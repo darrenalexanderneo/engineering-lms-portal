@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <title>Admin Portal - View Learners</title>
+</head>
+<body onload="getAllRegisteredLearners()">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+              <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" onclick="getAllRegisteredLearners()"  for="learners">Learners</label>
+  
+              <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
+              <label class="btn btn-outline-primary" onclick="window.location.href='./trainers.html'" for="trainers">Trainers</label>
+  
+          </div>
+          <div>
+            <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Admin</p></p>
+          </div>
+
+        </div>
+    </nav>
+
+        <!-- Pagination (not done properly yet)-->
+        <ul class="nav nav-pills nav-justified" style="padding-top: 20px;">
+            <li class="nav-item" id="enrolled">
+                <a class="nav-link" onclick="getAllEnrolledLearners()">Enrolled</a>
+            </li>
+            <li class="nav-item" id="registered">
+                <a class="nav-link" onclick="getAllRegisteredLearners()">Registered</a>
+            </li>
+            <li class="nav-item" id="preassign">
+                <a class="nav-link" onclick="getAllPreassignLearners()">Preassign</a>
+            </li>
+        </ul>
+    
+
+
+
+    <div class="container">
+        <table class="table table-borderless">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Student ID</th>
+                <th scope="col" class="text-center">Application Date & Time</th>
+                <th scope="col" class="text-center">Class</th>
+                <th scope="col" class="text-center"></th>
+              </tr>
+            </thead>
+            <tbody id="learners_list">
+    
+            </tbody>
+        </table>
+    </div>
+    
+
+    
+    <script src="../js/learners.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>
