@@ -9,18 +9,15 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
-    <title>Admin Portal - View Trainers</title>
+    <title>Admin Portal - Assign Trainers to Class</title>
 </head>
-<body>
+<body onload="getAllAvailableTrainers()">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
                
-            <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off">
-            <label class="btn btn-outline-primary" onclick="window.location.href='./learners.html'"  for="learners">Learners</label>
-
-            <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" onclick="getAllRegisteredLearners()" for="trainers">Trainers</label>
+            <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
+            <label class="btn btn-outline-primary" onclick="window.location.href='./trainers.html'"  for="trainers">Back</label>
 
           </div>
           <div>
@@ -30,35 +27,24 @@
         </div>
     </nav>
 
-        <!-- Pagination -->
-        <ul class="nav nav-pills nav-justified" style="padding-top: 20px;">
-            <li class="nav-item" id="enrolled">
-                <a class="nav-link" onclick="getAllUnassignedCourses()">Unassigned</a>
-            </li>
-            <li class="nav-item" id="registered">
-                <a class="nav-link" onclick="getAllAssignedCourses()">Assigned</a>
-            </li>
-        </ul>
-
     <div class="container">
         <table class="table table-borderless">
+          <h3 style="padding-bottom: 15px;"><center>Trainers Available for EM_G1 Assignment</center></h1> <!-- Automate the class id -->
             <thead class="table-light"> 
               <tr>
-                <th scope="col" class="text-center">Course Name</th>
-                <th scope="col" class="text-center">Class ID</th>
-                <th scope="col" class="text-center">Start Date</th>
+                <th scope="col" class="text-center">Trainer Name</th>
+                <th scope="col" class="text-center">Trainer ID</th>
+                <th scope="col" class="text-center">No. of Assigned Courses</th>
                 <th scope="col" class="text-center"></th>
               </tr>
             </thead>
-            <tbody id="trainers_list">
+            <tbody id="assign_trainers_list">
     
             </tbody>
         </table>
     </div>
     
-
-    
-    <script src="../js/trainers.js"></script>
+    <script src="../js/assign_trainers.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>

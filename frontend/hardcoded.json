@@ -94,5 +94,54 @@
             "apply_datetime": "18/08/2021, 23:00:00",
             "class": "G1"
         }
+    ] ,
+    "assigned_courses": [
+        { 
+            "course_name":"Basic Engineering Management",
+            "class_id": "BEM_C1",
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Basic Engineering Management",
+            "class_id": "BEM_C2",
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Engineering Management",
+            "class_id": "EM_C1",
+            "start_date": "16/08/2021, 12:00:00"
+        }
+    ] ,
+    "unassigned_courses": [
+        { 
+            "course_name":"Basic Engineering Management",
+            "class_id": "BEM_C3",
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Engineering Management",
+            "class_id": "EM_C2",
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Engineering Management",
+            "class_id": "EM_C3",
+            "start_date": "16/08/2021, 12:00:00"
+        }
+    ] ,
+    "assign_trainers": [
+        { 
+            "trainer_id":"EMP2",
+            "trainer_name": "Darren Neo Yong Yi",
+            "no_assigned_courses": "1"
+        }
+    ] ,
+    "unassign_trainers": [
+        { 
+            "trainer_id":"EMP2",
+            "trainer_name": "Darren Neo Yong Yi",
+            "no_assigned_courses": "1"
+        }
     ] 
+    
 }
