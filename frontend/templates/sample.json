@@ -1,0 +1,223 @@
+{
+    "registered_learners": [
+        { 
+            "name":"Au Yong Ting Ting",
+            "id": 14958475,
+            "apply_datetime": "20/08/2021, 08:00:00",
+            "class_id": "ENG201_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Darren Neo",
+            "id": 14958476,
+            "apply_datetime": "20/08/2021, 08:28:00",
+            "class_id": "ENG201_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Veronica Teng",
+            "id": 14958477,
+            "apply_datetime": "20/08/2021, 08:40:00",
+            "class_id": "ENG201_C1",
+            "class": "G2"
+        },
+        { 
+            "name":"Lewanna Erh",
+            "id": 14958478,
+            "apply_datetime": "20/08/2021, 09:25:00",
+            "class_id": "ENG201_C1",
+            "class": "G3"
+        },
+        { 
+            "name":"Teo Jia Xing",
+            "id": 14958479,
+            "apply_datetime": "20/08/2021, 09:30:00",
+            "class_id": "ENG201_C1",
+            "class": "G3"
+        },
+        { 
+            "name":"Mandy Loh",
+            "id": 14958480,
+            "apply_datetime": "20/08/2021, 10:00:00",
+            "class_id": "ENG201_C1",
+            "class": "G2"
+        },
+        { 
+            "name":"Pearlyn Tan",
+            "id": 14958481,
+            "apply_datetime": "20/08/2021, 11:55:00",
+            "class_id": "ENG201_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Dylan Ng",
+            "id": 14958482,
+            "apply_datetime": "20/08/2021, 12:00:00",
+            "class_id": "ENG201_C1",
+            "class": "G3"
+        }
+    ],
+    "preassign_learners": [
+        { 
+            "name":"Abby Ang",
+            "id": 12545623,
+            "apply_deadline": "15/10/2021, 23:59:00",
+            "class": "G4"
+        },
+        { 
+            "name":"Jessica Lim",
+            "id": 14362341,
+            "apply_deadline": "15/10/2021, 23:59:00",
+            "class": "G4"
+        },
+        { 
+            "name":"Darryl Soh",
+            "id": 14624623,
+            "apply_deadline": "15/10/2021, 23:59:00",
+            "class": "G2"
+        }
+    ],
+    "enrolled_learners": [
+        { 
+            "name":"Goh Li Ting",
+            "id": 11352346,
+            "apply_datetime": "16/08/2021, 12:00:00",
+            "class_id": "ENG101_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Leonard Lee",
+            "id": 12353463,
+            "apply_datetime": "15/08/2021, 18:00:00",
+            "class_id": "ENG101_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Jane Kim",
+            "id": 16234623,
+            "apply_datetime": "17/08/2021, 11:00:00",
+            "class_id": "ENG201_C1",
+            "class": "G1"
+        },
+        { 
+            "name":"Tom Poskitt",
+            "id": 13543479,
+            "apply_datetime": "18/08/2021, 23:00:00",
+            "class_id": "ENG201_C2",
+            "class": "G2"
+        }
+    ] ,
+    "assign_trainers": [
+        { 
+            "trainer_id":"EMP2",
+            "trainer_name": "Darren Neo Yong Yi",
+            "no_assigned_courses": "1"
+        }
+    ] ,
+    "unassign_trainers": [
+        { 
+            "trainer_id":"EMP2",
+            "trainer_name": "Darren Neo Yong Yi",
+            "no_assigned_courses": "1"
+        }
+    ] ,
+
+    "courses": [
+        { 
+            "course_name":"Introduction to Engineering",
+            "course_id": "ENG101",
+            "course_description": "In this module, learners are exposed to different engineering disciplines by focusing on the application of relevant core engineering disciplines. Topics covered include roles and responsibilities of an engineer, ethics, and sustainability. Learners will engage in the practice of engineering through the process of conceiving, designing, and implementing solutions to engineering problems, individually and in teams. Through this, they will also be able to hone their creative thinking and problem-solving skills, build synergistic teamwork and enhance their communication skills.",
+            "pre_assign": true,
+            "class_size": 50,
+            "num_of_class": 2,
+            "reg_period": true
+        },
+        { 
+            "course_name":"Electrical Principles",
+            "course_id": "ENG102",
+            "course_description": "This module covers electrical fundamentals and their applications in electrical and electronic circuits. Topics covered include principles of electricity, power sources, resistive, capacitive and inductive circuits. Learners will apply this knowledge to analyze, interpret and solve engineering problems.",
+            "pre_assign": true,
+            "class_size": 60,
+            "num_of_class": 2,
+            "reg_period": true
+        },
+        { 
+            "course_name":"Digital Electronics",
+            "course_id": "ENG201",
+            "course_description": "This module covers digital concepts and principles, which include binary and hexadecimal number systems, logic levels and logic devices, combinational and sequential logic. Learners will study the techniques in analysing, troubleshooting, designing and developing digital systems. Case studies are used to illustrate the applications of digital systems. Knowledge acquired in this module is essential for understanding the design and working of electronics-enabled systems and products.",
+            "pre_assign": false,
+            "class_size": 60,
+            "num_of_class": 2,
+            "reg_period": false
+        },
+        { 
+            "course_name":"Electronic Devices & Applications",
+            "course_id": "ENG202",
+            "course_description": "In this module, learners will acquire the knowledge of electronic devices and their applications. Topics include semiconductor devices such as diodes, special-purpose diodes, bipolar junction transistors, field-effect transistors and operational amplifiers. The design and operations of the devices and their applications are covered. Learners will apply this knowledge to analyze and solve electronic circuit problems.",
+            "pre_assign": false,
+            "class_size": 40,
+            "num_of_class": 1,
+            "reg_period": true
+        }
+    ],
+    "course_class": [
+        { 
+            "course_name":"Introduction to Engineering",
+            "course_id": "ENG101",
+            "class_id": "ENG101_C1",
+            "slots_available": 1,
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Introduction to Engineering",
+            "course_id": "ENG101",
+            "class_id": "ENG101_C2",
+            "slots_available": 50,
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Electrical Principles",
+            "course_id": "ENG102",
+            "class_id": "ENG102_C1",
+            "slots_available": 60,
+            "start_date": "16/08/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Electrical Principles",
+            "course_id": "ENG102",
+            "class_id": "ENG102_C2",
+            "slots_available": 60,
+            "start_date": "16/08/2021, 12:00:00",
+            "reg_start_date": "16/08/2021, 12:00:00",
+            "reg_end_date": "16/10/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Digital Electronics",
+            "course_id": "ENG201",
+            "class_id": "ENG201_C1",
+            "slots_available": 60,
+            "start_date": "16/08/2021, 12:00:00",
+            "reg_start_date": "16/08/2021, 12:00:00",
+            "reg_end_date": "16/10/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Digital Electronics",
+            "course_id": "ENG201",
+            "class_id": "ENG201_C2",
+            "slots_available": 60,
+            "start_date": "16/08/2021, 12:00:00",
+            "reg_start_date": "16/08/2021, 12:00:00",
+            "reg_end_date": "16/10/2021, 12:00:00"
+        },
+        { 
+            "course_name":"Electronic Devices & Applications",
+            "course_id": "ENG202",
+            "class_id": "ENG202_C1",
+            "slots_available": 40,
+            "start_date": "16/08/2021, 12:00:00",
+            "reg_start_date": "16/08/2021, 12:00:00",
+            "reg_end_date": "16/10/2021, 12:00:00"
+        }
+    ]
+    
+}

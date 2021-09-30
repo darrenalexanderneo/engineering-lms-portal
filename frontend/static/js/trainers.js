@@ -26,7 +26,7 @@ function getAllUnassignedCourses() {
             document.getElementById("trainers_list").innerHTML = record;
         }
     };
-
+    
     url = "../hardcoded.json";
     request.open("GET", url, true);
     request.send();

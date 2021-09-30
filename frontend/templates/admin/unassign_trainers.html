@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
-    <title>Admin Portal - Assign Trainers to Class</title>
+    <title>Admin Portal - Unassign Trainers to Class</title>
 </head>
-<body onload="getAllAvailableTrainers()">
+<body onload="getAllAssignedTrainers()">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -29,7 +29,7 @@
 
     <div class="container">
         <table class="table table-borderless">
-          <h3 style="padding-bottom: 15px;"><center>Trainers Available for EM_G1 Assignment</center></h1> <!-- Automate the class id -->
+          <h3 style="padding-bottom: 15px;"><center>Trainers for EM_G2 Assignment</center></h1> <!-- Automate the class id -->
             <thead class="table-light"> 
               <tr>
                 <th scope="col" class="text-center">Trainer Name</th>
@@ -38,13 +38,13 @@
                 <th scope="col" class="text-center"></th>
               </tr>
             </thead>
-            <tbody id="assign_trainers_list">
+            <tbody id="unassign_trainers_list">
     
             </tbody>
         </table>
     </div>
     
-    <script src="../js/assign_trainers.js"></script>
+    <script src="../../static/js/unassign_trainers.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
