@@ -21,7 +21,7 @@
     </div>
     <div class="container">
         
-        <table class="table table-borderless table-hover">
+        <table class="table table-borderless table-hover" id="test">
             <thead class="table-light"> 
               <tr>
                 <th scope="col" class="text-center">ID</th>
@@ -98,7 +98,7 @@
                     var border_colour = reg_period ? "success" : "danger"
                     var border_text = reg_period ? "OPEN" : "CLOSED"
     
-                    record += `<tr><a href="#">
+                    record += `<tr onclick="showAllLearners(this)"><a href="#">
 
                         <td class="text-center align-middle">${c_id}</td>
                         <td class="text-center align-middle">${c_name}</td>
@@ -119,6 +119,14 @@
         request.open("GET", url, true);
         request.send();
     };
+
+    $("#test tr").click(function() {
+        alert($(this).children("td").html());
+     });
+
+    function showAllLearners(x) {
+        location.href = "learners.html";
+    }
     </script>
 
     <!-- Latest compiled and minified JavaScript -->
