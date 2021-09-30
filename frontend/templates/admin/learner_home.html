@@ -61,44 +61,50 @@
             if (this.readyState == 4 && this.status == 200) {
                 var obj = JSON.parse(this.response);
                 var courses = obj.courses;
-                var classes = obj.course_class;
 
-                console.log(classes);
-
+                const now = new Date();
                 
     
                 var record = '';
                 for (var i = 0; i < courses.length; i++) {
+                    // declare variables
+                    var total_slots_avail = 0;
+
+                    // get course details
                     var c_name = courses[i].course_name;
                     var c_id = courses[i].course_id;
                     var c_description = courses[i].course_description;
                     var c_size = courses[i].class_size;
-                    var num_of_class = courses[i].num_of_class;
                     var pre_assign = courses[i].pre_assign;
-                    var total_slots_avail = 0;
-                    var reg_period = courses[i].reg_period;
 
-                    // find class
+                     // get class details
+                     var classes = obj.course_class[c_id];
+                    
+
+                    // compute if reg period is open
+                    var reg_period = obj.course_reg_period[c_id];
+                    var start_date = new Date(reg_period.reg_start_date);
+                    var end_date = new Date(reg_period.reg_end_date);
+                    const reg_condition = (now <= end_date) && (now >= start_date);
+                    var reg_status = reg_condition ? true : false;
+
+                    // compute number of available slots per course
                     for (var j = 0; j < classes.length; j++) { 
                         var class_id = classes[j].class_id;
                         var slots_avail = classes[j].slots_available;
-
-                        if (c_id == class_id.slice(0, -3)) { 
-                            total_slots_avail += slots_avail;
-                            //console.log(class_id, slots_avail);
-                        }
+                        total_slots_avail += slots_avail;  
                     }
-                    console.log(c_id, total_slots_avail);
+                    console.log(class_id, slots_avail);
 
                     // preassign boolean 
                     // <a href="#">Column 1</a>
                     var tick_icon = pre_assign ? "bi bi-check2" : "";
                     var full_class = total_slots_avail <= 0? "FULL" : "AVAILABLE";
                     var slots_colour = total_slots_avail <= 0? "danger" : "success";
-                    var border_colour = reg_period ? "success" : "danger"
-                    var border_text = reg_period ? "OPEN" : "CLOSED"
+                    var border_colour = reg_status ? "success" : "danger"
+                    var border_text = reg_status ? "OPEN" : "CLOSED"
     
-                    record += `<tr onclick="showAllLearners(this)"><a href="#">
+                    record += `<tr onclick="showAllLearners(this.id)" id="${c_id}"><a href="#">
 
                         <td class="text-center align-middle">${c_id}</td>
                         <td class="text-center align-middle">${c_name}</td>
@@ -120,12 +126,12 @@
         request.send();
     };
 
-    $("#test tr").click(function() {
-        alert($(this).children("td").html());
-     });
-
-    function showAllLearners(x) {
-        location.href = "learners.html";
+    function showAllLearners(id) {
+        
+        localStorage.setItem( 'course_selected', id);
+        var course_selected = localStorage['course_selected'];
+        console.log(course_selected);
+        location.href = "learner_course.html";
     }
     </script>
 
