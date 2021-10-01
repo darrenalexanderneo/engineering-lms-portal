@@ -25,12 +25,9 @@
             <thead class="table-light"> 
               <tr>
                 <th scope="col" class="text-center">ID</th>
-                <th scope="col" class="text-center">NAME</th>
-                <th scope="col" class="text-center">PRE-ASSIGN?</th>
-                <th scope="col" class="text-center">REGISTRATION PERIOD</th>
-                <th scope="col" class="text-center">SLOTS AVAILABLE?</th>
-                <th scope="col" class="text-center">SLOTS AVAILABLE</th>
-                <th scope="col" class="text-center text-white">HEHE</th>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Number of Class</th>
+                <th scope="col" class="text-center">Slots Available</th>
                 <!-- <i class="bi bi-check2"></i> -->
               </tr>
             </thead>
@@ -121,7 +118,7 @@
             }
         };
     
-        url = "../sample.json";
+        url = "../learners.json";
         request.open("GET", url, true);
         request.send();
     };
