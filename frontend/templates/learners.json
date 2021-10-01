@@ -1,0 +1,827 @@
+{
+    "registered_learners": [
+        {"ENG201" : 
+            [
+                {"ENG201_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG202" : 
+            [
+                {"ENG202_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG101" : 
+            [
+                {"ENG101_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG102" : 
+            [
+                {"ENG102_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        }
+    ],
+    
+    "preassigned_learners": [
+        {"ENG201" : 
+            [
+                {"ENG201_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG202" : 
+            [
+                {"ENG202_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG101" : 
+            [
+                {"ENG101_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG102" : 
+            [
+                {"ENG102_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        }
+    ],
+
+    "enrolled_learners": [
+        {"ENG201" : 
+            [
+                {"ENG201_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG201_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG202" : 
+            [
+                {"ENG202_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG202_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG101" : 
+            [
+                {"ENG101_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        },
+        {"ENG102" : 
+            [
+                {"ENG102_C1" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C2" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                },
+                {"ENG101_C3" : 
+                    [
+                        { 
+                            "name":"Au Yong Ting Ting",
+                            "id": 111111,
+                            "enrolled_datetime": "20/08/2021, 08:00:00",
+                            "class_id": "ENG201_C1",
+                            "class": "C1"
+                        },
+                        { 
+                            "name":"Darren Neo",
+                            "id": 14958476,
+                            "enrolled_datetime": "20/08/2021, 08:28:00",
+                            "class_id": "ENG201_C2",
+                            "class": "C2"
+                        }
+                    ]
+                }
+            ]
+                  
+        }
+    ],
+
+    "courses": [
+        { 
+            "course_name":"Introduction to Engineering",
+            "course_id": "ENG101",
+            "course_description": "In this module, learners are exposed to different engineering disciplines by focusing on the application of relevant core engineering disciplines. Topics covered include roles and responsibilities of an engineer, ethics, and sustainability. Learners will engage in the practice of engineering through the process of conceiving, designing, and implementing solutions to engineering problems, individually and in teams. Through this, they will also be able to hone their creative thinking and problem-solving skills, build synergistic teamwork and enhance their communication skills.",
+            "class_size": 50,
+            "num_of_class": 2
+        },
+        { 
+            "course_name":"Electrical Principles",
+            "course_id": "ENG102",
+            "course_description": "This module covers electrical fundamentals and their applications in electrical and electronic circuits. Topics covered include principles of electricity, power sources, resistive, capacitive and inductive circuits. Learners will apply this knowledge to analyze, interpret and solve engineering problems.",
+            "class_size": 60,
+            "num_of_class": 2
+        },
+        { 
+            "course_name":"Digital Electronics",
+            "course_id": "ENG201",
+            "course_description": "This module covers digital concepts and principles, which include binary and hexadecimal number systems, logic levels and logic devices, combinational and sequential logic. Learners will study the techniques in analysing, troubleshooting, designing and developing digital systems. Case studies are used to illustrate the applications of digital systems. Knowledge acquired in this module is essential for understanding the design and working of electronics-enabled systems and products.",
+            "class_size": 60,
+            "num_of_class": 2
+        },
+        { 
+            "course_name":"Electronic Devices & Applications",
+            "course_id": "ENG202",
+            "course_description": "In this module, learners will acquire the knowledge of electronic devices and their applications. Topics include semiconductor devices such as diodes, special-purpose diodes, bipolar junction transistors, field-effect transistors and operational amplifiers. The design and operations of the devices and their applications are covered. Learners will apply this knowledge to analyze and solve electronic circuit problems.",
+            "class_size": 40,
+            "num_of_class": 1
+        }
+    ],
+    
+    "course_class": {
+        
+        "ENG101": [
+            { 
+                "course_name":"Introduction to Engineering",
+                "class_id": "ENG101_C1",
+                "class_name": "C1",
+                "slots_available": 4,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "09-16-2021 12:00:00",
+                "reg_end_date": "10-16-2021 12:00:00"
+            },
+            { 
+                "course_name":"Introduction to Engineering",
+                "class_id": "ENG101_G2",
+                "class_name": "G2",
+                "slots_available": 50,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "09-16-2021 12:00:00",
+                "reg_end_date": "10-16-2021 12:00:00"
+            }
+
+        ],
+
+        "ENG102": [
+            { 
+                "course_name":"Electrical Principles",
+                "class_id": "ENG102_C1",
+                "class_name": "C1",
+                "slots_available": 60,
+                "reg_start_date": "09-16-2021 12:00:00",
+                "reg_end_date": "10-16-2021 12:00:00"
+            },
+            { 
+                "course_name":"Electrical Principles",
+                "class_id": "ENG102_C2",
+                "class_name": "C2",
+                "slots_available": 60,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "16/08/2021, 12:00:00",
+                "reg_end_date": "16/10/2021, 12:00:00"
+            }
+        ],
+        "ENG201": [ 
+            { 
+                "course_name":"Digital Electronics",
+                "class_id": "ENG201_C1",
+                "class_name": "C1",
+                "slots_available": 60,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "16/08/2021, 12:00:00",
+                "reg_end_date": "16/10/2021, 12:00:00"
+            },
+            { 
+                "course_name":"Digital Electronics",
+                "class_id": "ENG201_C2",
+                "class_name": "C2",
+                "slots_available": 60,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "16/08/2021, 12:00:00",
+                "reg_end_date": "16/10/2021, 12:00:00"
+            }
+        ],
+        "ENG202" : [
+            { 
+                "course_name":"Electronic Devices & Applications",
+                "class_id": "ENG202_C1",
+                "class_name": "C1",
+                "slots_available": 13,
+                "start_date": "16/08/2021, 12:00:00",
+                "reg_start_date": "16/08/2021, 12:00:00",
+                "reg_end_date": "16/10/2021, 12:00:00"
+            }
+        ]
+       
+    }
+    
+}
