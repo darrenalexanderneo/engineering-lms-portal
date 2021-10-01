@@ -1,7 +1,6 @@
 function getAllRegisteredLearners() {
     document.getElementById("learners_list").innerHTML = "";
 
-
     var request = new XMLHttpRequest();
 
     request.onreadystatechange = function () {
@@ -29,7 +28,7 @@ function getAllRegisteredLearners() {
         }
     };
 
-    url = "../hardcoded.json";
+    url = "../../templates/learners-v2.json";  // api endpoint example:  flask --> localhost:5000/learners/course/ENG101 OR AWS RDS --> some URL
     request.open("GET", url, true);
     request.send();
 };
@@ -65,7 +64,7 @@ function getAllEnrolledLearners() {
         }
     };
 
-    url = "../hardcoded.json";
+    url = "../../templates/learners-v2.json";  // api endpoint example:  flask --> localhost:5000/learners/course/ENG101 OR AWS RDS --> some URL
     request.open("GET", url, true);
     request.send();
 };
@@ -100,7 +99,7 @@ function getAllPreassignLearners() {
         }
     };
 
-    url = "../hardcoded.json";
+    url = "../../templates/learners-v2.json";  // api endpoint example:  flask --> localhost:5000/learners/course/ENG101 OR AWS RDS --> some URL
     request.open("GET", url, true);
     request.send();
 };

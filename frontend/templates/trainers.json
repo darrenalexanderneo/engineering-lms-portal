@@ -1,7 +1,6 @@
 {
-    "registered_learners": 
-        {
-            "ENG201" : 
+    "registered_learners": [
+        {"ENG201" : 
             [
                 {"ENG201_C1" : 
                     [
@@ -60,8 +59,7 @@
             ]
                   
         },
-        {
-            "ENG202" : 
+        {"ENG202" : 
             [
                 {"ENG202_C1" : 
                     [
