@@ -40,3 +40,8 @@ i.fa {
 tr:hover i.fa {
     display: inline-block;
 }   
+
+/* NAVBAR */
+.navbar-light .navbar-nav .active>.nav-link {
+    border-bottom: 5px solid #F4C127;
+}

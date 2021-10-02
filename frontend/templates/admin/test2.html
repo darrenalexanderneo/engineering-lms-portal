@@ -11,33 +11,39 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getAllRegisteredLearners()">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+<body onload="getCourseDetails(); getAllRegisteredLearners();">
 
-              <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
-              <label class="btn btn-outline-primary" onclick="getAllRegisteredLearners()"  for="learners">Learners</label>
-  
-              <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
-              <label class="btn btn-outline-primary" onclick="window.location.href='./trainers.html'" for="trainers">Trainers</label>
-  
-          </div>
-          <div>
-            <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
-          </div>
+    <!-- section 1: course details -->
+    <div class="container">
+        <h2 id="course_title"></h2>
+        <p> <strong>Description</strong> </p>
+        <p id="course_description"></p>
+    </div>
 
+    <!-- Pagination (not done properly yet)-->
+    <!-- <ul class="nav nav-pills nav-justified" style="padding-top: 20px;">
+        <li class="nav-item" id="enrolled">
+            <a class="nav-link" onclick="getAllEnrolledLearners()">Enrolled</a>
+        </li>
+        <li class="nav-item" id="registered">
+            <a class="nav-link" onclick="getAllRegisteredLearners()">Registered</a>
+        </li>
+        <li class="nav-item" id="preassign">
+            <a class="nav-link" onclick="getAllPreassignLearners()">Preassign</a>
+        </li>
+    </ul> -->
+
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="">1</a>
+          <a class="dropdown-item" href="#">2</a>
+          <a class="dropdown-item" href="#">3</a>
         </div>
-    </nav>
-
-        <!-- Pagination (not done properly yet)-->
-        <ul class="nav nav-pills nav-justified" style="padding-top: 20px;">
-            <li class="nav-item" id="registered">
-                <a class="nav-link" onclick="getAllRegisteredLearners()">Registered</a>
-            </li>
-        </ul>
-
-        <h1 id="text"></h1>
+      </div>
     
 
 
@@ -64,35 +70,93 @@
         const course_selected = localStorage['course_selected'];
         //localStorage.removeItem( 'course_selected' ); // Clear the localStorage
         console.log('course selected: ' + course_selected);
+
+        // we need a function to load files
+        // done is a "callback" function
+        // in this case, we're passing the `responseText` of the XML request
+        var loadFile = function (filePath, done) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () { return done(this.response) }
+            xhr.open("GET", filePath, true);
+            xhr.send();
+        }
+        // paths to all of your files
+        var myFiles = [ "../course_list.json", "../course_classes.json", "../learners-v2.json"];
+        // where you want to store the data
+        var jsonData = [];
+        // loop through each file
+        myFiles.forEach(function (file, i) {
+            // and call loadFile
+            // note how a function is passed as the second parameter
+            // that's the callback function
+            loadFile(file, function (response) {
+                // we set jsonData[i] to the parse data since the requests
+                // will not necessarily come in order
+                jsonData[i] = JSON.parse(response);
+            }
+        )});
+
         
 
-        function getAllRegisteredLearners() {
-            
+        function getCourseDetails() {
+            // global variables
+            const course_ls = jsonData[0].courses;
+            const class_ls = jsonData[1].course_class;
+            const learner_ls = jsonData[2][course_selected];
+            // registered
+            var reg_ls = learner_ls.registered_learners;
+
+            // get description 
+            for (var j = 0; j < course_ls.length; j++) { 
+                var c_id = course_ls[j].course_id;
+                if (course_selected == c_id) { 
+                    var c_name = course_ls[j].course_name;
+                    var c_desc = course_ls[j].course_description;
+                    break
+                }
+            }
+
+            console.log('check', c_name, c_id, c_desc);
+            document.getElementById("course_title").innerHTML = `${c_id} - ${c_name}`;
+            document.getElementById("course_description").innerHTML = `${c_desc}`;
+        }
+
+        function getAllRegisteredLearners() { 
+            const learner_ls = jsonData[2][course_selected];
+            var reg_ls = learner_ls.registered_learners;
+
+            console.log(reg_ls);
+
             document.getElementById("learners_list").innerHTML = "";
         
-        
-            var request = new XMLHttpRequest();
-        
-            request.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var obj = JSON.parse(this.response);
-                    var learners = obj.registered_learners[course_selected];
-                    var slots = obj.course_class[course_selected];
-                    
-                    console.log("slots", learners);
+            var record = '';
+            for (var i = 0; i < reg_ls.length; i++) {
+                // declare variables
+                var course_avail = 0;
 
-                    
-                    
-                    //document.getElementById("learners_list").innerHTML = record;
-                }
+                // learners details
+                var name = reg_ls[i].name;
+                var id = reg_ls[i].id; 
+                var app_dt = reg_ls[i].apply_datetime;
+                var class_id = reg_ls[i].class_id;
+                var class_name = reg_ls[i].class;
                 
-            };
-            //document.getElementById("text").innerHTML = course_selected;
-        
-            url = "../learners.json";
-            request.open("GET", url, true);
-            request.send();
-        };
+                // input row details
+                record += `<tr onclick="" id="${id}"><a href="#">
+
+                    <td class="text-center align-middle">${name}</td>
+                    <td class="text-center align-middle">${id}</td>
+                    <td class="text-center align-middle">${app_dt}</td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
+
+                    <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                    
+                </a></tr>`;
+            }
+            
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
     </script>
     <!-- <script src="../../static/js/learners.js"></script> -->
 

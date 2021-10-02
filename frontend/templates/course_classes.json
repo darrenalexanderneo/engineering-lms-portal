@@ -7,7 +7,7 @@
                     "course_name":"Introduction to Engineering",
                     "class_id": "ENG101_C1",
                     "class_name": "C1",
-                    "slots_available": 4,
+                    "slots_available": 15,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "09-16-2021 12:00:00",
                     "reg_end_date": "10-16-2021 12:00:00"
@@ -16,7 +16,7 @@
                     "course_name":"Introduction to Engineering",
                     "class_id": "ENG101_G2",
                     "class_name": "G2",
-                    "slots_available": 50,
+                    "slots_available": 20,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "09-16-2021 12:00:00",
                     "reg_end_date": "10-16-2021 12:00:00"

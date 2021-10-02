@@ -81,44 +81,45 @@
         
         //
         var record = '';
-                for (var i = 0; i < course_ls.length; i++) {
-                    // declare variables
-                    var course_avail = 0;
+        for (var i = 0; i < course_ls.length; i++) {
+            // declare variables
+            var course_avail = 0;
 
-                    // get course details
-                    var c_name = course_ls[i].course_name;
-                    var c_id = course_ls[i].course_id;
-                    var c_desc = course_ls[i].course_description;
-                    var c_size = course_ls[i].class_size;
+            // get course details
+            var c_name = course_ls[i].course_name;
+            var c_id = course_ls[i].course_id;
+            var c_desc = course_ls[i].course_description;
+            var c_size = course_ls[i].class_size;
 
-                    // get class details
-                    var classes = class_ls[c_id];
-                    var num_of_classes = classes.length;
+            // get class details
+            var classes = class_ls[c_id];
+            var num_of_classes = classes.length;
 
-                    // compute number of available slots per course
-                    for (var j = 0; j < classes.length; j++) { 
-                        var class_id = classes[j].class_id;
-                        var each_class_avail = classes[j].slots_available;
-                        course_avail += each_class_avail;  
-                    }
+            // compute number of available slots per course
+            for (var j = 0; j < classes.length; j++) { 
+                var class_id = classes[j].class_id;
+                var each_class_avail = classes[j].slots_available;
+                course_avail += each_class_avail;  
+            }
 
-                    // input row details
-                    record += `<tr onclick="getAllLearners(this.id)" id="${c_id}"><a href="#">
+            // input row details
+            record += `<tr onclick="getAllLearners(this.id)" id="${c_id}"><a href="#">
 
-                        <td class="text-center align-middle">${c_id}</td>
-                        <td class="text-center align-middle">${c_name}</td>
-                        <td class="text-center align-middle">${num_of_classes}</td>
-                        <td class="text-center align-middle">${course_avail}</td>
+                <td class="text-center align-middle">${c_id}</td>
+                <td class="text-center align-middle">${c_name}</td>
+                <td class="text-center align-middle">${num_of_classes}</td>
+                <td class="text-center align-middle">${course_avail}</td>
 
-                        <td><i class="fa bi bi-chevron-double-right" ></i></td>
-                        
-                    </a></tr>`;
-                }
+                <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                
+            </a></tr>`;
+        }
         
         // update table with data
         document.getElementById("course_list").innerHTML = record;
     }
 
+    // when course is clicked, direct to another page
     function getAllLearners(id) {
         
         localStorage.setItem('course_selected', id);
