@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getCourseDetails(); getAllPreassignLearners(); getClassDropdown();">
+<body onload="getCourseDetails(); getLearnersOfClass('All'); getClassDropdown();">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -34,22 +34,30 @@
     <!-- section 1: course details -->
     <div class="container">
         <h2 id="course_title"></h2>
-        <p> <strong>Description</strong> </p>
+        <p> <strong>Description</strong></p>
         <p id="course_description"></p>
     </div>
 
     <!-- section 2: class dropdown list -->
-    <div class="container">
+    <!-- <div class="container">
         <div class="dropdown">
             Class: &nbsp;
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             </button>
             <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <!-- <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li> -->
+              <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>
             </ul>
         </div>
+    </div> -->
+    <div class="container">
+        <span class="fw-bold">Class: &nbsp;</span> 
+        <select class="form-select" aria-label="dropdownforClasses" onchange="getLearnersOfClass(this.value)">
+            <!-- <option selected value="All" onclick="getAllLearnersOfClass()">All</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3" >Three</option> -->
+        </select>
     </div>
-    
 
     <!-- section 3: pagination -->
     <div class="container">
@@ -67,7 +75,7 @@
     </div>    
 
 
-    <!-- section 4: pagination -->
+    <!-- section 4: table content for learners -->
     <div class="container">
         <table class="table table-borderless">
             <thead class="table-light"> 
@@ -109,6 +117,8 @@
             }
         )});
 
+        console.log(jsonData);
+
         /* section 2: get course details */
         function getCourseDetails() {
             // global variables
@@ -129,13 +139,13 @@
                 }
             }
 
-            console.log('check', c_name, c_id, c_desc);
+            // console.log('check', c_name, c_id, c_desc);
             document.getElementById("course_title").innerHTML = `${c_id} - ${c_name}`;
             document.getElementById("course_description").innerHTML = `${c_desc}`;
         }
 
         /* section 3: dropdown */
-        function getRowDetails(list) { 
+        function getRowDetails(list, cols) { 
             var record = '';
 
             for (var i = 0; i < list.length; i++) {
@@ -149,6 +159,7 @@
                 var class_id = list[i].class_id;
                 var class_name = list[i].class;
                 
+                if (cols == 4) {
                 // input row details
                 record += `<tr onclick="" id="${id}"><a href="#">
 
@@ -160,6 +171,17 @@
                     <td><i class="fa bi bi-chevron-double-right" ></i></td>
                     
                 </a></tr>`;
+                } else if (cols == 3) {
+                    record += `<tr onclick="" id="${id}"><a href="#">
+
+                        <td class="text-center align-middle">${name}</td>
+                        <td class="text-center align-middle">${id}</td>
+                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
+
+                        <td><i class="fa bi bi-chevron-double-right" ></i></td>
+
+                        </a></tr>`;
+                }
             }
 
             return record;
@@ -169,7 +191,7 @@
         function getClassDropdown() { 
             // var class_dropdown = document.getElementById('class_dropdown');
             const class_ls = jsonData[0].course_classes[course_selected];
-            console.log(class_ls);
+            // console.log(class_ls);
             
             // get dropdown value
             // var options = [];
@@ -179,15 +201,14 @@
             // }
             // console.log(options);
 
-            
-            var class_dropdown = `<li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>`;
+            var class_dropdown = `<option selected value="All">All</option>`;
             for(var i = 0; i < class_ls.length; i++) {
                 // var opt = options[i]; 
                 // console.log(opt)
                 var class_name = class_ls[i].class_name;
                 var class_id = class_ls[i].class_id;
 
-                class_dropdown += `<li><a class="dropdown-item" value="${class_id}" onclick="getLearnersOfClass('${class_name}')" href="#">${class_name}</a></li>`;
+                class_dropdown += `<option value="${class_id}">${class_name}</option>`;
                 // // create element
                 // var li = document.createElement("li");
                 // var link = document.createElement("a");             
@@ -201,49 +222,67 @@
                 
                 // li.appendChild(link);
                 // class_dropdown.appendChild(li);
-
             }
-            document.getElementById("class_dropdown").innerHTML = class_dropdown;
-            
-            console.log(class_dropdown);
+            document.getElementsByClassName("form-select")[0].innerHTML = class_dropdown;
+            // console.log(class_dropdown);
         }
 
-        function getAllLearnersOfClass() { 
+        // function getAllLearnersOfClass() { 
+        //     const learner_ls = jsonData[1][course_selected];
+        //     var preassigned_ls = learner_ls.preassign_learners;
+
+        //     record = getRowDetails(preassigned_ls);
+
+        //     // update table with data
+        //     document.getElementById("learners_list").innerHTML = record;
+        // }
+
+
+    // global variable to store selected class_ID
+    var class_ID; 
+
+        function getLearnersOfClass(class_id) { 
+            class_ID = class_id;
             const learner_ls = jsonData[1][course_selected];
-            var reg_ls = learner_ls.registered_learners;
+            var preassigned_ls = learner_ls.preassign_learners;
+            document.getElementById("app_dt").classList.add("d-none");
 
-            record = getRowDetails(reg_ls);
 
-            // update table with data
-            document.getElementById("learners_list").innerHTML = record;
-        }
+            if (class_id == "All") {
+                console.log("class_id = All");
+                record = getRowDetails(preassigned_ls,3);
 
-        function getLearnersOfClass(class_name) { 
-            // console.log("calling getLearnersOfCLass");
-            const learner_ls = jsonData[1][course_selected];
-            var reg_ls = learner_ls.registered_learners;
-            console.log("class_name", class_name);
-            //
-            var class_reg_ls = [];
-            //console.log(reg_ls); 
-            for (const [key, value] of Object.entries(reg_ls)) {
-                var curr_class_name = value['class'];
+                // update table with data
+                // document.getElementById("learners_list").innerHTML = record;
 
-                if (class_name == curr_class_name) { 
-                    class_reg_ls.push(value);
+            } else {
+                console.log(`Preassign - class: ${class_id}`);
+
+                var class_preassigned_ls = [];
+                var curr_class_id;
+                // console.log(preassigned_ls); 
+                for (value of preassigned_ls) {
+                    curr_class_id = value.class_id;
+                    // console.log(class_id, curr_class_id);
+
+                    if (class_id == curr_class_id) { 
+                        class_preassigned_ls.push(value);
+                    }
                 }
+                //console.log(class_preassigned_ls);
+                record = getRowDetails(class_preassigned_ls,3);
             }
-            //console.log(class_reg_ls);
-
-            // 
-            record = getRowDetails(class_reg_ls);
 
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
+            // console.log(record);
         }
+
+        
 
         /* section 3: tabs */
         function getAllRegisteredLearners() { 
+            console.log("Registered",class_ID);
             const learner_ls = jsonData[1][course_selected];
             var reg_ls = learner_ls.registered_learners;
 
@@ -256,78 +295,112 @@
                 document.getElementById("app_dt").classList.remove("d-none");
             }
 
-            // var class_dropdown = document.getElementById('class_dropdown');
-            // var class_selected = class_dropdown.value;
-
             var record = '';
-            for (var i = 0; i < reg_ls.length; i++) {
-                // declare variables
-                var course_avail = 0;
+            var record_count = 0;
 
-                // learners details
-                var name = reg_ls[i].name;
-                var id = reg_ls[i].id; 
-                var app_dt = reg_ls[i].apply_datetime;
-                var class_id = reg_ls[i].class_id;
-                var class_name = reg_ls[i].class;
-                
-                // input row details
-                record += `<tr>
+            if (class_ID == "All") {
 
-                    <td class="text-center align-middle">${name}</td>
-                    <td class="text-center align-middle">${id}</td>
-                    <td class="text-center align-middle">${app_dt}</td>
-                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
-                    
-                </tr>`;
+                record = getRowDetails(reg_ls,4);
+                record_count = 1 // hardcoded this part -- need to check for no. of records even if class_ID == "All"
+
+            } else {
+                for (var i = 0; i < reg_ls.length; i++) {
+                    // declare variables
+                    var course_avail = 0;
+
+                    if (reg_ls[i].class_id == class_ID) {
+                        record_count += 1;
+
+                        // learners details
+                        var name = reg_ls[i].name;
+                        var id = reg_ls[i].id; 
+                        var app_dt = reg_ls[i].apply_datetime;
+                        var class_id = reg_ls[i].class_id;
+                        var class_name = reg_ls[i].class;
+
+                        record += `<tr>
+
+                                            <td class="text-center align-middle">${name}</td>
+                                            <td class="text-center align-middle">${id}</td>
+                                            <td class="text-center align-middle">${app_dt}</td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+
+                                            </tr>`;
+                    }
+
+                }
+
             }
-            
+            console.log(record_count);
+            if (record_count == 0) {
+                record = `There are currently no registered learners in ${class_ID}`;
+            }
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
         }
 
         function getAllEnrolledLearners() {
+            console.log("Enrolled",class_ID);
+
             const learner_ls = jsonData[1][course_selected];
             var enrolled_ls = learner_ls.enrolled_learners;
 
             console.log(enrolled_ls);
 
             document.getElementById("learners_list").innerHTML = "";
-        
+
+            // hide table header for application datetime 
+            document.getElementById("app_dt").classList.add("d-none");
+
             var record = '';
-            for (var i = 0; i < enrolled_ls.length; i++) {
-                // declare variables
-                var course_avail = 0;
+            var record_count = 0;
 
-                // learners details
-                var name = enrolled_ls[i].name;
-                var id = enrolled_ls[i].id; 
-                // var app_dt = enrolled_ls[i].apply_datetime;
-                var class_id = enrolled_ls[i].class_id;
-                var class_name = enrolled_ls[i].class;
-                
-                // hide table header for application datetime 
-                document.getElementById("app_dt").classList.add("d-none");
+            if (class_ID == "All") {
 
-                // input row details
-                record += `<tr>
+                record = getRowDetails(enrolled_ls,3);
+                record_count = 1 // hardcoded this part -- need to check for no. of records even if class_ID == "All"
 
-                    <td class="text-center align-middle">${name}</td>
-                    <td class="text-center align-middle">${id}</td>
-                    <td class="text-center align-middle my-auto"><p class='btn-danger btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Withdraw</p></td>
+            } else {
+                for (var i = 0; i < enrolled_ls.length; i++) {
+                    // declare variables
+                    var course_avail = 0;
 
-                    </tr>`;
+                    if (enrolled_ls[i].class_id == class_ID) {
+                        record_count += 1;
+
+                        // learners details
+                        var name = enrolled_ls[i].name;
+                        var id = enrolled_ls[i].id; 
+                        // var app_dt = enrolled_ls[i].apply_datetime;
+                        var class_id = enrolled_ls[i].class_id;
+                        var class_name = enrolled_ls[i].class;
+
+                        record += `<tr>
+
+                                            <td class="text-center align-middle">${name}</td>
+                                            <td class="text-center align-middle">${id}</td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+
+                                            </tr>`;
+                    }
+
+                }
+
             }
-            
+            console.log(record_count);
+            if (record_count == 0) {
+                record = `There are currently no enrolled learners in ${class_ID}`;
+            }
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
         }
+          
 
         function getAllPreassignLearners() {
             const learner_ls = jsonData[1][course_selected];
             var preassign_ls = learner_ls.preassign_learners;
 
-            console.log(preassign_ls);
+            // console.log(preassign_ls);
 
             document.getElementById("learners_list").innerHTML = "";
 
@@ -364,8 +437,18 @@
             document.getElementById("learners_list").innerHTML = record;
         }
 
-        function approve_reg(learner_id) {
-            console.log(learner_id);
+        function approve_reg_learners() {
+        // updates database by removing record from registered + adding record to enrolled
+
+        //refresh page
+        } 
+
+        function preassign_learners() {
+        // updates database by removing record from preassigned + adding record to ...??? (not sure)
+        }
+
+        function withdraw_learners() {
+            //updates database by removing record from enrolled
         }
 
 

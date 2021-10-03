@@ -46,7 +46,7 @@ tr:hover i.fa {
     border-bottom: 5px solid #F4C127;
 }
 
-h1 {
+h2,h1 {
     font-family: 'Poppins';
 }
 
@@ -55,4 +55,13 @@ img {
     height: 45px;
     width: 45px;
     margin-right: 20px;
+}
+
+select.form-select {
+    width: 20%;
+    display: inline;
+}
+
+div.container {
+    font-family: 'Poppins';
 }
