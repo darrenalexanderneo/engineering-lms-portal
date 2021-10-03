@@ -112,5 +112,71 @@
                 "class": "C2"
             }
         ] 
-    }   
+    },
+    
+    "ENG101": { 
+        "preassign_learners": [  
+            { 
+                "name":"Abby Ang",
+                "id": 12545623,
+                "enrolled_datetime": "15/10/2021, 23:59:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            },
+            { 
+                "name":"Darryl Soh",
+                "id": 14624623,
+                "enrolled_datetime": "15/10/2021, 23:59:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            }
+        ],
+        "registered_learners": [
+            { 
+                "name":"Au Yong Ting Ting",
+                "id": 14958475,
+                "apply_datetime": "20/08/2021, 08:00:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            },
+            { 
+                "name":"Darren Neo",
+                "id": 14958476,
+                "apply_datetime": "20/08/2021, 08:28:00",
+                "class_id": "ENG201_C2",
+                "class": "C2"
+            },
+            { 
+                "name":"Dylan Ng",
+                "id": 14958482,
+                "apply_datetime": "20/08/2021, 12:00:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            }
+        ],
+
+        "enrolled_learners": [
+            { 
+                "name":"Goh Li Ting",
+                "id": 11352346,
+                "enrolled_datetime": "16/08/2021, 12:00:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            },
+            { 
+                "name":"Goh Li Ting",
+                "id": 11352346,
+                "enrolled_datetime": "16/08/2021, 12:00:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            },
+            { 
+                "name":"Tom Poskitt",
+                "id": 13543479,
+                "enrolled_datetime": "18/08/2021, 23:00:00",
+                "class_id": "ENG201_C1",
+                "class": "C1"
+            }
+        ] 
+    }
 }
