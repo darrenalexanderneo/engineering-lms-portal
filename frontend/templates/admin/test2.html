@@ -81,7 +81,7 @@
             xhr.send();
         }
         // paths to all of your files
-        var myFiles = [ "../course_list.json", "../course_classes.json", "../learners-v2.json"];
+        var myFiles = [ "../course_list.json", "../learners-v2.json"];
         // where you want to store the data
         var jsonData = [];
         // loop through each file
@@ -101,8 +101,9 @@
         function getCourseDetails() {
             // global variables
             const course_ls = jsonData[0].courses;
-            const class_ls = jsonData[1].course_class;
+            const class_ls = jsonData[0].course_classes;
             const learner_ls = jsonData[2][course_selected];
+            
             // registered
             var reg_ls = learner_ls.registered_learners;
 

@@ -56,7 +56,7 @@
         xhr.send();
     }
     // paths to all of your files
-    var myFiles = [ "../course_list.json", "../course_classes.json"];
+    var myFiles = [ "../course_list.json"];
     // where you want to store the data
     var jsonData = [];
     // loop through each file
@@ -77,7 +77,7 @@
 
         // get course and class data
         var course_ls = jsonData[0].courses;
-        var class_ls = jsonData[1].course_class;
+        var class_ls = jsonData[0].course_classes;
         
         //
         var record = '';
