@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+
+# sql files
+spm_lms.sql
 # Distribution / packaging
 .Python
 build/
