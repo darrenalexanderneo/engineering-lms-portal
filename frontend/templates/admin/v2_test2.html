@@ -56,10 +56,9 @@
         <div class="dropdown">
             Class: &nbsp;
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              select class
             </button>
             <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#" value = "All" selected>All</a></li>
             </ul>
         </div>
     </div>
@@ -135,7 +134,7 @@
                 }
             }
 
-            console.log('check', c_name, c_id, c_desc);
+            //console.log('check', c_name, c_id, c_desc);
             document.getElementById("course_title").innerHTML = `${c_id} - ${c_name}`;
             document.getElementById("course_description").innerHTML = `${c_desc}`;
         }
@@ -144,21 +143,29 @@
             const learner_ls = jsonData[1][course_selected];
             var reg_ls = learner_ls.registered_learners;
 
-            console.log(reg_ls);
-
+            //console.log(reg_ls);
             document.getElementById("learners_list").innerHTML = "";
         
+            // get record
+            record = getRowDetails(reg_ls);
+            
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
+
+        function getRowDetails(list) { 
             var record = '';
-            for (var i = 0; i < reg_ls.length; i++) {
+
+            for (var i = 0; i < list.length; i++) {
                 // declare variables
                 var course_avail = 0;
 
                 // learners details
-                var name = reg_ls[i].name;
-                var id = reg_ls[i].id; 
-                var app_dt = reg_ls[i].apply_datetime;
-                var class_id = reg_ls[i].class_id;
-                var class_name = reg_ls[i].class;
+                var name = list[i].name;
+                var id = list[i].id; 
+                var app_dt = list[i].apply_datetime;
+                var class_id = list[i].class_id;
+                var class_name = list[i].class;
                 
                 // input row details
                 record += `<tr onclick="" id="${id}"><a href="#">
@@ -172,9 +179,8 @@
                     
                 </a></tr>`;
             }
-            
-            // update table with data
-            document.getElementById("learners_list").innerHTML = record;
+
+            return record;
         }
 
         // populate list
@@ -194,8 +200,7 @@
 
             for(var i = 0; i < options.length; i++) {
                 var opt = options[i]; 
-                var class_id = "C" + opt.slice(-1);  
-                console.log(class_id);
+                console.log(opt)
                 
                 // create element
                 var li = document.createElement("li");
@@ -205,7 +210,7 @@
 
                 // set attributes: text, onclick event
                 link.setAttribute("class", "dropdown-item");
-                link.setAttribute("onclick", `getLearnersOfClass(${class_id})`);
+                link.setAttribute("onclick", `getLearnersOfClass('${opt}')`);
                 //link.href = "#";
                 
                 li.appendChild(link);
@@ -213,6 +218,29 @@
             }
 
             console.log(class_dropdown);
+        }
+
+        function getLearnersOfClass(class_name) { 
+            const learner_ls = jsonData[1][course_selected];
+            var reg_ls = learner_ls.registered_learners;
+            console.log("class_name", class_name);
+            //
+            var class_reg_ls = [];
+            //console.log(reg_ls); 
+            for (const [key, value] of Object.entries(reg_ls)) {
+                var curr_class_name = value['class'];
+
+                if (class_name == curr_class_name) { 
+                    class_reg_ls.push(value);
+                }
+            }
+            //console.log(class_reg_ls);
+
+            // 
+            record = getRowDetails(class_reg_ls);
+
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
         }
 
     </script>
