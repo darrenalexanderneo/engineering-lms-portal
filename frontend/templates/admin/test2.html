@@ -45,7 +45,7 @@
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             </button>
             <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#" value = "All" selected>All</a></li>
+              <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>
             </ul>
         </div>
     </div>
@@ -200,6 +200,16 @@
             }
 
             console.log(class_dropdown);
+        }
+
+        function getAllLearnersOfClass() { 
+            const learner_ls = jsonData[1][course_selected];
+            var reg_ls = learner_ls.registered_learners;
+
+            record = getRowDetails(reg_ls);
+
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
         }
 
         function getLearnersOfClass(class_name) { 
