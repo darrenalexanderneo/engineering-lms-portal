@@ -6,7 +6,7 @@ function getAllRegisteredLearners() {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var obj = JSON.parse(this.response);
-            var registered = obj.registered_learners;
+            var registered = obj.ENG201.registered_learners;
             console.log(registered);
 
             var record = '';
@@ -41,15 +41,15 @@ function getAllEnrolledLearners() {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var obj = JSON.parse(this.response);
-            var registered = obj.enrolled_learners;
-            console.log(registered);
+            var enrolled = obj.ENG201.enrolled_learners;
+            console.log(enrolled);
 
             var record = '';
-            for (var i = 0; i < registered.length; i++) {
-                var name = registered[i].name;
-                var id = registered[i].id;
-                var apply_datetime = registered[i].apply_datetime;
-                var class_section = registered[i].class;
+            for (var i = 0; i < enrolled.length; i++) {
+                var name = enrolled[i].name;
+                var id = enrolled[i].id;
+                var apply_datetime = enrolled[i].apply_datetime;
+                var class_section = enrolled[i].class;
 
 
                 record += `<tr>
@@ -77,15 +77,15 @@ function getAllPreassignLearners() {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var obj = JSON.parse(this.response);
-            var registered = obj.preassign_learners;
-            console.log(registered);
+            var preassign = obj.ENG201.preassign_learners;
+            console.log(preassign);
 
             var record = '';
-            for (var i = 0; i < registered.length; i++) {
-                var name = registered[i].name;
-                var id = registered[i].id;
-                var apply_deadline = registered[i].apply_deadline;
-                var class_section = registered[i].class;
+            for (var i = 0; i < preassign.length; i++) {
+                var name = preassign[i].name;
+                var id = preassign[i].id;
+                var apply_deadline = preassign[i].apply_deadline;
+                var class_section = preassign[i].class;
 
                 record += `<tr>
                     <td class="text-center align-middle">${name}</td>
