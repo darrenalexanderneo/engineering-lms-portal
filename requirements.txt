@@ -13,4 +13,4 @@ mysql-connector-python==8.0.23
 Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.4.5
 requests==2.25.1
-decouple==3.1.0
+python-decouple==3.3.0
