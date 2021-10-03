@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getCourseDetails(); getAllPreassignLearners();">
+<body onload="getCourseDetails(); getAllPreassignLearners(); getClassDropdown();">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -38,21 +38,21 @@
         <p id="course_description"></p>
     </div>
 
-
-    <!-- dropdown -->
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="">1</a>
-          <a class="dropdown-item" href="#">2</a>
-          <a class="dropdown-item" href="#">3</a>
+    <!-- section 2: class dropdown list -->
+    <div class="container">
+        <div class="dropdown">
+            Class: &nbsp;
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#" value = "All" selected>All</a></li>
+            </ul>
         </div>
-      </div>
+    </div>
     
-    <!-- Pagination -->
-    <nav>
+
+    <!-- section 3: pagination -->
+    <div class="container">
     <ul class="pagination" style="padding-top: 20px;">
         <li class="page-item active" id="preassign">
             <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
@@ -64,9 +64,10 @@
             <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
         </li>
     </ul>
-    </nav>    
+    </div>    
 
 
+    <!-- section 4: pagination -->
     <div class="container">
         <table class="table table-borderless">
             <thead class="table-light"> 
@@ -83,16 +84,15 @@
         </table>
     </div>
     
-
+    <!-- javascript -->
     <script>
+        /* section 1: load files*/
         // get the course selected
         const course_selected = localStorage['course_selected'];
         //localStorage.removeItem( 'course_selected' ); // Clear the localStorage
         console.log('course selected: ' + course_selected);
 
         // we need a function to load files
-        // done is a "callback" function
-        // in this case, we're passing the `responseText` of the XML request
         var loadFile = function (filePath, done) {
             var xhr = new XMLHttpRequest();
             xhr.onload = function () { return done(this.response) }
@@ -101,21 +101,15 @@
         }
         // paths to all of your files
         var myFiles = [ "../course_list.json", "../learners-v2.json"];
-        // where you want to store the data
         var jsonData = [];
-        // loop through each file
         myFiles.forEach(function (file, i) {
             // and call loadFile
-            // note how a function is passed as the second parameter
-            // that's the callback function
             loadFile(file, function (response) {
-                // we set jsonData[i] to the parse data since the requests
-                // will not necessarily come in order
                 jsonData[i] = JSON.parse(response);
             }
         )});
-        console.log(jsonData);
 
+        /* section 2: get course details */
         function getCourseDetails() {
             // global variables
             const course_ls = jsonData[0].courses;
@@ -140,6 +134,98 @@
             document.getElementById("course_description").innerHTML = `${c_desc}`;
         }
 
+        /* section 3: dropdown */
+        function getRowDetails(list) { 
+            var record = '';
+
+            for (var i = 0; i < list.length; i++) {
+                // declare variables
+                var course_avail = 0;
+
+                // learners details
+                var name = list[i].name;
+                var id = list[i].id; 
+                var app_dt = list[i].apply_datetime;
+                var class_id = list[i].class_id;
+                var class_name = list[i].class;
+                
+                // input row details
+                record += `<tr onclick="" id="${id}"><a href="#">
+
+                    <td class="text-center align-middle">${name}</td>
+                    <td class="text-center align-middle">${id}</td>
+                    <td class="text-center align-middle">${app_dt}</td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
+
+                    <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                    
+                </a></tr>`;
+            }
+
+            return record;
+        }
+
+        // populate list
+        function getClassDropdown() { 
+            var class_dropdown = document.getElementById('class_dropdown');
+            const class_ls = jsonData[0].course_classes[course_selected];
+            
+            // get dropdown value
+            var options = [];
+            for (const [key, value] of Object.entries(class_ls)) {
+                var class_name = value['class_name'];
+                options.push(class_name);
+            }
+            console.log(options);
+
+            
+
+            for(var i = 0; i < options.length; i++) {
+                var opt = options[i]; 
+                console.log(opt)
+                
+                // create element
+                var li = document.createElement("li");
+                var link = document.createElement("a");             
+                var text = document.createTextNode(opt);
+                link.appendChild(text);
+
+                // set attributes: text, onclick event
+                link.setAttribute("class", "dropdown-item");
+                link.setAttribute("onclick", `getLearnersOfClass('${opt}')`);
+                //link.href = "#";
+                
+                li.appendChild(link);
+                class_dropdown.appendChild(li);
+            }
+
+            console.log(class_dropdown);
+        }
+
+        function getLearnersOfClass(class_name) { 
+            const learner_ls = jsonData[1][course_selected];
+            var reg_ls = learner_ls.registered_learners;
+            console.log("class_name", class_name);
+            //
+            var class_reg_ls = [];
+            //console.log(reg_ls); 
+            for (const [key, value] of Object.entries(reg_ls)) {
+                var curr_class_name = value['class'];
+
+                if (class_name == curr_class_name) { 
+                    class_reg_ls.push(value);
+                }
+            }
+            //console.log(class_reg_ls);
+
+            // 
+            record = getRowDetails(class_reg_ls);
+
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
+
+        /* section 3: tabs */
         function getAllRegisteredLearners() { 
             const learner_ls = jsonData[1][course_selected];
             var reg_ls = learner_ls.registered_learners;
