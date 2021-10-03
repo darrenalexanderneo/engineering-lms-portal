@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getCourseDetails(); getAllRegisteredLearners();">
+<body onload="getCourseDetails(); getAllPreassignLearners();">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -23,7 +23,7 @@
               <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
               <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>
           </div>
-          <img src="../../static/img/sampleprofilepic.jfif" alt="profile picture">
+          <div class="float-end"><img src="../../static/img/sampleprofilepic.jfif" alt="profile picture"></div>
           <div class="pt-3 me-4">
             <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
           </div>
@@ -38,18 +38,6 @@
         <p id="course_description"></p>
     </div>
 
-    <!-- Pagination (not done properly yet)-->
-    <!-- <ul class="nav nav-pills nav-justified" style="padding-top: 20px;">
-        <li class="nav-item" id="enrolled">
-            <a class="nav-link" onclick="getAllEnrolledLearners()">Enrolled</a>
-        </li>
-        <li class="nav-item" id="registered">
-            <a class="nav-link" onclick="getAllRegisteredLearners()">Registered</a>
-        </li>
-        <li class="nav-item" id="preassign">
-            <a class="nav-link" onclick="getAllPreassignLearners()">Preassign</a>
-        </li>
-    </ul> -->
 
     <!-- dropdown -->
     <div class="dropdown">
@@ -63,7 +51,20 @@
         </div>
       </div>
     
-
+    <!-- Pagination -->
+    <nav>
+    <ul class="pagination" style="padding-top: 20px;">
+        <li class="page-item active" id="preassign">
+            <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
+        </li>
+        <li class="page-item " id="registered">
+            <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
+        </li>
+        <li class="page-item" id="enrolled">
+            <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
+        </li>
+    </ul>
+    </nav>    
 
 
     <div class="container">
@@ -72,7 +73,7 @@
               <tr>
                 <th scope="col" class="text-center">Name</th>
                 <th scope="col" class="text-center">Student ID</th>
-                <th scope="col" class="text-center">Application Date/Time</th> 
+                <th scope="col" class="text-center" id="app_dt">Application Date/Time</th> 
                 <th scope="col" class="text-center">Status</th>
               </tr>
             </thead>
@@ -113,7 +114,8 @@
                 jsonData[i] = JSON.parse(response);
             }
         )});
-        
+        console.log(jsonData);
+
         function getCourseDetails() {
             // global variables
             const course_ls = jsonData[0].courses;
@@ -139,13 +141,18 @@
         }
 
         function getAllRegisteredLearners() { 
-            const learner_ls = jsonData[2][course_selected];
+            const learner_ls = jsonData[1][course_selected];
             var reg_ls = learner_ls.registered_learners;
 
             console.log(reg_ls);
 
             document.getElementById("learners_list").innerHTML = "";
-        
+            
+            //to set table headers
+            if (document.getElementById("app_dt").classList.contains("d-none")) {
+                document.getElementById("app_dt").classList.remove("d-none");
+            }
+
             var record = '';
             for (var i = 0; i < reg_ls.length; i++) {
                 // declare variables
@@ -159,21 +166,103 @@
                 var class_name = reg_ls[i].class;
                 
                 // input row details
-                record += `<tr onclick="" id="${id}"><a href="#">
+                record += `<tr>
 
                     <td class="text-center align-middle">${name}</td>
                     <td class="text-center align-middle">${id}</td>
                     <td class="text-center align-middle">${app_dt}</td>
-                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
-
-                    <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
                     
-                </a></tr>`;
+                </tr>`;
             }
             
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
         }
+
+        function getAllEnrolledLearners() {
+            const learner_ls = jsonData[1][course_selected];
+            var enrolled_ls = learner_ls.enrolled_learners;
+
+            console.log(enrolled_ls);
+
+            document.getElementById("learners_list").innerHTML = "";
+        
+            var record = '';
+            for (var i = 0; i < enrolled_ls.length; i++) {
+                // declare variables
+                var course_avail = 0;
+
+                // learners details
+                var name = enrolled_ls[i].name;
+                var id = enrolled_ls[i].id; 
+                // var app_dt = enrolled_ls[i].apply_datetime;
+                var class_id = enrolled_ls[i].class_id;
+                var class_name = enrolled_ls[i].class;
+                
+                // hide table header for application datetime 
+                document.getElementById("app_dt").classList.add("d-none");
+
+                // input row details
+                record += `<tr>
+
+                    <td class="text-center align-middle">${name}</td>
+                    <td class="text-center align-middle">${id}</td>
+                    <td class="text-center align-middle my-auto"><p class='btn-danger btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Withdraw</p></td>
+
+                    </tr>`;
+            }
+            
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
+
+        function getAllPreassignLearners() {
+            const learner_ls = jsonData[1][course_selected];
+            var preassign_ls = learner_ls.preassign_learners;
+
+            console.log(preassign_ls);
+
+            document.getElementById("learners_list").innerHTML = "";
+
+            //to set table headers
+            // if (document.getElementById("app_dt").classList.contains("d-none")) {
+            //     document.getElementById("app_dt").classList.remove("d-none");
+            // }
+
+            document.getElementById("app_dt").classList.add("d-none");
+        
+            var record = '';
+            for (var i = 0; i < preassign_ls.length; i++) {
+                // declare variables
+                var course_avail = 0;
+
+                // learners details
+                var name = preassign_ls[i].name;
+                var id = preassign_ls[i].id; 
+                // var assign_deadline = preassign_ls[i].assign_deadline;
+                var class_id = preassign_ls[i].class_id;
+                var class_name = preassign_ls[i].class;
+                
+                // input row details
+                record += `<tr>
+
+                <td class="text-center align-middle">${name}</td>
+                <td class="text-center align-middle">${id}</td>
+                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Assign</p></td>
+
+                </tr>`;
+            }
+            
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
+
+        function approve_reg(learner_id) {
+            console.log(learner_id);
+        }
+
+
     </script>
     <!-- <script src="../../static/js/learners.js"></script> -->
 
