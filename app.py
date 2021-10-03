@@ -235,7 +235,7 @@ class Learners(db.Model):
         'polymorphic_identity': 'learners',
     }
 
-    def __init__(self,learner_id,emp_id,course_id,class_id,completed):
+    def __init__(self,emp_id,course_id,class_id,completed):
         self.emp_id = emp_id
         self.course_id = course_id
         self.class_id = class_id
@@ -774,9 +774,8 @@ def assign_to_course():
         print(data['course_id'])
         print(data['class_id'])
 
-        #def __init__(self,learner_id,emp_id,course_id,class_id,completed):
+        #def __init__(self,emp_id,course_id,class_id,completed):
         learner = Learners(
-            learner_id= "random",
             emp_id=data['emp_id'],
             course_id=data['course_id'],
             class_id=data['class_id'],
