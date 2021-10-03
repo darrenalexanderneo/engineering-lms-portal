@@ -36,7 +36,7 @@
                 { 
                     "course_name":"Introduction to Engineering",
                     "class_id": "ENG101_C1",
-                    "class_name": "C1",
+                    "class_name": "Class 1",
                     "slots_available": 4,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "09-16-2021 12:00:00",
@@ -44,8 +44,8 @@
                 },
                 { 
                     "course_name":"Introduction to Engineering",
-                    "class_id": "ENG101_G2",
-                    "class_name": "G2",
+                    "class_id": "ENG101_C2",
+                    "class_name": "Class 2",
                     "slots_available": 50,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "09-16-2021 12:00:00",
@@ -59,7 +59,7 @@
                 { 
                     "course_name":"Electrical Principles",
                     "class_id": "ENG102_C1",
-                    "class_name": "C1",
+                    "class_name": "Class 1",
                     "slots_available": 60,
                     "reg_start_date": "09-16-2021 12:00:00",
                     "reg_end_date": "10-16-2021 12:00:00"
@@ -67,7 +67,7 @@
                 { 
                     "course_name":"Electrical Principles",
                     "class_id": "ENG102_C2",
-                    "class_name": "C2",
+                    "class_name": "Class 2",
                     "slots_available": 60,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "16/08/2021, 12:00:00",
@@ -79,7 +79,7 @@
                 { 
                     "course_name":"Digital Electronics",
                     "class_id": "ENG201_C1",
-                    "class_name": "C1",
+                    "class_name": "Class 1",
                     "slots_available": 60,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "16/08/2021, 12:00:00",
@@ -88,7 +88,7 @@
                 { 
                     "course_name":"Digital Electronics",
                     "class_id": "ENG201_C2",
-                    "class_name": "C2",
+                    "class_name": "Class 2",
                     "slots_available": 60,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "16/08/2021, 12:00:00",
@@ -100,7 +100,7 @@
                 { 
                     "course_name":"Electronic Devices & Applications",
                     "class_id": "ENG202_C1",
-                    "class_name": "C1",
+                    "class_name": "Class 1",
                     "slots_available": 13,
                     "start_date": "16/08/2021, 12:00:00",
                     "reg_start_date": "16/08/2021, 12:00:00",

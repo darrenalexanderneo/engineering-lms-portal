@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getCourseDetails(); getAllRegisteredLearners();">
+<body onload="getCourseDetails(); getAllRegisteredLearners(); getClassDropdown();">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -56,12 +56,10 @@
         <div class="dropdown">
             Class: &nbsp;
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown button
+              select class
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
         </div>
     </div>
@@ -179,6 +177,33 @@
             document.getElementById("learners_list").innerHTML = record;
         }
 
+        // populate list
+        function getClassDropdown() { 
+            var class_dropdown = document.getElementById('class_dropdown');
+
+            // get dropdown value
+            const class_ls = jsonData[0].course_classes[course_selected];
+            for (const [key, value] of Object.entries(class_ls)) {
+                console.log(key, value);
+            }
+
+            var options = ["1", "2", "3", "4", "5"];
+
+            for(var i = 0; i < options.length; i++) {
+                var opt = options[i];  
+                var li = document.createElement("li");
+                var link = document.createElement("a");             
+                var text = document.createTextNode(opt);
+                link.appendChild(text);
+                link.setAttribute("class", "dropdown-item");
+                link.href = "#";
+                
+                li.appendChild(link);
+                class_dropdown.appendChild(li);
+            }
+
+            console.log(class_dropdown);
+        }
 
     </script>
     <!-- <script src="../../static/js/learners.js"></script> -->
