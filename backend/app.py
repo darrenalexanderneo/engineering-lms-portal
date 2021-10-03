@@ -7,7 +7,6 @@ from flask_cors import CORS
 
 # Database connection
 
-
 # EC2 DB port is 3306 instead, change accordingly.
 app = Flask(__name__)
 # EC2 DB port is 3306 instead, change accordingly.
@@ -194,10 +193,9 @@ class Course_Prerequisite(db.Model):
 
 class Trainers(Employee):
     __tablename__ = "trainers"
-    trainer_id = db.Column(db.String(10),primary_key=True, nullable=False)
     emp_id = db.Column(db.String(10), db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
-    course_id = db.Column(db.String(10),nullable=False)
-    class_id= db.Column(db.String(10), nullable=False)
+    course_id = db.Column(db.String(10),nullable=False, primary_key=True)
+    class_id= db.Column(db.String(10), nullable=False, primary_key=True)
     completed= db.Column(db.Integer, nullable=False)
 
     __mapper_args__ = {
@@ -216,7 +214,6 @@ class Trainers(Employee):
 
     def json(self):
         trainers_info = {
-            'trainer_id' : self.trainer_id,
             'emp_id': self.emp_id,
             'course_id': self.course_id,
             'class_id': self.class_id,
@@ -227,10 +224,9 @@ class Trainers(Employee):
 
 class Learners(db.Model):
     __tablename__ = "learners"
-    learner_id = db.Column(db.String(10),primary_key=True, nullable=False)
     emp_id = db.Column(db.String(10) ,db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
-    course_id = db.Column(db.String(10),nullable=False)
-    class_id = db.Column(db.String(10),nullable=False)
+    course_id = db.Column(db.String(10),nullable=False, primary_key=True)
+    class_id = db.Column(db.String(10),nullable=False, primary_key=True)
     completed = db.Column(db.Integer,nullable=False)
     
 
@@ -240,7 +236,6 @@ class Learners(db.Model):
     }
 
     def __init__(self,learner_id,emp_id,course_id,class_id,completed):
-        self.learner_id = learner_id
         self.emp_id = emp_id
         self.course_id = course_id
         self.class_id = class_id
@@ -259,13 +254,10 @@ class Learners(db.Model):
     
     def json(self):
         learners_info = {
-            'learner_id' : self.learner_id,
             'emp_id': self.emp_id,
             'course_id': self.course_id,
             'class_id': self.class_id,
             'completed' : self.completed,
-
-            
   
         }
         return learners_info
