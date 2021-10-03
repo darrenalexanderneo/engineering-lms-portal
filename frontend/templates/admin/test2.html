@@ -45,7 +45,7 @@
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             </button>
             <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>
+              <!-- <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li> -->
             </ul>
         </div>
     </div>
@@ -167,38 +167,44 @@
 
         // populate list
         function getClassDropdown() { 
-            var class_dropdown = document.getElementById('class_dropdown');
+            // var class_dropdown = document.getElementById('class_dropdown');
             const class_ls = jsonData[0].course_classes[course_selected];
+            console.log(class_ls);
             
             // get dropdown value
-            var options = [];
-            for (const [key, value] of Object.entries(class_ls)) {
-                var class_name = value['class_name'];
-                options.push(class_name);
-            }
-            console.log(options);
+            // var options = [];
+            // for (var i=0; i<class_ls.length; i++) {
+            //     var class_name = value['class_name'];
+            //     options.push(class_name);
+            // }
+            // console.log(options);
 
             
+            var class_dropdown = `<li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>`;
+            for(var i = 0; i < class_ls.length; i++) {
+                // var opt = options[i]; 
+                // console.log(opt)
+                var class_name = class_ls[i].class_name;
+                var class_id = class_ls[i].class_id;
 
-            for(var i = 0; i < options.length; i++) {
-                var opt = options[i]; 
-                console.log(opt)
-                
-                // create element
-                var li = document.createElement("li");
-                var link = document.createElement("a");             
-                var text = document.createTextNode(opt);
-                link.appendChild(text);
+                class_dropdown += `<li><a class="dropdown-item" value="${class_id}" onclick="getLearnersOfClass('${class_name}')" href="#">${class_name}</a></li>`;
+                // // create element
+                // var li = document.createElement("li");
+                // var link = document.createElement("a");             
+                // var text = document.createTextNode(opt);
+                // link.appendChild(text);
 
-                // set attributes: text, onclick event
-                link.setAttribute("class", "dropdown-item");
-                link.setAttribute("onclick", `getLearnersOfClass('${opt}')`);
-                //link.href = "#";
+                // // set attributes: text, onclick event
+                // link.setAttribute("class", "dropdown-item");
+                // link.setAttribute("onclick", `getLearnersOfClass('${opt}')`);
+                // //link.href = "#";
                 
-                li.appendChild(link);
-                class_dropdown.appendChild(li);
+                // li.appendChild(link);
+                // class_dropdown.appendChild(li);
+
             }
-
+            document.getElementById("class_dropdown").innerHTML = class_dropdown;
+            
             console.log(class_dropdown);
         }
 
@@ -213,6 +219,7 @@
         }
 
         function getLearnersOfClass(class_name) { 
+            // console.log("calling getLearnersOfCLass");
             const learner_ls = jsonData[1][course_selected];
             var reg_ls = learner_ls.registered_learners;
             console.log("class_name", class_name);
@@ -248,6 +255,9 @@
             if (document.getElementById("app_dt").classList.contains("d-none")) {
                 document.getElementById("app_dt").classList.remove("d-none");
             }
+
+            // var class_dropdown = document.getElementById('class_dropdown');
+            // var class_selected = class_dropdown.value;
 
             var record = '';
             for (var i = 0; i < reg_ls.length; i++) {
