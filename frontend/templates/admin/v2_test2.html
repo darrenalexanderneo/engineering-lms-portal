@@ -180,23 +180,33 @@
         // populate list
         function getClassDropdown() { 
             var class_dropdown = document.getElementById('class_dropdown');
-
-            // get dropdown value
             const class_ls = jsonData[0].course_classes[course_selected];
+            
+            // get dropdown value
+            var options = [];
             for (const [key, value] of Object.entries(class_ls)) {
-                console.log(key, value);
+                var class_name = value['class_name'];
+                options.push(class_name);
             }
+            console.log(options);
 
-            var options = ["1", "2", "3", "4", "5"];
+            
 
             for(var i = 0; i < options.length; i++) {
-                var opt = options[i];  
+                var opt = options[i]; 
+                var class_id = "C" + opt.slice(-1);  
+                console.log(class_id);
+                
+                // create element
                 var li = document.createElement("li");
                 var link = document.createElement("a");             
                 var text = document.createTextNode(opt);
                 link.appendChild(text);
+
+                // set attributes: text, onclick event
                 link.setAttribute("class", "dropdown-item");
-                link.href = "#";
+                link.setAttribute("onclick", `getLearnersOfClass(${class_id})`);
+                //link.href = "#";
                 
                 li.appendChild(link);
                 class_dropdown.appendChild(li);

@@ -6,21 +6,21 @@
                 "id": 12545623,
                 "enrolled_datetime": "15/10/2021, 23:59:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Jessica Lim",
                 "id": 14362341,
                 "enrolled_datetime": "15/10/2021, 23:59:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Darryl Soh",
                 "id": 14624623,
                 "enrolled_datetime": "15/10/2021, 23:59:00",
                 "class_id": "ENG201_C3",
-                "class": "C3"
+                "class": "Class 3"
             }
         ],
         "registered_learners": [
@@ -29,56 +29,56 @@
                 "id": 14958475,
                 "apply_datetime": "20/08/2021, 08:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Darren Neo",
                 "id": 14958476,
                 "apply_datetime": "20/08/2021, 08:28:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Veronica Teng",
                 "id": 14958477,
                 "apply_datetime": "20/08/2021, 08:40:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Lewanna Erh",
                 "id": 14958478,
                 "apply_datetime": "20/08/2021, 09:25:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Teo Jia Xing",
                 "id": 14958479,
                 "apply_datetime": "20/08/2021, 09:30:00",
                 "class_id": "ENG201_C3",
-                "class": "C3"
+                "class": "Class 3"
             },
             { 
                 "name":"Mandy Loh",
                 "id": 14958480,
                 "apply_datetime": "20/08/2021, 10:00:00",
                 "class_id": "ENG201_C3",
-                "class": "C3"
+                "class": "Class 3"
             },
             { 
                 "name":"Pearlyn Tan",
                 "id": 14958481,
                 "apply_datetime": "20/08/2021, 11:55:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Dylan Ng",
                 "id": 14958482,
                 "apply_datetime": "20/08/2021, 12:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             }
         ],
 
@@ -88,28 +88,28 @@
                 "id": 11352346,
                 "enrolled_datetime": "16/08/2021, 12:00:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Leonard Lee",
                 "id": 12353463,
                 "enrolled_datetime": "15/08/2021, 18:00:00",
                 "class_id": "ENG201_C3",
-                "class": "C3"
+                "class": "Class 3"
             },
             { 
                 "name":"Jane Kim",
                 "id": 16234623,
                 "enrolled_datetime": "17/08/2021, 11:00:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Tom Poskitt",
                 "id": 13543479,
                 "enrolled_datetime": "18/08/2021, 23:00:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             }
         ] 
     },
@@ -121,14 +121,14 @@
                 "id": 12545623,
                 "enrolled_datetime": "15/10/2021, 23:59:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Darryl Soh",
                 "id": 14624623,
                 "enrolled_datetime": "15/10/2021, 23:59:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             }
         ],
         "registered_learners": [
@@ -137,21 +137,21 @@
                 "id": 14958475,
                 "apply_datetime": "20/08/2021, 08:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Darren Neo",
                 "id": 14958476,
                 "apply_datetime": "20/08/2021, 08:28:00",
                 "class_id": "ENG201_C2",
-                "class": "C2"
+                "class": "Class 2"
             },
             { 
                 "name":"Dylan Ng",
                 "id": 14958482,
                 "apply_datetime": "20/08/2021, 12:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             }
         ],
 
@@ -161,21 +161,21 @@
                 "id": 11352346,
                 "enrolled_datetime": "16/08/2021, 12:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Goh Li Ting",
                 "id": 11352346,
                 "enrolled_datetime": "16/08/2021, 12:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             },
             { 
                 "name":"Tom Poskitt",
                 "id": 13543479,
                 "enrolled_datetime": "18/08/2021, 23:00:00",
                 "class_id": "ENG201_C1",
-                "class": "C1"
+                "class": "Class 1"
             }
         ] 
     }
