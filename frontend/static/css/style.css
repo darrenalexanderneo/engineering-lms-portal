@@ -45,3 +45,14 @@ tr:hover i.fa {
 .navbar-light .navbar-nav .active>.nav-link {
     border-bottom: 5px solid #F4C127;
 }
+
+h1 {
+    font-family: 'Poppins';
+}
+
+img {
+    border-radius:75%;
+    height: 45px;
+    width: 45px;
+    margin-right: 20px;
+}

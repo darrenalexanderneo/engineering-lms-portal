@@ -13,6 +13,24 @@
 </head>
 <body onload="getCourseDetails(); getAllRegisteredLearners();">
 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse ms-4" id="navbarSupportedContent">
+
+              <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" onclick="window.location.href='./test1.html'"  for="learners">Learners</label>
+  
+              <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
+              <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>
+          </div>
+          <img src="../../static/img/sampleprofilepic.jfif" alt="profile picture">
+          <div class="pt-3 me-4">
+            <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
+          </div>
+
+        </div>
+    </nav>
+
     <!-- section 1: course details -->
     <div class="container">
         <h2 id="course_title"></h2>
@@ -95,7 +113,6 @@
                 jsonData[i] = JSON.parse(response);
             }
         )});
-
         
 
         function getCourseDetails() {
