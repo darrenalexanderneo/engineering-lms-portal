@@ -1,0 +1,31 @@
+{
+    "code":200,
+    
+    "data":{
+        "courses": [
+            {
+                "course_description":"Learning the basic concepts of engineering. In addition, \nreal life concepts will be introduced as well.",
+                "course_id":"BEM460",
+                "course_name":"Basic Engineering Management",
+                "num_of_class":4,
+                "slot_available":50},
+            {
+                "course_description":"You will also be prepared for internationally recognised industry certification examinations such as those from National Instruments, UI Path, Microsoft and Unity3D\n",
+                "course_id":"CE100",
+                "course_name":"Computer Engineering",
+                "num_of_class":1,"slot_available":50},
+            {
+                "course_description":"Develop and build analog electronics circuits. You will build multiple \ncircuits from sound buzzers to bionics where we actually control a servo motor by reading signals from your muscles\n",
+                "course_id":"EE200",
+                "course_name":"Electricity & Electronics",
+                "num_of_class":1,"slot_available":50},
+            {
+                "course_description":"Develop and build analog electronics circuits. You awill build multiple \ncircuits from sound buzzers to bionics where we actually control a servo motor by reading signals from your muscles\n",
+                "course_id":"EM140",
+                "course_name":"Engineering Management",
+                "num_of_class":3,
+                "slot_available":49}
+        ]
+    }
+
+}
