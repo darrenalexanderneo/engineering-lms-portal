@@ -715,7 +715,7 @@ def retrieve_course_learners(course_id):
     if(len(course_registration_list)):
         for  course_reg in course_registration_list:
             employee = Employee.query.filter_by(emp_id = course_reg.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = course_reg.class_id).first()
+            class_info = Classes.query.filter_by(class_id = course_reg.class_id,course_id = course_id).first()
 
             string = {
                 "name": employee.emp_name,
@@ -730,7 +730,7 @@ def retrieve_course_learners(course_id):
     if(len(course_registration_list)):
         for  course_reg in course_registration_list:
             employee = Employee.query.filter_by(emp_id = course_reg.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = course_reg.class_id).first()
+            class_info = Classes.query.filter_by(class_id = course_reg.class_id,course_id = course_id).first()
 
             string = {
                 "name": employee.emp_name,
@@ -744,7 +744,7 @@ def retrieve_course_learners(course_id):
     if(len(learners_lists)):
         for  learner in learners_lists:
             employee = Employee.query.filter_by(emp_id = learner.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = learner.class_id).first()
+            class_info = Classes.query.filter_by(class_id = learner.class_id,course_id = course_id).first()
 
             string = {
                 "name": employee.emp_name,
@@ -814,7 +814,47 @@ def retrieve_course_classes():
 
 
         
+@app.route("/course_classes/<string:course_id>")
+def retrieve_course_class(course_id):
+    #registration, course, class table # course_id etc
 
+    result = []
+    
+    course = Courses.query.filter_by(course_id = course_id).first()
+
+    course_name = course.course_name
+    course_id = course.course_id
+    registration_list = Registration.query.filter_by(course_id = course_id).all()
+    if(len(registration_list)):
+        registration_array = []
+        for registration in registration_list:
+            reg_start_date = registration.reg_start_date
+            reg_end_date= registration.reg_end_date
+            class_id = registration.class_id
+            one_class = Classes.query.filter_by(course_id = course_id, class_id =registration.class_id).first()
+            #retrieve all the class for this course based on registration
+            start_date = one_class.start_date
+            slots_available = one_class.slots_available
+
+            string = {
+                "course_name" : course_name,
+                "class_id" : class_id,
+                "slots_available" : slots_available,
+                "start_date" : start_date,
+                "reg_start_date" : reg_start_date,
+                "reg_end_date": reg_end_date
+            }
+
+            registration_array.append(string)
+
+    
+    return jsonify(
+        {
+            'code': 200,
+                course_id : [result for result in registration_array]
+
+        }
+    )
                         
 
 
