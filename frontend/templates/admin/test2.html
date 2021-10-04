@@ -447,8 +447,57 @@
         // updates database by removing record from preassigned + adding record to ...??? (not sure)
         }
 
-        function withdraw_learners() {
+        function withdraw_learners(class_id, emp_id) { 
             //updates database by removing record from enrolled
+            var course_id = course_selected;
+
+            // AJAX call to invoke update of Learner's table in database to change available_slots
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+                    console.log("update of available slots is successful");
+                    
+                } else {
+                    console.log("update of available slots failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            var json_obj = {emp_id: emp_id, course_id: course_id, class_id: class_id};
+            var json_string = JSON.stringify(json_obj);
+            request.open("PUT", url, true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(json_string); 
+            
+
+            // AJAX call to invoke deletion of record from enrolled learners table in database
+            var request2 = new XMLHttpRequest();
+
+            request2.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("deletion of learner from enrol table is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("deletion of learner from enrol table - failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request2.open("DELETE", url, true);
+            request2.send(json_string); 
+
+            // refresh page OR invoke getAllEnrolledLearners()
+            getAllEnrolledLearners();
+
         }
 
 
