@@ -75,32 +75,23 @@
         xhr.send();
     }
 
-    // load course_list, course_classes json data
+    // load course_list json data
     var course_json = [];
-    var class_json = [];
+    
     loadFile("https://spm-lms.herokuapp.com/courses_list", function (response) {
         course_json.push(JSON.parse(response).data);
         //console.log(course_json);
         course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
     })
 
+    
+    // load course_classes json data
+    var class_json = [];
     loadFile("https://spm-lms.herokuapp.com/course_classes", function (response) {
         class_json.push(JSON.parse(response).course_classes);
         //console.log("test", class_json);
         class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
     })
-
-    // loop through each file
-    /*myFiles.forEach(function (file, i) {
-        // and call loadFile
-        // note how a function is passed as the second parameter
-        // that's the callback function
-        loadFile(file, function (response) {
-            // we set jsonData[i] to the parse data since the requests
-            // will not necessarily come in order
-            jsonData[i] = JSON.parse(response);
-        }
-    )})*/
     
     function getAllCourses() { 
         course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];

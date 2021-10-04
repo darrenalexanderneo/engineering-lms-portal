@@ -323,7 +323,7 @@
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
                                             <td class="text-center align-middle">${app_dt}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id})" id="${id}">Approve</p></td>
 
                                             </tr>`;
                     }
@@ -379,7 +379,7 @@
 
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="withdraw_learners(${class_id}, ${id})" id="${id}">Approve</p></td>
 
                                             </tr>`;
                     }
@@ -428,7 +428,7 @@
 
                 <td class="text-center align-middle">${name}</td>
                 <td class="text-center align-middle">${id}</td>
-                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Assign</p></td>
+                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id})" id="${id}">Assign</p></td>
 
                 </tr>`;
             }
@@ -437,18 +437,72 @@
             document.getElementById("learners_list").innerHTML = record;
         }
 
-        function approve_reg_learners() {
+        function approve_learners() {
         // updates database by removing record from registered + adding record to enrolled
+            // update the table data on both preassign and enrolled || registered and enrolled
+            
+            
+            // send a json to backend - {emp_id: "", course_id: "", class_id: ""}
+            
 
-        //refresh page
+        //refresh page OR invoke getAllRegisteredLearners()
         } 
 
         function preassign_learners() {
         // updates database by removing record from preassigned + adding record to ...??? (not sure)
+
+        //refresh page OR invoke getAllPreassignLearners()
+
         }
 
-        function withdraw_learners() {
+        function withdraw_learners(class_id, emp_id) { 
             //updates database by removing record from enrolled
+            var course_id = course_selected;
+
+            // AJAX call to invoke update of Learner's table in database to change available_slots
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("withdrawal of learners is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("withdrawal of learners failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request.open("PUT", url, true);
+            request.send(emp_id, course_id, class_id); // to do
+            
+            // AJAX call to invoke deletion of record from enrolled learners table in database
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("withdrawal of learners is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("withdrawal of learners failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request.open("DELETE", url, true);
+            request.send(emp_id, course_id, class_id); // to do
+
+            // refresh page OR invoke getAllEnrolledLearners()
+            getAllEnrolledLearners();
+
         }
 
 

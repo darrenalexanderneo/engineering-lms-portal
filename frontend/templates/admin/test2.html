@@ -38,42 +38,33 @@
         <p id="course_description"></p>
     </div>
 
-    <!-- section 2: class dropdown list -->
-    <!-- <div class="container">
-        <div class="dropdown">
-            Class: &nbsp;
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            </button>
-            <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>
-            </ul>
-        </div>
-    </div> -->
+
     <div class="container">
+        <!-- section 2: class dropdown list -->
+
         <span class="fw-bold">Class: &nbsp;</span> 
         <select class="form-select" aria-label="dropdownforClasses" onchange="getLearnersOfClass(this.value)">
+            <!-- dropdown list options -->
             <!-- <option selected value="All" onclick="getAllLearnersOfClass()">All</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3" >Three</option> -->
         </select>
+
+        <!-- section 3: pagination -->
+
+        <ul class="pagination float-end me-2">
+            <li class="page-item active" id="preassign">
+                <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
+            </li>
+            <li class="page-item " id="registered">
+                <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
+            </li>
+            <li class="page-item" id="enrolled">
+                <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
+            </li>
+        </ul>
     </div>
-
-    <!-- section 3: pagination -->
-    <div class="container">
-    <ul class="pagination" style="padding-top: 20px;">
-        <li class="page-item active" id="preassign">
-            <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
-        </li>
-        <li class="page-item " id="registered">
-            <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
-        </li>
-        <li class="page-item" id="enrolled">
-            <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
-        </li>
-    </ul>
-    </div>    
-
 
     <!-- section 4: table content for learners -->
     <div class="container">
@@ -166,7 +157,7 @@
                     <td class="text-center align-middle">${name}</td>
                     <td class="text-center align-middle">${id}</td>
                     <td class="text-center align-middle">${app_dt}</td>
-                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Assign</p></td>
 
                     <td><i class="fa bi bi-chevron-double-right" ></i></td>
                     
@@ -176,7 +167,7 @@
 
                         <td class="text-center align-middle">${name}</td>
                         <td class="text-center align-middle">${id}</td>
-                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
+                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})">Assign</p></td>
 
                         <td><i class="fa bi bi-chevron-double-right" ></i></td>
 
@@ -323,7 +314,7 @@
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
                                             <td class="text-center align-middle">${app_dt}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Approve</p></td>
 
                                             </tr>`;
                     }
@@ -379,7 +370,7 @@
 
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Approve</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-danger btn rounded-pill align-middle my-auto' onclick="withdraw_learners(${id}, ${class_id})" id="${id}">Withdraw</p></td>
 
                                             </tr>`;
                     }
@@ -393,6 +384,7 @@
             }
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
+            
         }
           
 
@@ -428,17 +420,25 @@
 
                 <td class="text-center align-middle">${name}</td>
                 <td class="text-center align-middle">${id}</td>
-                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_reg(${id})" id="${id}">Assign</p></td>
+                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Assign</p></td>
 
                 </tr>`;
             }
             
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
+            console.log(record);
+            console.log('hi');
         }
 
-        function approve_reg_learners() {
+        function approve_learners(emp_id, class_id) {
         // updates database by removing record from registered + adding record to enrolled
+            var course_id = course_selected;
+            console.log("APPROVE: ", course_id, emp_id, class_id);
+             // update the table data on both preassign and enrolled || registered and enrolled
+            
+            
+            // send a json to backend - {emp_id: "", course_id: "", class_id: ""}
 
         //refresh page
         } 
