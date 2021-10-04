@@ -1,0 +1,19 @@
+{
+"BEM460":[
+        {
+            "class_id":"C4",
+            "course_name":"Basic Engineering Management",
+            "reg_end_date":"2021-10-20","reg_start_date":"2021-09-30",
+            "slots_available":50,
+            "start_date":"2021-10-30"
+        },
+        {
+            "class_id":"C2",
+            "course_name":"Basic Engineering Management",
+            "reg_end_date":"2021-10-20","reg_start_date":"2021-09-30",
+            "slots_available":50,
+            "start_date":"2021-10-30"
+        }
+    ]
+
+}
