@@ -29,7 +29,7 @@
               <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
               <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>
           </div>
-          <!-- <img src="../../static/img/sampleprofilepic.jfif" alt="profile picture"> -->
+          <img src="../../static/img/sampleprofilepic.jfif" alt="profile picture">
           <div class="pt-3 me-4">
             <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
           </div>
@@ -50,7 +50,7 @@
                 <th scope="col" class="text-center">Name</th>
                 <th scope="col" class="text-center">Number of Class</th>
                 <th scope="col" class="text-center">Slots Available</th>
-                <th scope="col" class="text-center text-white">HEH</th>
+                <th scope="col" class="text-center text-white"></th>
                 <!-- <i class="bi bi-check2"></i> -->
               </tr>
             </thead>
@@ -62,27 +62,36 @@
     
 </body>
    
-    
 
     
     <!-- <script src="../../static/js/learners.js"></script> -->
 
     <script>
     // we need a function to load files
-    // done is a "callback" function
-    // in this case, we're passing the `responseText` of the XML request
     var loadFile = function (filePath, done) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () { return done(this.response) }
         xhr.open("GET", filePath, true);
         xhr.send();
     }
-    // paths to all of your files
-    var myFiles = [ "../course_list.json"];
-    // where you want to store the data
-    var jsonData = [];
+
+    // load course_list, course_classes json data
+    var course_json = [];
+    var class_json = [];
+    loadFile("https://spm-lms.herokuapp.com/courses_list", function (response) {
+        course_json.push(JSON.parse(response).data);
+        //console.log(course_json);
+        course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
+    })
+
+    loadFile("https://spm-lms.herokuapp.com/course_classes", function (response) {
+        class_json.push(JSON.parse(response).course_classes);
+        //console.log("test", class_json);
+        class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
+    })
+
     // loop through each file
-    myFiles.forEach(function (file, i) {
+    /*myFiles.forEach(function (file, i) {
         // and call loadFile
         // note how a function is passed as the second parameter
         // that's the callback function
@@ -91,15 +100,23 @@
             // will not necessarily come in order
             jsonData[i] = JSON.parse(response);
         }
-    )})
+    )})*/
     
     function getAllCourses() { 
+        course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
+        class_ls = JSON.parse(window.localStorage.getItem("class_json"))[0];
+        console.log("course_ls: ", course_ls);
+        console.log("class_ls: ", class_ls);
+        /*console.log("0: ", jsonData[0]);
+        console.log("1: ", jsonData[1]);
+        console.log("1: ", jsonData[1].data);*/
+
         //
         document.getElementById("course_list").innerHTML = "";
 
         // get course and class data
-        var course_ls = jsonData[0].courses;
-        var class_ls = jsonData[0].course_classes;
+        //var course_ls = jsonData[0].courses;
+        //var class_ls = jsonData[0].course_classes;
         
         //
         var record = '';
@@ -111,18 +128,22 @@
             var c_name = course_ls[i].course_name;
             var c_id = course_ls[i].course_id;
             var c_desc = course_ls[i].course_description;
-            var c_size = course_ls[i].class_size;
+            var c_size = course_ls[i].num_of_class;
+            var course_avail = course_ls[i].slot_available;
 
             // get class details
-            var classes = class_ls[c_id];
-            var num_of_classes = classes.length;
+            //var classes = class_ls[c_id];
+            for (var j = 0; j < class_ls.length; j++) { 
+                console.log(class_ls[j])
+            }
+            
 
             // compute number of available slots per course
-            for (var j = 0; j < classes.length; j++) { 
+            /* for (var j = 0; j < classes.length; j++) { 
                 var class_id = classes[j].class_id;
                 var each_class_avail = classes[j].slots_available;
                 course_avail += each_class_avail;  
-            }
+            } */
 
             // input row details
             record += `<tr onclick="getAllLearners(this.id)" id="${c_id}"><a href="#">
@@ -147,7 +168,7 @@
         localStorage.setItem('course_selected', id);
         var course_selected = localStorage['course_selected'];
         console.log(course_selected);
-        location.href = "v2_test2.html";
+        location.href = "test2.html";
     }
     </script>
 
