@@ -67,47 +67,40 @@
     <!-- <script src="../../static/js/learners.js"></script> -->
 
     <script>
-    // we need a function to load files
+    // global variables
+    //var course_name_ls = [];
+    var course_json = [];
+
+    // function to load json files
     var loadFile = function (filePath, done) {
         var xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
         xhr.onload = function () { return done(this.response) }
         xhr.open("GET", filePath, true);
         xhr.send();
     }
 
-    // load course_list json data
-    var course_json = [];
-    
-    loadFile("https://spm-lms.herokuapp.com/courses_list", function (response) {
+    // load course_list data
+    loadFile('http://192.168.1.71:5000/courses_list', function (response) {
         course_json.push(JSON.parse(response).data);
         //console.log(course_json);
         course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
     })
 
     
-    // load course_classes json data
-    var class_json = [];
-    loadFile("https://spm-lms.herokuapp.com/course_classes", function (response) {
-        class_json.push(JSON.parse(response).course_classes);
-        //console.log("test", class_json);
-        class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
-    })
-    
     function getAllCourses() { 
-        course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
-        class_ls = JSON.parse(window.localStorage.getItem("class_json"))[0];
-        console.log("course_ls: ", course_ls);
-        console.log("class_ls: ", class_ls);
-        /*console.log("0: ", jsonData[0]);
-        console.log("1: ", jsonData[1]);
-        console.log("1: ", jsonData[1].data);*/
-
-        //
         document.getElementById("course_list").innerHTML = "";
 
-        // get course and class data
-        //var course_ls = jsonData[0].courses;
-        //var class_ls = jsonData[0].course_classes;
+        // get course data
+        course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
+        console.log("course_ls: ", course_ls);
+
+        // get course_id
+        /*for (var i = 0; i < course_ls.length; i++) { 
+            var course_id = course_ls[i]['course_id'];
+            course_name_ls.push(course_id);
+        }
+        console.log(course_name_ls);*/
         
         //
         var record = '';
@@ -116,33 +109,19 @@
             var course_avail = 0;
 
             // get course details
-            var c_name = course_ls[i].course_name;
-            var c_id = course_ls[i].course_id;
-            var c_desc = course_ls[i].course_description;
-            var c_size = course_ls[i].num_of_class;
-            var course_avail = course_ls[i].slot_available;
+            var course_name = course_ls[i].course_name;
+            var course_id = course_ls[i].course_id;
+            var num_of_classes = course_ls[i].num_of_class;
+            var total_slot_avail = course_ls[i].slot_available;
 
-            // get class details
-            //var classes = class_ls[c_id];
-            for (var j = 0; j < class_ls.length; j++) { 
-                console.log(class_ls[j])
-            }
-            
-
-            // compute number of available slots per course
-            /* for (var j = 0; j < classes.length; j++) { 
-                var class_id = classes[j].class_id;
-                var each_class_avail = classes[j].slots_available;
-                course_avail += each_class_avail;  
-            } */
 
             // input row details
-            record += `<tr onclick="getAllLearners(this.id)" id="${c_id}"><a href="#">
+            record += `<tr onclick="getAllLearners(this.id)" id="${course_id}"><a href="#">
 
-                <td class="text-center align-middle">${c_id}</td>
-                <td class="text-center align-middle">${c_name}</td>
-                <td class="text-center align-middle">${c_size}</td>
-                <td class="text-center align-middle">${course_avail}</td>
+                <td class="text-center align-middle">${course_id}</td>
+                <td class="text-center align-middle">${course_name}</td>
+                <td class="text-center align-middle">${num_of_classes}</td>
+                <td class="text-center align-middle">${total_slot_avail}</td>
 
                 <td><i class="fa bi bi-chevron-double-right" ></i></td>
                 
@@ -159,7 +138,7 @@
         localStorage.setItem('course_selected', id);
         var course_selected = localStorage['course_selected'];
         console.log(course_selected);
-        location.href = "test2.html";
+        location.href = "v3_test2.html";
     }
     </script>
 

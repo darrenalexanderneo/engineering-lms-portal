@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getCourseDetails(); getLearnersOfClass('All'); getClassDropdown();">
+<body onload="getData(); getCourseDetails(); getLearnersOfClass('All'); getClassDropdown();">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -38,33 +38,42 @@
         <p id="course_description"></p>
     </div>
 
-
+    <!-- section 2: class dropdown list -->
+    <!-- <div class="container">
+        <div class="dropdown">
+            Class: &nbsp;
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul  id="class_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#" value = "All" onclick="getAllLearnersOfClass()" selected>All</a></li>
+            </ul>
+        </div>
+    </div> -->
     <div class="container">
-        <!-- section 2: class dropdown list -->
-
         <span class="fw-bold">Class: &nbsp;</span> 
         <select class="form-select" aria-label="dropdownforClasses" onchange="getLearnersOfClass(this.value)">
-            <!-- dropdown list options -->
             <!-- <option selected value="All" onclick="getAllLearnersOfClass()">All</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3" >Three</option> -->
         </select>
-
-        <!-- section 3: pagination -->
-
-        <ul class="pagination float-end me-2">
-            <li class="page-item active" id="preassign">
-                <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
-            </li>
-            <li class="page-item " id="registered">
-                <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
-            </li>
-            <li class="page-item" id="enrolled">
-                <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
-            </li>
-        </ul>
     </div>
+
+    <!-- section 3: pagination -->
+    <div class="container">
+    <ul class="pagination" style="padding-top: 20px;">
+        <li class="page-item active" id="preassign">
+            <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
+        </li>
+        <li class="page-item " id="registered">
+            <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
+        </li>
+        <li class="page-item" id="enrolled">
+            <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
+        </li>
+    </ul>
+    </div>    
+
 
     <!-- section 4: table content for learners -->
     <div class="container">
@@ -85,19 +94,45 @@
     
     <!-- javascript -->
     <script>
-        /* section 1: load files*/
         // get the course selected
         const course_selected = localStorage['course_selected'];
-        //localStorage.removeItem( 'course_selected' ); // Clear the localStorage
         console.log('course selected: ' + course_selected);
+        var course_json = [];
+        var class_json = [];
+        var learners_json = [];
+        var course_ls = [];
+        var class_ls = [];
+        var learner_ls = [];
 
-        // we need a function to load files
+        // function to load json files
         var loadFile = function (filePath, done) {
             var xhr = new XMLHttpRequest();
             xhr.onload = function () { return done(this.response) }
             xhr.open("GET", filePath, true);
             xhr.send();
         }
+
+        // load course_list data
+        loadFile("xx/courses_list", function (response) {
+            course_json.push(JSON.parse(response).data);
+            // console.log(course_json);
+            course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
+        })
+        loadFile(`xx/${course_selected}`, function (response) {
+            class_json.push(JSON.parse(response));
+            // console.log(class_json);
+            class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
+        })
+        loadFile(`https://spm-lms.herokuapp.com/retrieve_course_learners/${course_selected}`, function (response) {
+            learners_json.push(JSON.parse(response));
+            //console.log(learners_json);
+            learners_json = window.localStorage.setItem("learners_json", JSON.stringify(learners_json));
+        })
+
+
+        /* section 1: load files*/
+        
+
         // paths to all of your files
         var myFiles = [ "../course_list.json", "../learners-v2.json"];
         var jsonData = [];
@@ -108,14 +143,28 @@
             }
         )});
 
-        console.log(jsonData);
+        function getData() {
+             // get course, class data
+             course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
+             // console.log("course_ls: ", course_ls);
+             class_ls = JSON.parse(window.localStorage.getItem("class_json"))[0][course_selected][0];
+             // console.log("classs_ls: ", class_ls);
+             learner_ls = JSON.parse(window.localStorage.getItem("learners_json"))[0][course_selected];
+             // console.log("learners_ls: ", learner_ls);
+        }
 
         /* section 2: get course details */
         function getCourseDetails() {
+            console.log("course_ls: ", course_ls);
+            console.log("learner_ls: ", learner_ls);
+            console.log(preassign_learners.length)
+           
             // global variables
-            const course_ls = jsonData[0].courses;
-            const class_ls = jsonData[0].course_classes;
-            const learner_ls = jsonData[1][course_selected];
+            const old_course_ls = jsonData[0].courses;
+            const old_class_ls = jsonData[0].course_classes;
+            const old_learner_ls = jsonData[1][course_selected];
+            console.log("old course_ls", course_ls);
+            console.log("old class_ls", class_ls);
             
             // registered
             var reg_ls = learner_ls.registered_learners;
@@ -124,6 +173,7 @@
             for (var j = 0; j < course_ls.length; j++) { 
                 var c_id = course_ls[j].course_id;
                 if (course_selected == c_id) { 
+                    console.log("c_id", c_id)
                     var c_name = course_ls[j].course_name;
                     var c_desc = course_ls[j].course_description;
                     break
@@ -157,7 +207,7 @@
                     <td class="text-center align-middle">${name}</td>
                     <td class="text-center align-middle">${id}</td>
                     <td class="text-center align-middle">${app_dt}</td>
-                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Assign</p></td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
 
                     <td><i class="fa bi bi-chevron-double-right" ></i></td>
                     
@@ -167,7 +217,7 @@
 
                         <td class="text-center align-middle">${name}</td>
                         <td class="text-center align-middle">${id}</td>
-                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})">Assign</p></td>
+                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Approve</p></td>
 
                         <td><i class="fa bi bi-chevron-double-right" ></i></td>
 
@@ -182,8 +232,15 @@
         function getClassDropdown() { 
             // var class_dropdown = document.getElementById('class_dropdown');
             const class_ls = jsonData[0].course_classes[course_selected];
-            console.log(`class ls: ${class_ls}`);
-            console.log(`num of class: ${class_ls.length}`)
+            // console.log(class_ls);
+            
+            // get dropdown value
+            // var options = [];
+            // for (var i=0; i<class_ls.length; i++) {
+            //     var class_name = value['class_name'];
+            //     options.push(class_name);
+            // }
+            // console.log(options);
 
             var class_dropdown = `<option selected value="All">All</option>`;
             for(var i = 0; i < class_ls.length; i++) {
@@ -226,9 +283,11 @@
     var class_ID; 
 
         function getLearnersOfClass(class_id) { 
+            console.log("enrolled_learners", learner_ls.enrolled_learners)
             class_ID = class_id;
             const learner_ls = jsonData[1][course_selected];
             var preassigned_ls = learner_ls.preassign_learners;
+            
             document.getElementById("app_dt").classList.add("d-none");
 
 
@@ -307,7 +366,7 @@
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
                                             <td class="text-center align-middle">${app_dt}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Approve</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id})" id="${id}">Approve</p></td>
 
                                             </tr>`;
                     }
@@ -363,7 +422,7 @@
 
                                             <td class="text-center align-middle">${name}</td>
                                             <td class="text-center align-middle">${id}</td>
-                                            <td class="text-center align-middle my-auto"><p class='btn-danger btn rounded-pill align-middle my-auto' onclick="withdraw_learners(${id}, ${class_id})" id="${id}">Withdraw</p></td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="withdraw_learners(${class_id}, ${id})" id="${id}">Approve</p></td>
 
                                             </tr>`;
                     }
@@ -377,7 +436,6 @@
             }
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
-            
         }
           
 
@@ -413,35 +471,81 @@
 
                 <td class="text-center align-middle">${name}</td>
                 <td class="text-center align-middle">${id}</td>
-                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Assign</p></td>
+                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id})" id="${id}">Assign</p></td>
 
                 </tr>`;
             }
             
             // update table with data
             document.getElementById("learners_list").innerHTML = record;
-            console.log(record);
-            console.log('hi');
         }
 
-        function approve_learners(emp_id, class_id) {
+        function approve_learners() {
         // updates database by removing record from registered + adding record to enrolled
-            var course_id = course_selected;
-            console.log("APPROVE: ", course_id, emp_id, class_id);
-             // update the table data on both preassign and enrolled || registered and enrolled
+            // update the table data on both preassign and enrolled || registered and enrolled
             
             
             // send a json to backend - {emp_id: "", course_id: "", class_id: ""}
+            
 
-        //refresh page
+        //refresh page OR invoke getAllRegisteredLearners()
         } 
 
         function preassign_learners() {
         // updates database by removing record from preassigned + adding record to ...??? (not sure)
+
+        //refresh page OR invoke getAllPreassignLearners()
+
         }
 
-        function withdraw_learners() {
+        function withdraw_learners(class_id, emp_id) { 
             //updates database by removing record from enrolled
+            var course_id = course_selected;
+
+            // AJAX call to invoke update of Learner's table in database to change available_slots
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("withdrawal of learners is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("withdrawal of learners failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request.open("PUT", url, true);
+            request.send(emp_id, course_id, class_id); // to do
+            
+            // AJAX call to invoke deletion of record from enrolled learners table in database
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("withdrawal of learners is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("withdrawal of learners failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request.open("DELETE", url, true);
+            request.send(emp_id, course_id, class_id); // to do
+
+            // refresh page OR invoke getAllEnrolledLearners()
+            getAllEnrolledLearners();
+
         }
 
 
