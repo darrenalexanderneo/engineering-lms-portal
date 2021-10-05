@@ -98,7 +98,7 @@
         var course_ls = [];
         var class_ls = [];
         var learner_ls = [];
-        //var alert_msg = '';
+        var alert_msg = '';
 
         var class_filter = 'all';
         var learner_type = 'preassign';
@@ -365,7 +365,6 @@
             var url = update_type == "assign" ? 'http://192.168.1.71:5000/assign_course' : 'http://192.168.1.71:5000/withdraw_course';
             var method = update_type == "assign" ? 'POST' : 'PUT';
             console.log(url, method);
-            var alert_msg = '';
 
             // AJAX call to invoke update of Learner's table in database to change available_slots: assign_course, withdraw_course
             var request = new XMLHttpRequest();
@@ -378,19 +377,25 @@
                     console.log("readystate: ", this.readyState, this.status);
                     if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
                         var obj = JSON.parse(this.response);
-
                         alert_msg = `${update_type} of learners is successful`;
+                        var message = `Successfully ${update_type} the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
                         console.log(`${update_type} of learners is successful`);
-
                         document.getElementById("learners_list").innerHTML = message; // to do
-                        
-                        alert(alert_msg);
+
+                        // alert storage
+                        window.localStorage.setItem("alert_msg", alert_msg);
+                        console.log('reload', localStorage['alert_msg']);
+                        alert(localStorage['alert_msg']);
                         reload();
-                    } else if (this.readyState == 4 && (this.status == 404 || this.status == 500)) {
+                    } else if (this.readyState == 4 && this.status == 404) {
                         alert_msg = `${update_type} of learners failed`, "error: ", this.statusText;
                         console.log(`${update_type} of learners failed`, "error: ", this.statusText);
+
+                        // alert storage
+                        window.localStorage.setItem("alert_msg", alert_msg);
+                        console.log('reload', localStorage['alert_msg']);
+                        alert(localStorage['alert_msg']);
                         
-                        alert(alert_msg);
                         reload(); // location.reload(true);
                    
                     }
