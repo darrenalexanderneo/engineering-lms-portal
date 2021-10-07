@@ -88,7 +88,9 @@
     </div>
     
     <!-- javascript -->
+    <script type="module" src="../../static/js/env.js"></script>
     <script>
+        
         // get the course selected
         const course_selected = localStorage['course_selected'];
         console.log('course selected: ' + course_selected);
@@ -138,17 +140,17 @@
         }
 
         // load course_list data
-        loadFile("http://192.168.1.71:5000/courses_list", function (response) {
+        loadFile(`${env.COURSE_LIST_URL}`, function (response) {
             course_json.push(JSON.parse(response).data);
             // console.log(course_json);
             course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
         })
-        loadFile(`http://192.168.1.71:5000/course_classes/${course_selected}`, function (response) {
+        loadFile(`${env.CLASS_PARTIAL_URL}${course_selected}`, function (response) {
             class_json.push(JSON.parse(response));
             // console.log(class_json);
             class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
         })
-        loadFile(`http://192.168.1.71:5000/retrieve_course_learners/${course_selected}`, function (response) {
+        loadFile(`${env.COURSE_DETAILS_PARTIAL_URL}${course_selected}`, function (response) {
             learners_json.push(JSON.parse(response));
             //console.log(learners_json);
             learners_json = window.localStorage.setItem("learners_json", JSON.stringify(learners_json));
@@ -424,13 +426,6 @@
             // location.reload(true);
         }
 
-        updateLearners(update_type, emp_id, class_id).then( function () { 
-            console.log('424');
-            // console.log('reload', localStorage['alert_msg']);
-            // location.reload(true);
-            alert(localStorage['alert_msg']);
-        });
-        
         
 
 

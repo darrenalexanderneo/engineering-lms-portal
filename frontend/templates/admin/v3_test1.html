@@ -62,11 +62,18 @@
     
 </body>
    
-
-    
-    <!-- <script src="../../static/js/learners.js"></script> -->
-
+    <!-- require.js -->
+    <script type="module" src="../../static/js/env.js"></script>
     <script>
+    // env file: without preload
+    /*
+    require('dotenv').config({
+        path: `${_dirname}/.env.${process.env.NODE_ENV}`
+    });
+    console.log(`DIRECTORY: ${_dirname}/.env.${process.env.NODE_ENV}`);
+    console.log("TEST: ", process.env.NUMBER);
+    */
+
     // global variables
     //var course_name_ls = [];
     var course_json = [];
@@ -81,7 +88,7 @@
     }
 
     // load course_list data
-    loadFile('http://192.168.1.71:5000/courses_list', function (response) {
+    loadFile(`${env.COURSE_LIST_URL}`, function (response) {
         course_json.push(JSON.parse(response).data);
         //console.log(course_json);
         course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
@@ -144,5 +151,8 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    
+    
+
 </body>
 </html>
