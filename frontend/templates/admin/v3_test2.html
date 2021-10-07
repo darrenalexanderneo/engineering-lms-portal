@@ -88,7 +88,7 @@
     </div>
     
     <!-- javascript -->
-    <script type="module" src="../../static/js/env.js"></script>
+    <script type="module" src="../../static/js/testing.js"></script>
     <script>
         
         // get the course selected
@@ -139,22 +139,7 @@
             xhr.send();
         }
 
-        // load course_list data
-        loadFile(`${env.COURSE_LIST_URL}`, function (response) {
-            course_json.push(JSON.parse(response).data);
-            // console.log(course_json);
-            course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
-        })
-        loadFile(`${env.CLASS_PARTIAL_URL}${course_selected}`, function (response) {
-            class_json.push(JSON.parse(response));
-            // console.log(class_json);
-            class_json = window.localStorage.setItem("class_json", JSON.stringify(class_json));
-        })
-        loadFile(`${env.COURSE_DETAILS_PARTIAL_URL}${course_selected}`, function (response) {
-            learners_json.push(JSON.parse(response));
-            //console.log(learners_json);
-            learners_json = window.localStorage.setItem("learners_json", JSON.stringify(learners_json));
-        })
+        
 
         function goBack() {
             location.href = 'v3_test1.html';

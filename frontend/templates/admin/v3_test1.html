@@ -63,7 +63,8 @@
 </body>
    
     <!-- require.js -->
-    <script type="module" src="../../static/js/env.js"></script>
+    <!-- <script type="module" src="../../static/js/env.js"></script> -->
+    <script type="module" src="../../static/js/testing1.js"></script>
     <script>
     // env file: without preload
     /*
@@ -78,21 +79,14 @@
     //var course_name_ls = [];
     var course_json = [];
 
-    // function to load json files
-    var loadFile = function (filePath, done) {
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = false;
-        xhr.onload = function () { return done(this.response) }
-        xhr.open("GET", filePath, true);
-        xhr.send();
-    }
-
     // load course_list data
+    /*
     loadFile(`${env.COURSE_LIST_URL}`, function (response) {
         course_json.push(JSON.parse(response).data);
         //console.log(course_json);
         course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
     })
+    */
 
     
     function getAllCourses() { 
