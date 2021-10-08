@@ -17,7 +17,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getAllCourses()">
+<body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -64,89 +64,24 @@
    
     <!-- require.js -->
     <!-- <script type="module" src="../../static/js/env.js"></script> -->
+    <script src="../../static/js/test1_functions.js"></script>
     <script type="module" src="../../static/js/testing1.js"></script>
     <script>
-    // env file: without preload
-    /*
-    require('dotenv').config({
-        path: `${_dirname}/.env.${process.env.NODE_ENV}`
-    });
-    console.log(`DIRECTORY: ${_dirname}/.env.${process.env.NODE_ENV}`);
-    console.log("TEST: ", process.env.NUMBER);
-    */
-
-    // global variables
-    //var course_name_ls = [];
-    var course_json = [];
-
-    // load course_list data
-    /*
-    loadFile(`${env.COURSE_LIST_URL}`, function (response) {
-        course_json.push(JSON.parse(response).data);
-        //console.log(course_json);
-        course_json = window.localStorage.setItem("course_json", JSON.stringify(course_json));
-    })
-    */
-
-    
-    function getAllCourses() { 
-        document.getElementById("course_list").innerHTML = "";
-
-        // get course data
-        course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
-        console.log("course_ls: ", course_ls);
-
-        // get course_id
-        /*for (var i = 0; i < course_ls.length; i++) { 
-            var course_id = course_ls[i]['course_id'];
-            course_name_ls.push(course_id);
-        }
-        console.log(course_name_ls);*/
-        
-        //
-        var record = '';
-        for (var i = 0; i < course_ls.length; i++) {
-            // declare variables
-            var course_avail = 0;
-
-            // get course details
-            var course_name = course_ls[i].course_name;
-            var course_id = course_ls[i].course_id;
-            var num_of_classes = course_ls[i].num_of_class;
-            var total_slot_avail = course_ls[i].slot_available;
-
-
-            // input row details
-            record += `<tr onclick="getAllLearners(this.id)" id="${course_id}"><a href="#">
-
-                <td class="text-center align-middle">${course_id}</td>
-                <td class="text-center align-middle">${course_name}</td>
-                <td class="text-center align-middle">${num_of_classes}</td>
-                <td class="text-center align-middle">${total_slot_avail}</td>
-
-                <td><i class="fa bi bi-chevron-double-right" ></i></td>
-                
-            </a></tr>`;
-        }
-        
-        // update table with data
-        document.getElementById("course_list").innerHTML = record;
-    }
-
-    // when course is clicked, direct to another page
-    function getAllLearners(id) {
-        
-        localStorage.setItem('course_selected', id);
-        var course_selected = localStorage['course_selected'];
+          // when course is clicked, direct to another page
+      function getAllLearners(id) {
+        const storage = window.localStorage;
+        storage.setItem('course_selected', id);
+        const course_selected = storage.getItem('course_selected');
         console.log(course_selected);
+        
+
         location.href = "v3_test2.html";
     }
     </script>
 
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-    
-    
 
 </body>
 </html>
