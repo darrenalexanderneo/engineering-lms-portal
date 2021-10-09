@@ -8,7 +8,7 @@ __pycache__/
 
 
 # sql files
-spm_lms.sql
+*.sql
 # Distribution / packaging
 .Python
 build/

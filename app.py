@@ -4,13 +4,16 @@ from flask import Flask, json, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
+from datetime import datetime
 
 # Database connection
 
 # EC2 DB port is 3306 instead, change accordingly.
 app = Flask(__name__)
 # EC2 DB port is 3306 instead, change accordingly.
-app.config['SQLALCHEMY_DATABASE_URI'] = config('dbURL') or environ.get("dbURL")
+# app.config['SQLALCHEMY_DATABASE_URI'] = config('dbURL') or environ.get("dbURL")
+app.config['SQLALCHEMY_DATABASE_URI'] = config('localURL') or environ.get('localURL')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
                                            'pool_recycle': 280}
@@ -19,162 +22,95 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-
-class Role(db.Model):
-    __tablename__ = "role"
-    
-    role_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    role_desc = db.Column(db.String(50), nullable=False)
-
-    def json(self):
-        role_info = {
-            'role_id': self.role_id,
-            'role_desc': self.role_desc 
-        }
-
-        return role_info
-    
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
-
-
-class Courses(db.Model):
-    __tablename__ = "courses"
-    course_id = db.Column(db.String(10), primary_key=True)
-    course_name = db.Column(db.String(50), nullable=False)
-    course_desc = db.Column(db.String(255), nullable=False)
-    prerequisite = db.Column(db.Integer, nullable=False)
-
-    def json(self):
-        course_info = {
-            'course_id' : self.course_id,
-            'course_name': self.course_name,
-            'course_desc': self.course_desc,
-            'prerequisite':self.prerequisite
-
-        }
-
-        return course_info
-
-class Classes(db.Model):
-    __tablename__ = "classes"
-    class_id = db.Column(db.String(10), primary_key=True)
-    course_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    start_date = db.Column(db.String(50),nullable=False)
-    end_date = db.Column(db.String(50),nullable=False)
-    slots_available = db.Column(db.Integer, nullable=False)
-    class_size = db.Column(db.Integer, nullable=False)
-
-    def get_num_of_class(counter):
-        counter+=1
-        return counter
-    
-    def get_slot_available(slot_available,total):
-        return total + slot_available
-
-    def compute_slot_available(string,slot_available):
-        if(string == "Assign"):
-            updated_slot_available = slot_available- 1
-        elif(string == "Withdraw"):
-            updated_slot_available = slot_available + 1
-        return updated_slot_available
-
-    def json(self):
-        classes_info = {
-            'class_id' : self.class_id,
-            'course_id': self.course_id,
-            'start_date' : self.start_date,
-            'end_date' :self.end_date,
-            'slots_available': self.slots_available,
-            'class_size': self.class_size
-        }
-        return classes_info
-
-
-class Registration(db.Model):
-    __tablename__ = "registration"
-    course_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    reg_start_date = db.Column(db.String(50), nullable=False)
-    reg_end_date = db.Column(db.String(50), nullable=False)
-    class_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    
-    
-    def json(self):
-        registration_info = {
-            'course_id' : self.course_id,
-            'reg_start_date': self.reg_start_date,
-            'reg_end_date' :self.reg_end_date,
-            'class_id':self.class_id
-        }
-        return registration_info
-
-class Course_Registration(db.Model):
-    __tablename__ = "course_registration"
-    course_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    class_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    emp_id = db.Column(db.String(10),primary_key=True, nullable=False)
-    pre_assigned = db.Column(db.Integer,nullable=False)
-    
-    def json(self):
-        course_registration_info = {
-            'course_id' : self.course_id,
-            'class_id':self.class_id,
-            'emp_id': self.emp_id,
-            'pre_assigned' : self.pre_assigned
-        }
-        return course_registration_info
-
-
-class Trainers_Course(db.Model):
-    __tablename__ = "trainers_course"
-    course_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    class_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    emp_id = db.Column(db.String(10), primary_key=True, nullable=False)
-    
-    def json(self):
-        trainers_course_info = {
-            'course_id' : self.course_id,
-            'class_id':self.class_id,
-            'emp_id': self.emp_id
-        }
-        return trainers_course_info
-
 class Employee(db.Model):
     __tablename__ = "employee"
     emp_id = db.Column(db.String(10),primary_key=True, nullable=False)
     emp_name = db.Column(db.String(50), nullable=False)
-    role_id = db.Column(db.String(50),nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'employee'
     }
 
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
-    # def json(self):
-    #     employee_info = {
-    #         'emp_id' : self.emp_id,
-    #         'emp_name': self.emp_name,
-    #         'role_id': self.role_id
-  
-    #     }
-    #     return employee_info
+    def json(self):
+        employee_info = {
+            'emp_id': self.emp_id,
+            'emp_name': self.emp_name
+        }
+        return employee_info
+    
+    # def getName(self):
+    #     return self.emp_name
+    
+    # def getEmpId(self):
+    #     return self.emp_id
+
+class Senior_Engineer(Employee):
+    __tablename__ = "senior_engineer"
+    emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'senior_engineer',
+    }
+    
+class Engineer(Employee):
+    __tablename__ = "engineer"
+    emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
+
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'engineer',
+    }
+
+class Trainer(db.Model):
+    __tablename__ = "trainer"
+    emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'), nullable=False)
+    trainer_id =  db.Column(db.String(10), primary_key=True, nullable=False)
+
+
+
+
+class Learner(db.Model):
+    __tablename__ = "learner"
+    emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'), nullable=False)
+    learner_id =  db.Column(db.String(10), primary_key=True, nullable=False)
+
+    # def getEmpId(self):
+    #     return self.emp_id
+
+
+class Completion_Record(db.Model):
+    __tablename__ = "completion_record"
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+
+class Course(db.Model):
+    __tablename__ = "course"
+    course_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    course_name = db.Column(db.String(50), nullable=False)
+    course_desc = db.Column(db.String(255), nullable=False)
+    prerequisite = db.Column(db.Integer, nullable=False)
+
+    def json(self):
+        Course_info = {
+            'course_id': self.course_id,
+            'course_name': self.course_name,
+            'course_desc': self.course_desc,
+            'prerequisite': self.prerequisite
+        }
+        return Course_info
+
+    # def getCourseName(self):
+    #     return self.course_name
+    
+    # def getCourseDesc(self):
+    #     return self.course_name
+        
+    # def getPrerequisite(self):
+    #     return self.prerequisite
+    
+    # def getCourseId(self):
+    #     return self.course_id
+
 
 
 class Course_Prerequisite(db.Model):
@@ -183,112 +119,166 @@ class Course_Prerequisite(db.Model):
     prereq_course_id = db.Column(db.String(10),primary_key=True, nullable=False)
 
 
+class Class_Run(db.Model):
+    __tablename__ = "class_run"
+
+    # Assuming class_id contains information of the course itself, thus it can be a singular primary key (Important, let team know.)
+    class_id = db.Column(db.String(10), primary_key=True)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), primary_key=True, nullable=False)
+    class_start_date = db.Column(db.String(50),nullable=False)
+    class_end_date = db.Column(db.String(50),nullable=False)
+    reg_start_date = db.Column(db.String(50),nullable=False)
+    reg_end_date = db.Column(db.String(50),nullable=False)
+
+    # Just slots available is enough, don't need class_size.
+    slots_available = db.Column(db.Integer, nullable=False)
+
+    def check_available_date(self):
+        now = datetime.now()
+        ## double check
+        dt_string = now.strftime("%Y-%m-%d")
+        if(self.reg_start_date <= dt_string <= self.reg_end_date):
+            return True
+        return False
     
-    def json(self):
-        course_prereq_info = {
-            'course_id' : self.course_id,
-            'prereq_course_id': self.prereq_course_id,
-  
-        }
-        return course_prereq_info
+    def compute_total_slot_available(self,total_slot_available):
+        return total_slot_available + self.slots_available
 
+    
+    def compute_slot_available(self,string):
+        if(string == "Assign"):
+            self.slots_available = self.slots_available- 1
+        elif(string == "Withdraw"):
+            self.slots_available = self.slots_available + 1
+        #return self.slots_available
 
-class Trainers(Employee):
-    __tablename__ = "trainers"
-    emp_id = db.Column(db.String(10), db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
-    course_id = db.Column(db.String(10),nullable=False, primary_key=True)
-    class_id= db.Column(db.String(10), nullable=False, primary_key=True)
-    completed= db.Column(db.Integer, nullable=False)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'trainers',
-    }
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
 
     def json(self):
-        trainers_info = {
-            'emp_id': self.emp_id,
-            'course_id': self.course_id,
+        class_run_info = {
             'class_id': self.class_id,
-            'completed': self.completed
-  
-        }
-        return trainers_info
-
-class Learners(db.Model):
-    __tablename__ = "learners"
-    emp_id = db.Column(db.String(10) ,db.ForeignKey('employee.emp_id'),primary_key=True, nullable=False)
-    course_id = db.Column(db.String(10),nullable=False, primary_key=True)
-    class_id = db.Column(db.String(10),nullable=False, primary_key=True)
-    completed = db.Column(db.Integer,nullable=False)
-    
-
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'learners',
-    }
-
-    def __init__(self,emp_id,course_id,class_id,completed):
-        self.emp_id = emp_id
-        self.course_id = course_id
-        self.class_id = class_id
-        self.completed = completed
-
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
-    
-    def json(self):
-        learners_info = {
-            'emp_id': self.emp_id,
             'course_id': self.course_id,
-            'class_id': self.class_id,
-            'completed' : self.completed,
-  
+            'class_start_date': self.class_start_date,
+            'class_end_date': self.class_end_date,
+            'reg_start_date': self.reg_start_date,
+            'reg_end_date': self.reg_end_date
         }
-        return learners_info
+        return class_run_info
+
+class Trainer_Record(db.Model):
+    __tablename__ = "trainer_record"
+    class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
+    trainer_id =  db.Column(db.String(10), db.ForeignKey('trainer.trainer_id'), primary_key=True, nullable=False)
 
 
 
-@app.route("/classes")
-def get_class_list():
-    classes = Classes.query.all()
-    if len(classes):
+class Class_Record(db.Model):
+    __tablename__ = "class_record"
+    class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+
+class Registration(db.Model):
+    __tablename__ = "registration"
+    class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+    reg_date = db.Column(db.String(50),nullable=False)
+
+    def get_current_date():
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+        print(current_date)
+        return current_date
+
+    # def getClassId(self):
+    #     return self.class_id
+    
+    # def getCourseId(self):
+    #     return self.course_id
+    # def getLearnerId(self):
+    #     return self.learner_id
+    # def getRegDate(self):
+    #     return self.reg_date
+
+
+
+db.create_all()
+
+
+
+@app.route("/course_classes/<string:course_id>")
+def retrieve_course_class(course_id):
+    #registration, course, class table # course_id etc
+
+    
+    # course = Course.query.filter_by(course_id = course_id).first()
+    # course_name = course.course_name
+    class_run_list = Class_Run.query.filter_by(course_id = course_id).all()
+
+    if(len(class_run_list)):
+        class_run_array = []
+        for class_run in class_run_list:
+            is_registration = class_run.check_available_date()
+            if is_registration:
+                class_run_array.append(class_run)
+    return jsonify(
+        {
+            'code': 200,
+                course_id: [class_run.json() for class_run in class_run_array]
+
+        }
+    )
+
+
+@app.route("/courses_list")
+def retrieve_all_courses():
+    array = []
+    course_list = Course.query.all() # course_id etc
+    
+    if len(course_list):
+        for course in course_list:
+            course_name = course.course_name
+            course_id = course.course_id
+            course_description = course.course_desc
+            class_run_list = Class_Run.query.filter_by(course_id=course_id).all()
+            if len(class_run_list):
+                #got class
+                class_counter = 0
+                total_slot_available = 0
+                for class_run in class_run_list:
+                    is_registration = class_run.check_available_date()
+                    if is_registration:
+                        #means allow to display 
+                        total_slot_available = class_run.compute_total_slot_available(total_slot_available)
+                        class_counter+=1
+                
+            value = {
+                "course_name": course_name,
+                "course_id":course_id,
+                "course_description":course_description,
+                "total_slot_available":total_slot_available,
+                "num_of_class": class_counter
+            }
+
+            array.append(value)
+
+        
         return jsonify(
             {
                 'code': 200,
                 'data': {
-                    "Classes": [class_one.json() for class_one in classes]
+                    "courses": [course for course in array]
                 }
             }
         )
 
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no raffle companies."
-    }
-    ), 404
+
+
 
 @app.route("/courses")
 def get_course_list():
-    course_list = Courses.query.all()
+    course_list = Course.query.all()
     print(course_list)
     if len(course_list):
         return jsonify(
@@ -308,401 +298,8 @@ def get_course_list():
     ), 404
 
 
-@app.route("/course_prerequisite")
-def get_course_prerequisite_list():
-    course_prerequisites = Course_Prerequisite.query.all()
-    if len(course_prerequisites):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "course_prerequisites": [course_prerequisite.json() for course_prerequisite in course_prerequisites]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no raffle companies."
-    }
-    ), 404
 
 
-@app.route("/course_registration")
-def get_course_registration_list():
-    course_registration_list = Course_Registration.query.all()
-    print(course_registration_list)
-    if len(course_registration_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "course_registrations": [course_registration.json() for course_registration in course_registration_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no course_registration."
-    }
-    ), 404
-
-@app.route("/employee")
-def get_employee_list():
-    employees = Employee.query.all()
-    print(employees)
-    if len(employees):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "employees": [employee.json() for employee in employees]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no employee."
-    }
-    ), 404
-
-
-@app.route("/learners")
-def get_learners_list():
-    learners = Learners.query.all()
-    print(learners)
-    if len(learners):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "learner": [learner.to_dict() for learner in learners]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no learner."
-    }
-    ), 404
-
-
-
-@app.route("/registration")
-def get_registration_list():
-    registration_list = Registration.query.all()
-    print(registration_list)
-    if len(registration_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "registration_list": [registration.json() for registration in registration_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no registration."
-    }
-    ), 404
-
-@app.route("/role")
-def get_role_list():
-    roles = Role.query.all()
-    if len(roles):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "roles": [role.json() for role in roles]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no raffle companies."
-    }
-    ), 404
-
-
-@app.route("/trainers")
-def get_trainer_list():
-    trainers = Trainers.query.all()
-    print(trainers)
-    if len(trainers):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "trainers": [trainer.to_dict() for trainer in trainers]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no trainer."
-    }
-    ), 404
-
-
-
-@app.route("/trainers_course")
-def get_trainers_course_list():
-    trainer_course_list = Trainers_Course.query.all()
-    print(trainer_course_list)
-    if len(trainer_course_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "trainer_course_list": [trainer_course.json() for trainer_course in trainer_course_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no trainer to courses."
-    }
-    ), 404
-#------------------------------up top clear------------------------------------
-
-
-
-
-
-
-
-@app.route("/course_reg_period")
-def get_course_reg_period_list():
-    course_reg_period_list = Course_Reg_Period.query.all()
-    print(course_reg_period_list)
-    if len(course_reg_period_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "course_reg_periods": [course_reg_period.json() for course_reg_period in course_reg_period_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no course_reg_period."
-    }
-    ), 404
-
-
-
-@app.route("/course_emp_assignment")
-def get_course_emp_assignment_list():
-    course_emp_assignment_list = Course_Emp_Assignment.query.all()
-    print(course_emp_assignment_list)
-    if len(course_emp_assignment_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "course_emp_assignments": [course_emp_assignment.json() for course_emp_assignment in course_emp_assignment_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no course_emp_assignment."
-    }
-    ), 404
-
-
-@app.route("/course_class")
-def get_course_class_list():
-    course_class_list = Course_Class.query.all()
-    print(course_class_list)
-    if len(course_class_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "course_classes": [course_class.json() for course_class in course_class_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no course_classes."
-    }
-    ), 404
-
-
-@app.route("/class_emp_assignment")
-def get_class_emp_assignment_list():
-    class_emp_assignment_list = Class_Emp_Assignment.query.all()
-    print(class_emp_assignment_list)
-    if len(class_emp_assignment_list):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "class_emp_assignment": [class_emp_assignment.json() for class_emp_assignment in class_emp_assignment_list]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no class_emp_assignment."
-    }
-    ), 404
-#------------------------------------------------------------------------------------------------
-
-
-
-
-########################################################################
-
-#homepage for learner
-#1API call : class [ID and name] + ccourses  [number of class + slot avaialble]
-@app.route("/courses_list")
-def retrieve_all_courses():
-    array = []
-    course_list = Courses.query.all() # course_id etc
-    
-    if len(course_list):
-        for course in course_list:
-            course_name = course.course_name
-            course_id = course.course_id
-            course_description = course.course_desc
-            class_list = Classes.query.filter_by(course_id=course_id).all()
-            if len(class_list):
-                #got class
-                class_counter = 0
-                slot_available = 0
-                for one_class in class_list:
-                    slot_available = Classes.get_slot_available(one_class.slots_available,slot_available)
-                    class_counter = Classes.get_num_of_class(class_counter)
-
-                # class_size = class_list[0].class_size
-                # number_of_class = len(class_list)
-                
-            value = {
-                "course_name": course_name,
-                "course_id":course_id,
-                "course_description":course_description,
-                "slot_available":slot_available,
-                "num_of_class": class_counter
-            }
-
-            array.append(value)
-
-        
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "courses": [course for course in array]
-                }
-            }
-        )
-
-
-
-
-
-
-@app.route("/retrieve_course/<string:course_id>")
-def retrieve_course(course_id):
-    prereq_array = []
-  
-    course = Courses.query.filter_by(course_id = course_id).first()
-    print("course is" + str(course))
-    if(not course):
-        return jsonify(
-            {
-                "code": 404,
-                "message": "Course id is incorrect."
-                }
-                ), 404
-    #course.course_name, course.course_id, course_desc
-   
-###################################NEED TO REMOVE COURSE.PREREQ == 0 ####################################
-    ########
-    if(course.prerequisite == 1):
-        #got prereq 
-        prereq_list = Course_Prerequisite.query.filter_by(course_id = course_id).all()
-        print("lengthh" + str(len(prereq_list)))
-        if(len(prereq_list)):
-            #go find prereq everything  -> prereq.prereq_course_id
-            for prereq in prereq_list: 
-                #find all the prereq 
-                pre_req_course = Courses.query.filter_by(course_id = prereq.prereq_course_id).first()
-                value = {
-                    "course_id": pre_req_course.course_id,
-                    "course_name":pre_req_course.course_name
-                }
-                prereq_array.append(value)
-    
-    return jsonify({
-        'code': 200,
-        'result': {
-            'course_title' :course.course_id + " - " + course.course_name,
-            'course_description' : course.course_desc,
-            'pre_req': [prereq for prereq in prereq_array]
-            }
-
-    })
-
-
-
-
-
-   
-@app.route('/registration/<string:course_id>')
-def retrieve_registration(course_id):
-    list_of_class = Registration.query.filter_by(course_id = course_id).all()
-    if len(list_of_class):
-        return jsonify(
-            {
-                'code': 200,
-                'data': {
-                    "classes": [class_info.json() for class_info in list_of_class]
-                }
-            }
-        )
-
-    return jsonify(
-    {
-        "code": 404,
-        "message": "There are no classes."
-    }
-    ), 404
-
-#2nd pages
-#course registration + course[description] +  
-#preassign tab -> select course registration where preassign = 1
-#registered tab -> select course_registration  where = 0 
-#enrolled tab -> learners table retrieve all based on the course
 
 @app.route('/retrieve_course_learners/<string:course_id>')
 def retrieve_course_learners(course_id):
@@ -711,46 +308,36 @@ def retrieve_course_learners(course_id):
     enrolled_learners_array = []
     registered_learners_array = []
 
-    course_registration_list = Course_Registration.query.filter_by(course_id = course_id, pre_assigned = 1).all()
+    ##for now remove preassign 
+
+
+    course_registration_list = Registration.query.filter_by(course_id = course_id).all()
     if(len(course_registration_list)):
         for  course_reg in course_registration_list:
-            employee = Employee.query.filter_by(emp_id = course_reg.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = course_reg.class_id,course_id = course_id).first()
-
-            string = {
-                "name": employee.emp_name,
-                "emp_id": course_reg.emp_id,
-                "class_name" : class_info.course_id + "_" + class_info.class_id,
-                "class_id":class_info.class_id
-            }
-            preassign_learners_array.append(string)
-
-
-    course_registration_list = Course_Registration.query.filter_by(course_id = course_id, pre_assigned = 0).all()
-    if(len(course_registration_list)):
-        for  course_reg in course_registration_list:
-            employee = Employee.query.filter_by(emp_id = course_reg.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = course_reg.class_id,course_id = course_id).first()
-
-            string = {
-                "name": employee.emp_name,
-                "emp_id": course_reg.emp_id,
-                "class_name" : class_info.course_id + "_" + class_info.class_id,
-                "class_id":class_info.class_id
-            }
-            registered_learners_array.append(string)
-
-    learners_lists = Learners.query.filter_by(course_id = course_id, completed = 0).all()
-    if(len(learners_lists)):
-        for  learner in learners_lists:
+            learner = Learner.query.filter_by(learner_id = course_reg.learner_id).first()
+            #get learner already find the emp id
             employee = Employee.query.filter_by(emp_id = learner.emp_id).first()
-            class_info = Classes.query.filter_by(class_id = learner.class_id,course_id = course_id).first()
+
 
             string = {
                 "name": employee.emp_name,
                 "emp_id": learner.emp_id,
-                "class_name" : class_info.course_id + "_" + class_info.class_id,
-                "class_id":class_info.class_id
+                "learner_id": course_reg.learner_id,
+                "class_id":course_reg.class_id
+            }
+            registered_learners_array.append(string)
+
+    class_record_list = Class_Record.query.filter_by(course_id = course_id).all()
+    if(len(class_record_list)):
+        for  class_record in class_record_list:
+            learner = Learner.query.filter_by(learner_id = class_record.learner_id).first()
+            #get learner already find the emp id
+            employee = Employee.query.filter_by(emp_id = learner.emp_id).first()
+            string = {
+                "name": employee.emp_name,
+                "emp_id": learner.emp_id,
+                "learner_id": class_record.learner_id,
+                "class_id":class_record.class_id
             }
             enrolled_learners_array.append(string)
     
@@ -767,241 +354,139 @@ def retrieve_course_learners(course_id):
     )
 
 
-@app.route("/course_classes")
-def retrieve_course_classes():
-    #registration, course, class table # course_id etc
-
-    result = []
-    
-    course_list = Courses.query.all()
-    for course in course_list:
-        course_name = course.course_name
-        course_id = course.course_id
-        registration_list = Registration.query.filter_by(course_id = course_id).all()
-        if(len(registration_list)):
-            registration_array = []
-            for registration in registration_list:
-                reg_start_date = registration.reg_start_date
-                reg_end_date= registration.reg_end_date
-                class_id = registration.class_id
-                one_class = Classes.query.filter_by(course_id = course_id, class_id =registration.class_id).first()
-                #retrieve all the class for this course based on registration
-                start_date = one_class.start_date
-                slots_available = one_class.slots_available
-
-                string = {
-                    "course_name" : course_name,
-                    "class_id" : class_id,
-                    "slots_available" : slots_available,
-                    "start_date" : start_date,
-                    "reg_start_date" : reg_start_date,
-                    "reg_end_date": reg_end_date
-                }
-
-                registration_array.append(string)
-        result_string = {
-            course_id : [result for result in registration_array]
-        }
-        result.append(result_string)
-    
-    return jsonify(
-        {
-            'code': 200,
-                "course_classes" : [result for result in result]
-
-        }
-    )  
-
-
-        
-@app.route("/course_classes/<string:course_id>")
-def retrieve_course_class(course_id):
-    #registration, course, class table # course_id etc
-
-    result = []
-    
-    course = Courses.query.filter_by(course_id = course_id).first()
-
-    course_name = course.course_name
-    course_id = course.course_id
-    registration_list = Registration.query.filter_by(course_id = course_id).all()
-    if(len(registration_list)):
-        registration_array = []
-        for registration in registration_list:
-            reg_start_date = registration.reg_start_date
-            reg_end_date= registration.reg_end_date
-            class_id = registration.class_id
-            one_class = Classes.query.filter_by(course_id = course_id, class_id =registration.class_id).first()
-            #retrieve all the class for this course based on registration
-            start_date = one_class.start_date
-            slots_available = one_class.slots_available
-
-            string = {
-                "course_name" : course_name,
-                "class_id" : class_id,
-                "slots_available" : slots_available,
-                "start_date" : start_date,
-                "reg_start_date" : reg_start_date,
-                "reg_end_date": reg_end_date
-            }
-
-            registration_array.append(string)
-
-    
-    return jsonify(
-        {
-            'code': 200,
-                course_id : [result for result in registration_array]
-
-        }
-    )
-                        
-
-
-
-
-@app.route("/assign_course", methods=['POST','PUT','DELETE'])
-def assign_to_course():
+#@app.route("/update_slot_available_for_class/<string:class_id>", methods=['PUT'])
+def update_slot_available_for_class(class_id,action):
+    #taking in the account if there is only unique class_id in the database table ONLY
     try:
-        data = request.get_json()
+        class_info = Class_Run.query.filter_by(class_id = class_id).first()
+        class_info.compute_slot_available(action)
+        db.session.commit()
+        return 200
+    except Exception as e:
+        return 501
+
+#@app.route("/delete_registration", methods=['DELETE'])
+def delete_registration(data):
+    try:
+        class_id = data["class_id"]
+        course_id = data["course_id"]
+        learner_id = data["learner_id"]
+        #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
+        registration = Registration.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
+        db.session.delete(registration)
+        db.session.commit()
+        return 200
+    except Exception as e:
+        return 502
+
+#@app.route("/insert_class_record")
+def insert_class_record(data):
+    try:
         print(data)
-        print(data['emp_id'])
-        print(data['course_id'])
         print(data['class_id'])
+        print(data['course_id'])
+        print(data['learner_id'])
 
         #def __init__(self,emp_id,course_id,class_id,completed):
-        learner = Learners(
-            emp_id=data['emp_id'],
-            course_id=data['course_id'],
+        class_record = Class_Record(
             class_id=data['class_id'],
-            completed= 0 
-
+            course_id=data['course_id'],
+            learner_id=data['learner_id']
         )
-        print(learner)
+        print(class_record)
+        db.session.add(class_record)
+        db.session.commit()
+        return 200
+    except Exception as e:
+        return 500
 
-        try:
-            db.session.add(learner)
-            db.session.commit()
+@app.route("/assign_course", methods=['POST'])
+def assign_to_course():
+    #insert into class record, update slot available, delete from registration
+    try:
+        data = request.get_json()
+        insert_code = insert_class_record(data)
+        #update slot available 
+        update_code = update_slot_available_for_class(data['class_id'],'Assign')
+        delete_code = delete_registration(data)
 
-        except Exception as e:
+        if(insert_code == 500 or update_code == 501 or delete_code ==502):
             return jsonify(
-                {
-                    "code": 500,
-                    "message": "An error occurred while creating the order. " + str(e)
-                }
+            {
+                "insert_code": insert_code,
+                "update_code": update_code,
+                "delete_code": delete_code,
+                "message": "There is an problem performing the execution"
+            }
             ), 500
-
-        #need to reduce the class 
-        try:
-            class_info = Classes.query.filter_by(class_id = data['class_id'], course_id = data['course_id']).first()
-            update_slot_available = Classes.compute_slot_available('Assign',class_info.slots_available)
-            class_info.slots_available = update_slot_available
-            db.session.commit()
-
-        except Exception as e:
-            return jsonify(
-                {
-                    "code": 500,
-                    "message": "An error occur when update the slot " + str(e)
-                }
-            ), 500
-
-
-
-        #############need to do deletion fo this guy in the other compoenent
-        emp_id = data["emp_id"]
-        course_id = data["course_id"]
-        #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
-        course_registration = Course_Registration.query.filter_by(emp_id=emp_id,course_id = course_id,class_id = data['class_id']).first()
-        if learner:
-            try:
-                db.session.delete(course_registration)
-                db.session.commit()
-            except Exception as e:
-                return jsonify(
-                {
-                    "code": 500,
-                    "message": "An error occur when deleting the from course_registration " + str(e)
-                }
-            ), 500
-
         return jsonify(
-        {
-            "code": 201,
-            "result":"successfully assign",
-            "data_insert": learner.json(),
-            # "data_deleted": course_registration.json()
-        }
-    ), 201
+            {
+                "code": 200,
+                "message": "Successfully enrolled into the class."
+            }
+            ), 200
+
+
 
     except Exception as e:
-        jsonify(
+        return jsonify(
             {
                 "code": 500,
-                "message": "An error occurred while assigning. " + str(e)
+                "message": "An error occur when update the slot " + str(e)
             }
         ), 500
 
 
-
-
-@app.route("/withdraw_course", methods=['PUT','DELETE'])
-def withdraw_course():
-    data = request.get_json()
-    emp_id = data["emp_id"]
-    course_id = data["course_id"]
+def delete_class_record(data):
     class_id = data["class_id"]
-    #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
-    learner = Learners.query.filter_by(emp_id=emp_id,course_id = course_id,class_id = class_id).first()
-    if learner:
-        try:
-            db.session.delete(learner)
-            db.session.commit()
+    course_id = data["course_id"]
+    learner_id = data["learner_id"]
+    try:
+        class_record = Class_Record.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
+        db.session.delete(class_record)
+        db.session.commit()
+        return 200
+    except Exception as e:
+        return 500
+    
 
-            class_info = Classes.query.filter_by(class_id = data['class_id'], course_id = data['course_id']).first()
-            update_slot_available = Classes.compute_slot_available('Withdraw',class_info.slots_available)
-            class_info.slots_available = update_slot_available
-            db.session.commit()
-        except Exception as e:
+
+
+@app.route("/withdraw_course", methods=['PUT'])
+def withdraw_course():
+    try:
+        data = request.get_json()
+        delete_code = delete_class_record(data)
+        update_code = update_slot_available_for_class(data['class_id'],'Withdraw')
+        if(delete_code == 500 or update_code == 501):
             return jsonify(
             {
-                "code": 500,
-                "message": "There is an error withdrawing from the course" + str(e)
+                "delete_code": delete_code,
+                "update_code": update_code,
+                "message": "There is an problem performing the execution"
             }
-        ), 500
-    
-        #do update hereto increase slot available to 1
-        
+            ), 500
+            
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "message": "successful delete"
+                    "message": "successful withdraw from the course!"
                 }
             }
         )
-    return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "message": "error"
-            },
-            "message": "learner not found."
-        }
-    ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "message": "error"
+                },
+                "message": "learner not found."
+            }
+        ), 404
 
-    
-
-
-
-
-
-
-
-    
-
-
-
+############################################################################################################################
 if __name__ == '__main__':
     print("RUNNING TEST LETS GO")
     app.run(host='0.0.0.0', port=5000, debug=True)
