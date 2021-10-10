@@ -11,7 +11,7 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getData(); getCourseDetails(); getClassFilter(); displayLearnerDetails('all', 'preassign');">
+<body onload="getData(); getClassFilter(); displayLearnerDetails('all', 'preassign');">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -88,18 +88,20 @@
     </div>
     
     <!-- javascript -->
-    <script type="module" src="../../static/js/testing.js"></script>
+    <script type="module" src="../../static/js/testing2.js"></script>
     <script>
+
+        const storage = window.localStorage;
         
         // get the course selected
-        const course_selected = localStorage['course_selected'];
+        const course_selected = storage.getItem('course_selected');
         console.log('course selected: ' + course_selected);
-        var course_json = [];
-        var class_json = [];
-        var learners_json = [];
-        var course_ls = [];
-        var class_ls = [];
-        var learner_ls = [];
+        // var course_json = [];
+        // var class_json = [];
+        // var learners_json = [];
+        // var course_ls = [];
+        // var class_ls = [];
+        // var learner_ls = [];
         var alert_msg = '';
 
         var class_filter = 'all';
@@ -143,27 +145,55 @@
 
         function goBack() {
             location.href = 'v3_test1.html';
-            localStorage.clear();
+            storage.clear();
         }
 
+        var course_ls;
+        var class_ls;
+        var learner_ls;
+
+        function waitForLocalStorage(key, cb, timer) {
+                if (!storage.getItem(key)) {
+                    console.log(storage.getItem(key));
+                    return (timer = setTimeout(waitForLocalStorage.bind(null, key, cb), 800));
+                    }
+
+                clearTimeout(timer);
+
+                if (typeof(cb) !== 'function') {
+                    return storage.getItem(key);
+                    }   
+                console.log(storage.getItem(key));
+                return cb(storage.getItem(key));
+            } //set timeout to wait for Local Storage Session to be ready to "getItem()"
 
         function getData() {
              // get course, class data
-             course_ls = JSON.parse(window.localStorage.getItem("course_json"))[0]['courses'];
-             // console.log("course_ls: ", course_ls);
-             class_ls = JSON.parse(window.localStorage.getItem("class_json"))[0][course_selected];
-             // console.log("classs_ls: ", class_ls);
-             learner_ls = JSON.parse(window.localStorage.getItem("learners_json"))[0][course_selected];
-             // console.log("learners_ls: ", learner_ls);
+            if (waitForLocalStorage('learners_json') !== undefined) {
+                
+                //set timeout to wait for Local Storage Session to be ready to "getItem()"  
+                learner_ls = JSON.parse(storage.getItem("learners_json"))[`${course_selected}`];
+                console.log("learners_ls: ", learner_ls);
+            }
+            course_ls = JSON.parse(storage.getItem("course_json"))["courses"];
+             console.log("course_ls: ", course_ls);
+
+             class_ls = JSON.parse(storage.getItem("class_json"))[`${course_selected}`];
+             console.log("class_ls: ", class_ls);
 
              learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
              learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
              learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
              curr_num_of_learners = learner_ls.preassign_learners.length;
+            
+             if (course_ls && class_ls && learner_ls) {
+                 console.log("hello");
+                getCourseDetails();
+             }
 
         }
 
-        function getCourseDetails(class_id) {
+        function getCourseDetails() {
             // console.log("course_ls: ", course_ls);
             // console.log("class_ls: ", class_ls);
             console.log("learner_ls: ", learner_ls);
