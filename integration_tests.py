@@ -305,6 +305,67 @@ class TestDeleteRegistration(TestApp):
         db.session.add(registration)
         db.session.commit()
 
+    def test_delete_registration_failure(self):
+        data = {
+            "class_id":"BEM46SSS0_C4",
+            "course_id": "BEMSDS460",
+            "learner_id": "LNR1SD4"
+        }   
+        status = delete_registration(data) 
+        self.assertEqual(status, 502)
+
+class TestInsertClassRecord(TestApp):
+    def test_insert_class_record_success(self):
+        data = {
+            "class_id":"BEM460_C4",
+            "course_id": "BEM460",
+            "learner_id": "LNR14"
+        }  
+
+        status = insert_class_record(data)
+        self.assertEqual(status, 200)
+
+        #  Delete person off table
+        class_record = Class_Record.query.filter_by(class_id=data['class_id'], course_id=data['course_id'], learner_id=data['learner_id']).first()
+        db.session.delete(class_record)
+        db.session.commit()
+    
+    # We leave out learner_id
+    def test_insert_class_record_failure(self):
+        data = {
+            "class_id":"BEM460_C4",
+            "course_id": "BEM460"
+        }  
+
+        status = insert_class_record(data)
+        self.assertEqual(status, 500)
+    
+class TestInsertRegistration(TestApp):
+    def test_insert_registration_success(self):
+        data = {
+            "class_id":"BEM460_C4",
+            "course_id": "BEM460",
+            "learner_id": "LNR16"
+        }  
+
+        status = insert_registration(data)
+        self.assertEqual(status, 200)
+
+        # Reset the table
+        reg = Registration.query.filter_by(class_id=data['class_id'], course_id=data['course_id'], learner_id=data['learner_id']).first()
+        db.session.delete(reg)
+        db.session.commit()
+
+    def test_insert_registration_failure(self):
+        data = {
+            "class_id":"BEM460_C4",
+            "course_id": "BEM460",
+            "learner_id": "LNR14"
+        }  
+
+        status = insert_registration(data)
+        self.assertEqual(status, 500)
+
 
 if __name__ == '__main__':
     unittest.main()
