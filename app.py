@@ -68,7 +68,6 @@ class Trainer(db.Model):
 
 
 
-
 class Learner(db.Model):
     __tablename__ = "learner"
     emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'), nullable=False)
@@ -194,6 +193,8 @@ class Registration(db.Model):
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     reg_date = db.Column(db.String(50),nullable=False)
 
+
+    # Why must this be inside Reg class? Mmmm...
     def get_current_date():
         now = datetime.now()
         current_date = now.strftime("%Y-%m-%d")
@@ -212,14 +213,13 @@ class Registration(db.Model):
 
 
 
-db.create_all()
+# db.create_all()
 
 
 
 @app.route("/enroll_course_details/<string:course_id>")
 def retrieve_course_class(course_id):
     #registration, course, class table # course_id etc
-
     
     # course = Course.query.filter_by(course_id = course_id).first()
     # course_name = course.course_name
@@ -282,9 +282,6 @@ def retrieve_all_courses():
             }
         )
 
-
-
-
 @app.route("/courses")
 def get_course_list():
     course_list = Course.query.all()
@@ -305,8 +302,6 @@ def get_course_list():
         "message": "There are no course."
     }
     ), 404
-
-
 
 
 
@@ -382,15 +377,18 @@ def remove_class_run_by_learner_id(data):
         learner_id = data["learner_id"]
         #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
         registration_list = Registration.query.filter_by(course_id = course_id,learner_id = learner_id).all()
+
         if(len(registration_list)!= 0):
             for reg in registration_list:
                 #update_code = update_slot_available_for_class(reg.class_id,'Withdraw')
                 db.session.delete(reg)
                 db.session.commit()
-        return 200
+        else:
+            return 502
     except Exception as e:
         return 502
-
+    return 200
+    
 #@app.route("/delete_registration", methods=['DELETE'])
 def delete_registration(data):
     try:
@@ -425,7 +423,6 @@ def insert_class_record(data):
         return 200
     except Exception as e:
         return 500
-
 
 
 def insert_registration(data):
