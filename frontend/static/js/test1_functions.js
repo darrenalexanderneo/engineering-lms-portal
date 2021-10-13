@@ -78,15 +78,16 @@
         document.getElementById("course_list").innerHTML = record;
     }
     
+
     // when course is clicked, direct to another page
-    function getAllLearners(id) {
+    // function getAllLearners(id) {
         
-        storage.setItem('course_selected', id);
-        const course_selected = storage.getItem('course_selected');
-        console.log(course_selected);
+    //     asyncLocalStorage.setItem('course_selected', id);
+    //     const course_selected = asyncLocalStorage.getItem('course_selected');
+    //     console.log(course_selected);
         
-        location.href = "v3_test2.html";
-    }
+    //     location.href = "v3_test2.html";
+    // }
 
 
     // document.getElementById(course_id).addEventListener("click", getAllLearners(course_id));

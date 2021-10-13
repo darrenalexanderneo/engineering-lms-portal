@@ -68,10 +68,21 @@
     <script type="module" src="../../static/js/testing1.js"></script>
     <script>
           // when course is clicked, direct to another page
+      const storage = window.localStorage;
+    
+      const asyncLocalStorage = {
+            setItem: async function (key, value) {
+                await null;
+                return storage.setItem(key, value);
+            },
+            getItem: async function (key) {
+                await null;
+                return storage.getItem(key);
+            }
+        };
       function getAllLearners(id) {
-        const storage = window.localStorage;
-        storage.setItem('course_selected', id);
-        const course_selected = storage.getItem('course_selected');
+        asyncLocalStorage.setItem('course_selected', id);
+        const course_selected = asyncLocalStorage.getItem('course_selected');
         console.log(course_selected);
         
 
