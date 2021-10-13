@@ -367,14 +367,12 @@ class TestInsertRegistration(TestApp):
         self.assertEqual(status, 500)
 
 class TestAssignLearner(TestApp):
-    def test_assign_to_course(self):
-
+    def test_assign_to_course_success(self):
         request_body = {
             "class_id":"BEM460_C4",
             "course_id": "BEM460",
             "learner_id": "LNR14"
         }
-
 
         # Get a copy to reset later
         reg = Registration.query.filter_by(class_id=request_body['class_id'],course_id = request_body['course_id'],learner_id = request_body['learner_id']).first()
@@ -388,13 +386,10 @@ class TestAssignLearner(TestApp):
         data=json.dumps(request_body),
         content_type="application/json")
 
-
-        print("RESPONSE JSON FROM HERE IS!!! ")
-        print(response.json)
-
         self.assertEqual(response.status_code, 200)
 
         # Reset everything the above code has done
+
         #  Delete person off table
         class_record = Class_Record.query.filter_by(class_id=request_body['class_id'], course_id=request_body['course_id'], learner_id=request_body['learner_id']).first()
         db.session.delete(class_record)
@@ -412,7 +407,20 @@ class TestAssignLearner(TestApp):
 
         db.session.commit()
 
-    
+    def test_assign_to_course_invalid_input(self):
+        request_body = {
+            "class_id":"BEM460ZZ_C4"
+        }  
+
+        endpoint = "assign_learner"
+
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+
+        self.assertEqual(response.status_code, 500)
+        
+
 
 if __name__ == '__main__':
     unittest.main()

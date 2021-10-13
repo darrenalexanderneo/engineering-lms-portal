@@ -454,9 +454,13 @@ def assign_to_course():
     #insert into class record, update slot available, delete from registration
     try:
         data = request.get_json()
+
+        # Should immediately exit upon failing this line.....
         insert_code = insert_class_record(data)
+        
         #update slot available 
         update_code = update_slot_available_for_class(data['class_id'],'Assign')
+
         delete_code = delete_registration(data)
         #remove the rest if found in class_run
         remove_class_run = remove_class_run_by_learner_id(data)
@@ -476,7 +480,6 @@ def assign_to_course():
                 "message": "Successfully enrolled into the class."
             }
             ), 200
-
 
 
     except Exception as e:
