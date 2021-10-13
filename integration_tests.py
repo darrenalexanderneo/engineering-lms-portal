@@ -218,8 +218,8 @@ class TestLearnerByCourse(TestApp):
             "code": 200
         })
 
-class TestAssignLearner(TestApp):
-    def test_update_slot_available_for_class_pass(self):
+class TestUpdateSlotAvailableForClass(TestApp):
+    def test_update_slot_available_for_class_assign_pass(self):
     # You have to make sure when you change the db, you reset it to the original state.
     # Like for e.g. slots_available must be added back up.
         data = {
@@ -242,7 +242,7 @@ class TestAssignLearner(TestApp):
 
 
     # BM460_C5 don't exist
-    def test_update_slot_available_for_class_fail(self):
+    def test_update_slot_available_for_class_assign_fail(self):
         data = {
             "class_id":"BM460_C5",
             "course_id": "BEM460",
@@ -366,6 +366,53 @@ class TestInsertRegistration(TestApp):
         status = insert_registration(data)
         self.assertEqual(status, 500)
 
+class TestAssignLearner(TestApp):
+    def test_assign_to_course(self):
+
+        request_body = {
+            "class_id":"BEM460_C4",
+            "course_id": "BEM460",
+            "learner_id": "LNR14"
+        }
+
+
+        # Get a copy to reset later
+        reg = Registration.query.filter_by(class_id=request_body['class_id'],course_id = request_body['course_id'],learner_id = request_body['learner_id']).first()
+
+        # Get a copy to reset later
+        registration_list = Registration.query.filter_by(course_id = request_body['course_id'],learner_id = request_body['learner_id']).all()
+
+        endpoint = "assign_learner"
+
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+
+
+        print("RESPONSE JSON FROM HERE IS!!! ")
+        print(response.json)
+
+        self.assertEqual(response.status_code, 200)
+
+        # Reset everything the above code has done
+        #  Delete person off table
+        class_record = Class_Record.query.filter_by(class_id=request_body['class_id'], course_id=request_body['course_id'], learner_id=request_body['learner_id']).first()
+        db.session.delete(class_record)
+        db.session.commit()
+
+        class_info = Class_Run.query.filter_by(class_id = request_body['class_id']).first()
+        
+        # # Reset count 
+        class_info.slots_available += 1
+
+        # # Reset back the deletion
+        for reg in registration_list:
+            registration = Registration(class_id=reg.class_id, course_id=reg.course_id, learner_id=reg.learner_id, reg_date=reg.reg_date)
+            db.session.add(registration)
+
+        db.session.commit()
+
+    
 
 if __name__ == '__main__':
     unittest.main()

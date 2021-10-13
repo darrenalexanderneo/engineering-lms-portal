@@ -388,7 +388,6 @@ def remove_class_run_by_learner_id(data):
     except Exception as e:
         return 502
     return 200
-    
 #@app.route("/delete_registration", methods=['DELETE'])
 def delete_registration(data):
     try:
