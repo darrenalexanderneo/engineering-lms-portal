@@ -1,0 +1,16 @@
+
+
+.btn-outline-secondary {
+    border: none;
+    margin-left: 1rem;
+}
+
+/* information card */
+.card {
+    border: none;
+    border-radius: 10px
+}
+
+span {
+    margin-bottom: 30px;
+}
