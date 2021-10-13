@@ -504,7 +504,6 @@ def delete_class_record(data):
     
 
 
-
 @app.route("/withdraw_enrolled_learner", methods=['PUT'])
 def withdraw_course():
     try:
@@ -759,7 +758,6 @@ def register():
                 "message": "Successfully register for " + data['class_id'] + "."
             }
             ), 200
-
 
 
     except Exception as e:
