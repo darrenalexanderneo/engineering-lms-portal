@@ -144,3 +144,4 @@ profiler_output/
 # VSCode 
 **/.vscode/
 frontend/apikey.js
+frontend/apikey.json

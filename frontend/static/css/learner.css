@@ -1,8 +1,18 @@
+body {
+    font-family: 'Poppins';
+}
 
-
-.btn-outline-secondary {
-    border: none;
+button.btn-outline-light {
+    /* border: none; */
     margin-left: 1rem;
+}
+
+button.btn-outline-light:hover {
+    color: black;
+}
+
+button.btn.btn-outline-light.active {
+    color: black;
 }
 
 /* information card */
@@ -14,3 +24,9 @@
 span {
     margin-bottom: 30px;
 }
+
+img.card-img-top {
+    height: 100px;
+    object-fit: cover;
+}
+

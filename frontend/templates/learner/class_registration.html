@@ -11,29 +11,34 @@
     <!-- Bootstrap Font Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="../../static/css/learners.css">
+    <link rel="stylesheet" href="../../static/css/learner.css">
 
 
 
-    <title>Admin Portal - View Learners</title>
+    <title>Register for Classes</title>
 </head>
-<body onload="" style="background-color: #eee;">
+<body style="background-color: #eee;">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
-      <div class="my-2">
-        <button class="btn btn-outline-secondary text-white mx-2 active">Browse Course</button>
-        <button class="btn btn-outline-secondary text-white">View Status</button>
-      </div>
+        <div class="my-2">
+          <button onclick="goBackTo('viewcourses')" class="btn btn-outline-light ms-5 active">Browse Courses</button>
+          <button class="btn btn-outline-light">View/Change Status</button>
+        </div>
     </nav>
+    <br><br>
+
+    <div class="ms-5"><svg xmlns="http://www.w3.org/2000/svg"  onclick="goBackTo('viewcourses')" width="40" height="40" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+    </svg></div>
 
     <!-- course description -->
     <br><br>
     <div class="container">
-        <h2>IS110 Software Engineering Basics</h2>
+        <h2 id="course_name">IS110 Software Engineering Basics</h2>
         <h5 class="text-secondary">Description</h5>
-        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut diam quam nulla porttitor massa id. Vitae suscipit tellus mauris a diam maecenas sed enim. Elit eget gravida cum sociis. Vitae et leo duis ut diam quam nulla porttitor.</p>
+        <p class="mb-3" id="course_desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut diam quam nulla porttitor massa id. Vitae suscipit tellus mauris a diam maecenas sed enim. Elit eget gravida cum sociis. Vitae et leo duis ut diam quam nulla porttitor.</p>
         <h5 class="text-secondary">Prerequisites</h5>
-        <ul>
+        <ul id="prereq_courses">
             <li>IS101: Basic Engineering Management</li>
             <li>IS102: Intermediate Engineering Management</li>
         </ul>
@@ -41,7 +46,7 @@
 
     <!-- class registration -->
     <br><br>
-    <div class="container rounded p-4" style="background-color: white;">
+    <div id="classes-container" class="container rounded p-4" style="background-color: white;">
         <div class="row">
             <!-- left -->
             <div class="col-9">
@@ -60,28 +65,30 @@
                     </div>
                 </div>
             </div>
+            
             <!-- right -->
-            <div class="col-3 d-flex flex-column" style="">
+            <div class="col-3 d-flex flex-column" >
                 <span class="d-flex text-center" style="justify-content: flex-end;">32 out of 50 taken</span>
                 <button class="btn btn-outline-primary text-center align-self-end" style="margin-top:auto">Register</button>
             </div>
         </div>
+        
     </div>
     <br><br>
 
     <!-- class registration -->
     <div class="container rounded p-4" style="background-color: white;">
         <h6>You are not eligible to take IS110 Software Engineering Basics</h6>
-        <ul>
-            <li>did not complete prerequisites</li>
-            <li>have already completed the course</li>
+        <ul id="message">
+            <!-- <li>did not complete prerequisites</li>
+            <li>have already completed the course</li> -->
         </ul>
     </div>
     <br><br>
     
 </body>
     
-    <!-- <script src="../../static/js/learners.js"></script> -->
+    <script src="../../static/js/class_registration.js"></script>
 
     <script>
   
