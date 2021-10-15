@@ -57,13 +57,7 @@
           <td>Computer Engineering</td>
           <td class="text-secondary">Pending</td>
           <td><button type="button" class="btn btn-outline-danger" onclick="exampleOnclick(this)">Withdraw</button></td>
-        </tr>
-        <tr>
-          <td scope="row">EE200</td>
-          <td>Class 1</td>
-          <td>Electricity & Electronics</td>
-          <td class="text-success">Approved</td>
-          <td><button type="button" class="btn btn-outline-danger" onclick="exampleOnclick(this)">Withdraw</button></td> -->
+        </tr> -->
       </tbody>
     </table>
 </div>
@@ -73,6 +67,8 @@
   </div>
 <br><br>
 
+
+
     
 </body>
     
@@ -81,8 +77,9 @@
 
     <script>
     //hardcoded learner_id because learner login is not implemented yet
-    const learner_id = "LNR7"  
+    const learner_id = "LNR10"  
     let getRegisteredCourses = `http://192.168.1.71:5000/registration_details`;
+    let withdrawLearnerURL = "http://192.168.1.71:5000/withdraw_learner_registration";
     var course_id;
 
     //initialise localStorage
@@ -100,7 +97,7 @@
         // let url = `http://192.168.1.71:5000/registration_details/${learner_id}`;
         // console.log("url: ", getRegisteredCourses)
         let obj = await (await fetch(`${getRegisteredCourses}/${learner_id}`)).json();
-        // console.log(obj);
+        console.log(obj);
     }
     
     
@@ -140,16 +137,18 @@ function showClassesforRegistration (learner_id) {
               // show message
               console.log("** 0 **");
               document.getElementById("no-reg-course").classList.remove("d-none");
+              document.getElementById("reg-course").classList.add("d-none");
               // console.log(document.getElementById("no-reg-course").innerHTML)
 
             } else {
               console.log("** >=1 **");
+              document.getElementById("no-reg-course").classList.add("d-none");
               document.getElementById("reg-course").classList.remove("d-none");
 
               var html_content = "";
 
               for (course of reg_courses) { 
-                var class_id = course.class_id.slice(-1);
+                var class_id = course.class_id;
                 var course_id = course.course_id;  
                 var course_name = course.course_name;  
                 var is_approved = course.is_approved;  // boolean value 
@@ -160,10 +159,10 @@ function showClassesforRegistration (learner_id) {
                 `
                 <tr>
                   <td scope="row">${course_id}</td>
-                  <td>${class_id}</td>
+                  <td>${class_id.slice(-1)}</td>
                   <td>${course_name}</td>
                   <td class="text-secondary">${is_approved == 0? "Pending" : "Approved"}</td>
-                  <td><button type="button" class="btn btn-outline-danger" onclick="exampleOnclick(this, ${is_approved})">Withdraw</button></td>
+                  <td><button type="button" class="btn btn-outline-danger" onclick="exampleOnclick(this, '${class_id}', '${course_id}', ${is_approved})">Withdraw</button></td>
                 </tr>
                 `;
               }
@@ -188,7 +187,7 @@ function showClassesforRegistration (learner_id) {
 
 
     // hard code learner
-    function exampleOnclick(btn, is_approved) {
+    function exampleOnclick(btn, class_id, course_id, is_approved) {
         // console.log(course_detail)
 
         var name = btn.innerHTML;
@@ -200,17 +199,14 @@ function showClassesforRegistration (learner_id) {
         initExampleModal()
         var html =
             `<div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="exampleModalLabel">Withdraw</h5>
               </div>
               <div class="modal-body">
                 Are you sure you want to withdraw your ${is_approved == 0? "registration" : "enrollment"}?
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger">Withdraw</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()" id="modal-close-btn">Close</button>
+                <button type="button" class="btn btn-danger" onclick="withdrawLearner('${class_id}', '${course_id}', '${is_approved}')">Withdraw</button>
               </div>`;
       
         setExampleModalContent(html);
@@ -219,7 +215,67 @@ function showClassesforRegistration (learner_id) {
         jQuery(exampleModal).modal('show');
       
       }
+
+      function closeModal() {
+        console.log('close')
+        jQuery(exampleModal).modal('hide');
+      }
+
+      function withdrawLearner(class_id, course_id, is_approved) {
+        console.log(class_id, course_id, is_approved, learner_id);
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                
+              try {
+                console.log("ready state: ", this.readyState, this.status);
+
+                // withdraw msg
+                alert_msg = `withdrawal is successful`;
+                window.localStorage.setItem("alert_msg", alert_msg);
+
+                showClassesforRegistration();
+                alert(localStorage['alert_msg']);
+                
+                // reload();
+
+                jQuery(exampleModal).modal('hide');
+              }
+              catch(err) {
+                showError('There is a problem retrieving data, please try again later.<br />' + err);
+              }
+            }
+
+        }
+
+        var data = JSON.stringify({ 'class_id': `${class_id}`, 
+                                    'course_id': `${course_id}`,
+                                    'learner_id': `${learner_id}`,
+                                    'is_approved': parseInt(is_approved)
+        });
+        jQuery(exampleModal).modal('hide');
+  
+
+        console.log(data);
+        request.open("POST", withdrawLearnerURL, true, "/json-handler");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(data);   
+
+      }
+
+      /*
+        helper functions
+      */
+      /**/
+      function reload() {
+        location.reload();
+      }
+
       
+
+      
+
       function getExampleModal() {
         return document.getElementById('exampleModal');
       }
@@ -240,8 +296,10 @@ function showClassesforRegistration (learner_id) {
               '<div class="modal-dialog" role="document">' +
                 '<div class="modal-content"></div>' +
               '</div>';
+
+    
         document.body.appendChild(modal);
-        console.log("modal", modal)
+        // console.log("modal", modal)
         return modal;
       }
   
