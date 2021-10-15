@@ -86,7 +86,7 @@
 
     /***** VARIABLES *****/
     // hardcoded learner
-    const learner_id = "LNR16";  
+    const learner_id = "LNR8";  
     var course_id;
     var getRegCoursesURL;
     var withdrawLearnerURL;
@@ -97,14 +97,15 @@
       request.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
               var api_keys = JSON.parse(this.response);
-              getRegCoursesURL = api_keys.getRegCoursesURL;
-              withdrawLearnerURL = api_keys.withdrawLearnerURL;
-
-              console.log(getRegCoursesURL);
-              console.log(withdrawLearnerURL);
+              // getRegCoursesURL = api_keys.getRegCoursesURL;
+              // withdrawLearnerURL = api_keys.withdrawLearnerURL;
+              getRegCoursesURL = api_keys.getEnrollmentStatus;
+              withdrawLearnerURL = api_keys.withdraw_POST;
+              // console.log(getRegCoursesURL);
+              // console.log(withdrawLearnerURL);
           }
       }
-      request.open("GET", "../learner/apikey.json", false);
+      request.open("GET", "../../apikey.json", false);
       request.send();
     }
 
@@ -119,7 +120,8 @@
     
     async function load() {
         // console.log("url: ", getRegisteredCourses)
-        let obj = await (await fetch(`${getRegCoursesURL}/${learner_id}`)).json();
+        
+        let obj = await (await fetch(`${getRegCoursesURL}${learner_id}`)).json();
         console.log(obj);
     }
     
@@ -127,6 +129,7 @@
     // display table
     function showClassesforRegistration (learner_id) {
         getAPIkeys();
+        // console.log(`${getRegCoursesURL}${learner_id}`);
         console.log("learner_id: ", learner_id);
         
         var message = "";
