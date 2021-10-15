@@ -33,7 +33,7 @@ function getAPIkeys () {
             console.log(withdraw_POST);
         }
     }
-    request.open("GET", "../../apikey.json", false);
+    request.open("GET", "../../apikey.js", false);
     request.send();
 }
 
