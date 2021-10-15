@@ -102,71 +102,8 @@ function redirect_to_classRegistration(course_id) {
     }, 1000);
 }
 
-// function renderCourseDetailsPage () {
-//     getAPIkeys();
+function logout () {
+    storage.removeItem("learner_id");
 
-//     setTimeout(function() { 
-//         const course_id = storage.getItem("course_id"); 
-//         console.log(course_id)
-
-//         viewCourseDetails(course_id);
-//         showClassesforRegistration(courseID, learner_id);
-//     }, 3000);
-// }
-
-// function viewCourseDetails (course_id) {
-
-//     document.getElementById("course_name").innerHTML = "";
-//     document.getElementById("course_desc").innerHTML = "";
-//     document.getElementById("prereq_courses").innerHTML = "";
-
-//     var request = new XMLHttpRequest();
-//     request.onreadystatechange = function () {
-//         if (this.readyState == 4 && this.status == 200) {
-//             var course_details = JSON.parse(this.response).data;
-//             console.log(course_details);
-//             var prereq_content = "";
-
-//             var course_description = course.course_description;
-//             var course_name = course.course_name;
-//             var num_of_slots = course.num_of_slots;
-//             var prereq_courses = course.prereq_courses;  // string  
-            
-//             if (prereq_courses == "") {
-//                 prereq_content = "None";
-//             } else {
-//                 var prereq_array = prereq_courses.split(",");
-//                 for (course of prereq_array) {
-//                     prereq_content += `<li>${course}: Prerequisite Course Name</li>`;
-//                 }
-//             }
-
-//             document.getElementById("course_name").innerHTML = course_name;
-//             document.getElementById("course_desc").innerHTML = course_description;
-//             document.getElementById("prereq_courses").innerHTML = prereq_content;
-
-//         }
-//     };
-
-//     var url = getCourseDetails + course_id;
-//     console.log(url);
-//     request.open("GET", url, true);
-//     request.send();
-// }
-
-// function showClassesforRegistration (course_id, learner_id) {
-
-
-// }
-
-// function goBackTo (prev_page) {
-//     // console.log(prev_page);
-//     // console.log(window.location.href);
-//     var current_location_arr = window.location.href.split("/");
-//     var current_location = current_location_arr[current_location_arr.length - 1];
-//     // console.log(current_location);
-//     if (prev_page == "viewcourses" && current_location == "class_registration.html") {
-//         console.log(prev_page);
-//         window.location.replace("view_reg_courses.html");
-//     } 
-// }
+    window.location.replace("./login.html");
+}

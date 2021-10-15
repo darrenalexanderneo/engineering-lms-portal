@@ -263,3 +263,9 @@ function goBackTo (prev_page) {
         window.location.replace("view_reg_courses.html");
     } 
 }
+
+function logout () {
+    storage.removeItem("learner_id");
+
+    window.location.replace("./login.html");
+}
