@@ -50,9 +50,6 @@ const learnerTypeDict = {
 // }
 
 
-
-
-
 // var course_ls;
 // var class_ls;
 // var learner_ls;
@@ -348,8 +345,6 @@ export async function updateLearners(update_type, emp_id, class_id) {
         
     }
 
-    
-
     var data = JSON.stringify({ 'emp_id': emp_id, 
                                 'course_id': course_id,
                                 'class_id': class_id
@@ -363,9 +358,11 @@ export async function updateLearners(update_type, emp_id, class_id) {
     // location.reload(true);
 }
 
-
-
-
-export function reload() {
+function reload() {
     location.reload()
+}
+
+function goBack() {
+    location.href = 'v3_test1.html';
+    storage.clear();
 }
