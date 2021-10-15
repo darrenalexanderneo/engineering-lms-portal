@@ -1,96 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <!-- Bootstrap Font Icon CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="../../static/css/learner.css">
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
-
-    <title>View Registration Details</title>
-</head>
-<body onload="showClassesforRegistration(learner_id)" style="background-color: #eee;">
-    <!-- navigation bar, reference from https://codepen.io/TahseenAlaa/pen/gORezZR -->
-        <!-- navigation bar -->
-        <nav class="navbar navbar-dark bg-dark d-flex float-left">
-          <div class="my-3">
-            <button onclick="location.href='view_reg_courses.html'" class="btn btn-outline-light ms-5">Browse Courses</button>
-            <button class="btn btn-outline-light active" onclick="location.href='view_reg_details.html'">View/Change Status</button>
-          </div>
-          <div class="my-3 float-end">
-            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
-          </div>
-      </nav>
-
-    <!-- my course's title -->
-    <br><br>
-    <div class="container mb-4">
-        <h2>My Courses</h2>      
-    </div>
-
-    <!-- learner's courses table -->
-
-    <div class="container table-responsive"> 
-        <table id="reg-course" class="table table-borderless table-hover py-4 d-none">
-          <thead>
-            <tr>
-              <th scope="col">Course ID</th>
-              <th scope="col">Course Name</th>
-              <th scope="col">Class</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody id="reg-course-body">
-            <!-- <tr>
-              <td scope="row">CE100</td>
-              <td>Class 1</td>
-              <td>Computer Engineering</td>
-              <td class="text-secondary">Pending</td>
-              <td><button type="button" class="btn btn-outline-danger" onclick="exampleOnclick(this)">Withdraw</button></td>
-            </tr> -->
-          </tbody>
-        </table>
-    </div>
-
-    <div id="no-reg-course" class="container rounded py-4 d-none" style="background-color: white;">
-      <h6>You have not registered for any courses yet</h6>
-    </div>
-   
-</body>
-    <script src="../../static/js/view_reg_details.js"></script>
-    <!-- <script>
     /***** STORAGE *****/
     const storage = window.localStorage;
-    const asyncLocalStorage = {
-      setItem: async function (key, value) {
-          await null;
-          return storage.setItem(key, value);
-      },
-      getItem: async function (key) {
-          await null;
-          return storage.getItem(key);
-      }
-    };
+    // const asyncLocalStorage = {
+    //   setItem: async function (key, value) {
+    //       await null;
+    //       return storage.setItem(key, value);
+    //   },
+    //   getItem: async function (key) {
+    //       await null;
+    //       return storage.getItem(key);
+    //   }
+    // };
 
     /***** VARIABLES *****/
     // hardcoded learner
     // const learner_id = "LNR8"; 
 
     // GET learner_id from localStorage (stored in login.html)
-    const learner_id = asyncLocalStorage.getItem("learner_id");  
+    const learner_id = storage.getItem("learner_id");  
+    console.log(learner_id);
 
     var course_id;
     var getRegCoursesURL;
@@ -136,12 +63,11 @@
         getAPIkeys();
         // console.log(`${getRegCoursesURL}${learner_id}`);
         console.log("learner_id: ", learner_id);
-        
-        var message = "";
 
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
+                console.log(this.response);
                 var reg_courses = JSON.parse(this.response).results;
                 console.log("# of reg courses: ", reg_courses.length);
                 console.log(reg_courses);
@@ -185,8 +111,8 @@
             }
         }
 
-        var url = `${getRegCoursesURL}/${learner_id}`;
-        // console.log(url);
+        var url = `${getRegCoursesURL}${learner_id}`;
+        console.log(url);
         request.open("GET", url, true);
         request.send();
       }
@@ -307,10 +233,3 @@
 
             window.location.replace("./login.html");
         }
-    </script> -->
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-</body>
-</html>
-
