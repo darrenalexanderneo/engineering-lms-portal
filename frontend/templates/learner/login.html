@@ -32,7 +32,7 @@
                 <div class="card-body p-5 text-center">
       
                   <h3 class="mb-2">Sign in</h3>
-                  <p class="text-black-50 mb-5">Please enter your learner id to login!</p>
+                  <p class="text-black-50 mb-5">Please enter your Learner ID to login!</p>
       
                   <div class="form-outline mb-4">
                     <input type="email" id="learner_id" class="form-control form-control-lg" placeholder="Learner ID"/>
@@ -85,13 +85,10 @@
 
             setTimeout(function() {
                 console.log(window.localStorage.getItem("learner_id"));
-                console.log('-> next page')
-                location.href = "3_view_registration_details.html";
+                console.log('-> next page');
+                location.href = "view_reg_details.html";
             }, 1500);
         }
-
-
-
     </script>
 
     <!-- Latest compiled and minified JavaScript -->

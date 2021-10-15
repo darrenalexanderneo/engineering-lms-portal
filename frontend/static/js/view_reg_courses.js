@@ -2,11 +2,11 @@
 const storage = window.localStorage;
 
 //hardcoded learner_id because learner login is not implemented yet
-const learner_id = "LNR8"  
+// const learner_id = "LNR8";  
 
 // USE LOCALSTORAGE AFTER LEARNER LOGIN IS IMPLEMENTED
 // storage.setItem("learner_id", "LNR8");
-// const learner_id = storage.getItem("learner_id");
+const learner_id = storage.getItem("learner_id");
 
 
 //initialise global variables to store api keys
@@ -38,7 +38,7 @@ function getAPIkeys () {
             console.log(withdraw_POST);
         }
     }
-    request.open("GET", "../../apikey.js", false);
+    request.open("GET", "../../apikey.json", false);
     request.send();
 }
 
