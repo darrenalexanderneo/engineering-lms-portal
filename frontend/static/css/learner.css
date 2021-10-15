@@ -30,3 +30,12 @@ img.card-img-top {
     object-fit: cover;
 }
 
+/* svg {
+    stroke: rgb(13, 110, 253);
+} */
+
+svg:hover {
+    fill: rgb(13, 110, 253);
+    filter: drop-shadow(2px 2px 2px rgb(255 255 255 / 0.8));
+}
+

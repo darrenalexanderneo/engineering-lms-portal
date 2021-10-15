@@ -20,16 +20,16 @@
 <body style="background-color: #eee;">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
-        <div class="my-2">
+        <div class="my-3">
           <button onclick="goBackTo('viewcourses')" class="btn btn-outline-light ms-5 active">Browse Courses</button>
           <button class="btn btn-outline-light">View/Change Status</button>
         </div>
     </nav>
     <br><br>
 
-    <div class="ms-5"><svg xmlns="http://www.w3.org/2000/svg"  onclick="goBackTo('viewcourses')" width="40" height="40" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
-    </svg></div>
+    <div class="ms-5"><svg xmlns="http://www.w3.org/2000/svg" onclick="goBackTo('viewcourses')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+      </svg></div>
 
     <!-- course description -->
     <br><br>
@@ -44,15 +44,17 @@
         </ul>
     </div>
 
+    <div id="registration-alert" class="container"></div>
+
     <!-- class registration -->
     <br><br>
     <div id="classes-container" class="container rounded p-4" style="background-color: white;">
-        <div class="row">
+        <!-- <div class="row"> -->
             <!-- left -->
-            <div class="col-9">
-                <h5>Class 1</h5>
+            <!-- <div class="col-9">
+                <h5>Class 1</h5> -->
                 <!-- class details -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-3">
                         <span>Professor: </span> <br>
                         <span>Registration: </span> <br>
@@ -64,20 +66,19 @@
                         <span>0 Jan 2022 - 28 Mar 2022</span> <br>
                     </div>
                 </div>
-            </div>
+            </div> -->
             
             <!-- right -->
-            <div class="col-3 d-flex flex-column" >
+            <!-- <div class="col-3 d-flex flex-column" >
                 <span class="d-flex text-center" style="justify-content: flex-end;">32 out of 50 taken</span>
                 <button class="btn btn-outline-primary text-center align-self-end" style="margin-top:auto">Register</button>
             </div>
-        </div>
-        
+        </div> -->
     </div>
     <br><br>
 
     <!-- class registration -->
-    <div class="container rounded p-4" style="background-color: white;">
+    <div id="message-container" class="container rounded p-4" style="background-color: white;">
         <h6>You are not eligible to take IS110 Software Engineering Basics</h6>
         <ul id="message">
             <!-- <li>did not complete prerequisites</li>
