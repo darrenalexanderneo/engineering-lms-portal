@@ -132,7 +132,7 @@ function generateLearnerTypeDict () {
         }
     }
     var url = `${getLearnerList_HR}${course_id}`; 
-    request.open("GET", url, true);
+    request.open("GET", url, false);
     request.send();
 }
 // function getData() {
@@ -165,8 +165,8 @@ function renderLearnersListPage () {
     generateLearnerTypeDict();
 
     getCourseDetails(course_id);
-    getClasses()
-
+    getClasses();
+    displayLearnersByType("preassign");
 }
 
 function getCourseDetails(course_id) {
@@ -280,6 +280,7 @@ function displayLearnersOfClass(class_id) {
 
 
 function displayLearnersByType(curr_learner_type) { 
+    console.log(learner_ls);
     learner_type = curr_learner_type; // update filter
     var type_id = learnerTypeDict[`${curr_learner_type}`]['id'];
     // console.log('type_id', type_id)
@@ -331,7 +332,7 @@ function getHTMLofRecord(curr_list) {
     }
 
     if (num_of_learners == 0) {
-        record = `There are currently no ${learnerType} learners in for ${class_filter} classes`;
+        record = `There are currently no ${learnerType} learners for Class ${class_filter.slice(1)}`;
     } else { 
         
         for (var i = 0; i < curr_list.length; i++) {
@@ -358,7 +359,7 @@ function getHTMLofRecord(curr_list) {
     }
 
     if (curr_learner_count == 0) { 
-        record = `There are currently no ${learnerType} learners in for ${class_filter} classes`;
+        record = `There are currently no ${learnerType} learners for Class ${class_filter.slice(1)}`;
     }
     console.log('number of learners for class+tab: ', curr_learner_count);
     // console.log(record);
@@ -373,7 +374,7 @@ function getHTMLofAllRecords(curr_list) {
     var func_type = learnerTypeDict[`${learner_type}`]['func'];
     
     if (learnerTypeDict[`${learner_type}`]['num_of_learners'] == 0) {
-        record = `There are currently no preassigned learners in for ${class_filter} classes`;
+        record = `There are currently no preassigned learners in all classes`;
     } else { 
         for (var i = 0; i < curr_list.length; i++) {
             var class_id = curr_list[i].class_id;
