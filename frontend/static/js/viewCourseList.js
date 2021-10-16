@@ -61,7 +61,7 @@ function getAllCourses() {
         
         
                 // input row details
-                record += `<tr onclick="redirect_to_LearnersListPage(${course_id})" id="${course_id}"><a href="#">
+                record += `<tr onclick="redirect_to_LearnersListPage('${course_id}')" id="${course_id}"><a href="#">
         
                     <td class="text-center align-middle">${course_id}</td>
                     <td class="text-center align-middle">${course_name}</td>
@@ -85,13 +85,14 @@ function getAllCourses() {
 }
 
 function redirect_to_LearnersListPage(course_id) {
-    storage.setItem('course_selected', course_id);
-    
-    const course_selected = storage.getItem('course_selected');
-    console.log(course_selected);
+    storage.setItem('course_id', course_id);
     
     setTimeout( function() { 
-        location.href = "viewLearnersList.html";
-    }, 1000);
+        const course_selected = storage.getItem('course_id');
+        console.log(course_selected);
+        if (course_selected == course_id) {
+            location.href = "viewLearnersList.html";
+        }
+    }, 2000);
     
 }

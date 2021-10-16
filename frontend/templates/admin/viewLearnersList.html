@@ -11,14 +11,15 @@
 
     <title>Admin Portal - View Learners</title>
 </head>
-<body onload="getClassFilter(); displayLearnerDetails('all', 'preassign');">
+<body onload="renderLearnersListPage()">   
+    <!-- onload="getClassFilter(); displayLearnerDetails('all', 'preassign');" -->
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
           <div class="collapse navbar-collapse ms-4" id="navbarSupportedContent">
 
               <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
-              <label class="btn btn-outline-primary" onclick="window.location.href='./v3_test1.html'"  for="learners">Learners</label>
+              <label class="btn btn-outline-primary" onclick="window.location.href='./viewCourseList.html'"  for="learners">Learners</label>
   
               <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
               <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>

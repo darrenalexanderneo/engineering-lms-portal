@@ -1,16 +1,24 @@
-
 const storage = window.localStorage;
         
 // get the course selected
-const course_selected = storage.getItem('course_selected');
-console.log('course selected: ' + course_selected);
+const course_id = storage.getItem('course_id');
+console.log('course selected: ' + course_id);
+
+// initialise api keys
+var getCourseList_HR;
+var getCourseDetails_HR;
+var getLearnerList_HR;
+var assignLearner_POST_HR;
+var withdrawLearner_POST_HR;
+
 // var course_json = [];
 // var class_json = [];
 // var learners_json = [];
 // var course_ls = [];
 // var class_ls = [];
 // var learner_ls = [];
-var alert_msg = '';
+
+// var alert_msg = '';
 
 var class_filter = 'all';
 var learner_type = 'preassign';
@@ -52,12 +60,12 @@ const learnerTypeDict = {
 
 // var course_ls;
 // var class_ls;
-// var learner_ls;
+var learner_ls;
 
-// function waitForLocalStorage(key, cb, timer) {
+// function waitForstorage(key, cb, timer) {
 //         if (!storage.getItem(key)) {
 //             console.log(storage.getItem(key));
-//             return (timer = setTimeout(waitForLocalStorage.bind(null, key, cb), 800));
+//             return (timer = setTimeout(waitForstorage.bind(null, key, cb), 800));
 //             }
 
 //         clearTimeout(timer);
@@ -69,76 +77,164 @@ const learnerTypeDict = {
 //         return cb(storage.getItem(key));
 //     } //set timeout to wait for Local Storage Session to be ready to "getItem()"
 
-export const asyncLocalStorage = {
-    setItem: async function (key, value) {
-        await null;
-        return storage.setItem(key, value);
-    },
-    getItem: async function (key) {
-        await null;
-        return storage.getItem(key);
-    }
-};
+// const asyncstorage = {
+//     setItem: async function (key, value) {
+//         await null;
+//         return storage.setItem(key, value);
+//     },
+//     getItem: async function (key) {
+//         await null;
+//         return storage.getItem(key);
+//     }
+// };
 
-// function waitForLocalStorage(key) {
-//     const storage = window.localStorage;
+// function waitForstorage(key) {
+//     const storage = storage;
 //     while (storage.getItem(key) == null) {
 
 //     }
 // }
 
-export function getData() {
-     // get course, class data
-        
-        //set timeout to wait for Local Storage Session to be ready to "getItem()"  
-    const learner_ls = JSON.parse(asyncLocalStorage.getItem("learners_json"))[`${course_selected}`];
-    console.log("learners_ls: ", learner_ls);
+function getAPIkeys () {
 
-    const course_ls = JSON.parse(asyncLocalStorage.getItem("course_json"))["courses"];
-     console.log("course_ls: ", course_ls);
+    var request = new XMLHttpRequest();
 
-    const class_ls = JSON.parse(asyncLocalStorage.getItem("class_json"))[`${course_selected}`];
-     console.log("class_ls: ", class_ls);
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
 
-     learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
-     learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
-     learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
-     curr_num_of_learners = learner_ls.preassign_learners.length;
-    
-     if (course_ls && class_ls && learner_ls) {
-         console.log("hello");
-        getCourseDetails();
-     }
+            var apikeys = JSON.parse(this.response);
 
-}
-
-export function getCourseDetails() {
-    // console.log("course_ls: ", course_ls);
-    // console.log("class_ls: ", class_ls);
-    console.log("learner_ls: ", learner_ls);
-
-    for (var j = 0; j < course_ls.length; j++) { 
-        var c_id = course_ls[j].course_id;
-        if (course_selected == c_id) { 
-            // console.log("c_id", c_id)
-            var c_name = course_ls[j].course_name;
-            var c_desc = course_ls[j].course_description;
-            break
+            getCourseList_HR = apikeys.getCourseList_HR;
+            getCourseDetails_HR = apikeys.getCourseDetails_HR;
+            getLearnerList_HR = apikeys.getLearnerList_HR;
+            assignLearner_POST_HR = apikeys.assignLearner_POST_HR;
+            withdrawLearner_POST_HR = apikeys.withdrawLearner_POST_HR;
         }
     }
-
-    // console.log('check', c_name, c_id, c_desc);
-    document.getElementById("course_title").innerHTML = `${c_id} - ${c_name}`;
-    document.getElementById("course_description").innerHTML = `${c_desc}`;
+    var url = "../../apikey.json"; 
+    request.open("GET", url, false);
+    request.send();
 }
 
-export function getClassFilter() { 
+function generateLearnerTypeDict () {
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            learner_ls = JSON.parse(this.response)[`${course_id}`];
+            console.log(learner_ls);
+
+            learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
+            learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
+            learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
+            curr_num_of_learners = learner_ls.preassign_learners.length;
+        }
+    }
+    var url = `${getLearnerList_HR}${course_id}`; 
+    request.open("GET", url, true);
+    request.send();
+}
+// function getData() {
+//      // get course, class data
+        
+//     //set timeout to wait for Local Storage Session to be ready to "getItem()"  
+//     const learner_ls = JSON.parse(asyncstorage.getItem("learners_json"))[`${course_id}`];
+//     console.log("learners_ls: ", learner_ls);
+
+//     const course_ls = JSON.parse(asyncstorage.getItem("course_json"))["courses"];
+//      console.log("course_ls: ", course_ls);
+
+//     const class_ls = JSON.parse(asyncstorage.getItem("class_json"))[`${course_id}`];
+//      console.log("class_ls: ", class_ls);
+
+//      learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
+//      learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
+//      learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
+//      curr_num_of_learners = learner_ls.preassign_learners.length;
+    
+//      if (course_ls && class_ls && learner_ls) {
+//          console.log("hello");
+//         getCourseDetails();
+//      }
+
+// }
+
+function renderLearnersListPage () {
+    getAPIkeys();
+    generateLearnerTypeDict();
+
+    getCourseDetails(course_id);
+    getClasses()
+
+}
+
+function getCourseDetails(course_id) {
+    // console.log("course_ls: ", course_ls);
+    // console.log("class_ls: ", class_ls);
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            
+            var course_details = JSON.parse(this.response).data.courses;
+            console.log(course_details);
+
+            var course_name;
+            var course_desc;
+
+            for (var eachCourse of course_details) { 
+                // console.log(course_id);
+                // console.log(eachCourse.course_id);
+
+                if (course_id == eachCourse.course_id) { 
+
+                    course_name = eachCourse.course_name;
+                    course_desc = eachCourse.course_description;
+                    // console.log(course_name);
+                }
+            }
+            // console.log(course_name);
+
+            document.getElementById("course_title").innerHTML = `${course_id} - ${course_name}`;
+            document.getElementById("course_description").innerHTML = `${course_desc}`;
+        }
+
+    }
+    var url = `${getCourseList_HR}`; 
+    request.open("GET", url, true);
+    request.send();
+}
+
+function getClasses () {
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            var class_ls = JSON.parse(this.response)[`${course_id}`];
+            console.log(class_ls);
+
+            getClassFilter(class_ls);
+            
+
+        }
+
+    }
+    var url = `${getCourseDetails_HR}${course_id}`; 
+    console.log(url);
+    request.open("GET", url, true);
+    request.send();
+}
+
+
+function getClassFilter(class_ls) { 
     console.log(`=== getClassFilter called ===`);
     console.log(`number of classes: ${class_ls.length}`);
 
     var class_dropdown = `<option selected value="All">All</option>`;
     for(var i = 0; i < class_ls.length; i++) {
-        var class_id = class_ls[i].class_id;
+        var class_id = class_ls[i].class_id.split("_")[1];
         var class_name = `${class_id.slice(0, 1)}lass ${class_id.slice(1, 2)}`;
         // console.log(`test: ${class_id}, ${class_name}`)
         class_dropdown += `<option value="${class_id}">${class_name}</option>`;
@@ -147,7 +243,7 @@ export function getClassFilter() {
     document.getElementsByClassName("form-select")[0].innerHTML = class_dropdown;
 }
 
-export function changeTabActive(curr_tab) { 
+function changeTabActive(curr_tab) { 
     var tab_list = ['preassign', 'registered', 'enrolled'];
 
     for(var i = 0; i < tab_list.length; i++) {
@@ -160,9 +256,10 @@ export function changeTabActive(curr_tab) {
 
 }
 
-export function displayLearnersOfClass(class_id) {
+function displayLearnersOfClass(class_id) {
     class_filter = class_id; // update filter
     var type_id = learnerTypeDict[`${learner_type}`]['id'];
+    console.log(type_id);
     var curr_class_type_list = learner_ls[`${type_id}`]; // type_id == 'enrolled_learners'
 
     console.log(`=== displayLearnersOfClass called ===`);
@@ -182,7 +279,7 @@ export function displayLearnersOfClass(class_id) {
 }
 
 
-export function displayLearnersByType(curr_learner_type) { 
+function displayLearnersByType(curr_learner_type) { 
     learner_type = curr_learner_type; // update filter
     var type_id = learnerTypeDict[`${curr_learner_type}`]['id'];
     // console.log('type_id', type_id)
@@ -205,7 +302,7 @@ export function displayLearnersByType(curr_learner_type) {
 
 }
 
-export function displayLearnerDetails(class_filter, learner_type) { 
+function displayLearnerDetails(class_filter, learner_type) { 
     // number of learners
     console.log(`# of learners: preassign: ${learnerTypeDict['preassign']['num_of_learners']} | registered: ${learnerTypeDict['registered']['num_of_learners']} | enrolled: ${learnerTypeDict['enrolled']['num_of_learners']}`);
     var preassigned_ls = learner_ls['preassign_learners'];
@@ -218,25 +315,33 @@ export function displayLearnerDetails(class_filter, learner_type) {
 }
 
 
-export function getHTMLofRecord(curr_list) { 
+function getHTMLofRecord(curr_list) { 
     // console.log(`learner type:`, learnerTypeDict[`${learner_type}`]['num_of_learners']);
     var record = "";
     var num_of_learners = learnerTypeDict[`${learner_type}`]['num_of_learners'];
     var btn_class = learnerTypeDict[`${learner_type}`]['elem_class'];
     var func_type = learnerTypeDict[`${learner_type}`]['func'];
     var curr_learner_count = 0;
+    var learnerType;
+
+    if (learner_type == "preassign") {
+        learnerType = "preassigned";
+    } else {
+        learnerType = learner_type;
+    }
 
     if (num_of_learners == 0) {
-        record = `There are currently no preassigned learners in for ${class_filter} classes`;
+        record = `There are currently no ${learnerType} learners in for ${class_filter} classes`;
     } else { 
         
         for (var i = 0; i < curr_list.length; i++) {
-            var class_id = curr_list[i].class_id;
+            var class_id = curr_list[i].class_id.split("_")[1];
+            console.log(class_id);
     
             if (class_id.toLowerCase() == class_filter.toLowerCase()) {
                 var emp_name = curr_list[i].name;
                 var emp_id = curr_list[i].emp_id; 
-                // console.log(`hehe: ${emp_name}, ${emp_id}, ${class_id}`)
+                console.log(`hehe: ${emp_name}, ${emp_id}, ${class_id}`)
                 record += `<tr>
 
                     <td class="text-center align-middle">${emp_id}</td>
@@ -253,7 +358,7 @@ export function getHTMLofRecord(curr_list) {
     }
 
     if (curr_learner_count == 0) { 
-        record = `There are currently no preassigned learners in for ${class_filter} classes`;
+        record = `There are currently no ${learnerType} learners in for ${class_filter} classes`;
     }
     console.log('number of learners for class+tab: ', curr_learner_count);
     // console.log(record);
@@ -261,7 +366,7 @@ export function getHTMLofRecord(curr_list) {
     return record;
 }
 
-export function getHTMLofAllRecords(curr_list) { 
+function getHTMLofAllRecords(curr_list) { 
     var record = "";
     var btn_text = learnerTypeDict[`${learner_type}`]['button_text'];
     var btn_class = learnerTypeDict[`${learner_type}`]['elem_class'];
@@ -292,13 +397,13 @@ export function getHTMLofAllRecords(curr_list) {
 }
 
 
-export async function updateLearners(update_type, emp_id, class_id) {
+async function updateLearners(update_type, emp_id, class_id) {
     // add alert/service msg when withdraw/assign
     
-    var course_id = course_selected;
-    console.log(`update info: ${update_type}, ${emp_id}. ${class_id}, ${course_selected}`);
+    // var course_id = course_id;
+    console.log(`update info: ${update_type}, ${emp_id}. ${class_id}, ${course_id}`);
 
-    var url = update_type == "assign" ? 'http://192.168.1.71:5000/assign_course' : 'http://192.168.1.71:5000/withdraw_course';
+    var url = update_type == "assign" ? 'http://localhost:5000/assign_course' : 'http://localhost:5000/withdraw_course';
     var method = update_type == "assign" ? 'POST' : 'PUT';
     console.log(url, method);
 
@@ -319,18 +424,18 @@ export async function updateLearners(update_type, emp_id, class_id) {
                 document.getElementById("learners_list").innerHTML = message; // to do
 
                 // alert storage
-                window.localStorage.setItem("alert_msg", alert_msg);
-                console.log('reload', localStorage['alert_msg']);
-                alert(localStorage['alert_msg']);
+                storage.setItem("alert_msg", alert_msg);
+                console.log('reload', storage['alert_msg']);
+                alert(storage['alert_msg']);
                 reload();
             } else if (this.readyState == 4 && this.status == 404) {
                 alert_msg = `${update_type} of learners failed`, "error: ", this.statusText;
                 console.log(`${update_type} of learners failed`, "error: ", this.statusText);
 
                 // alert storage
-                window.localStorage.setItem("alert_msg", alert_msg);
-                console.log('reload', localStorage['alert_msg']);
-                alert(localStorage['alert_msg']);
+                storage.setItem("alert_msg", alert_msg);
+                console.log('reload', storage['alert_msg']);
+                alert(storage['alert_msg']);
                 
                 reload(); // location.reload(true);
            
@@ -351,7 +456,7 @@ export async function updateLearners(update_type, emp_id, class_id) {
     });
 
     console.log(data);
-    request.open(method, url, true, "/json-handler");
+    request.open(method, url, true); //, "/json-handler"
     request.setRequestHeader("Content-Type", "application/json");
     request.send(data); // to do     
     
@@ -359,10 +464,10 @@ export async function updateLearners(update_type, emp_id, class_id) {
 }
 
 function reload() {
-    location.reload()
+    location.reload();
 }
 
 function goBack() {
-    location.href = 'v3_test1.html';
+    location.href = 'viewCourseList.html';
     storage.clear();
 }
