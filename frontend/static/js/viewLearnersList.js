@@ -341,7 +341,7 @@ function getHTMLofRecord(curr_list) {
     
             if (class_id.toLowerCase() == class_filter.toLowerCase()) {
                 var emp_name = curr_list[i].name;
-                var emp_id = curr_list[i].emp_id; 
+                var emp_id = curr_list[i].learner_id; 
                 console.log(`hehe: ${emp_name}, ${emp_id}, ${class_id}`)
                 record += `<tr>
 
@@ -380,7 +380,7 @@ function getHTMLofAllRecords(curr_list) {
             var class_id = curr_list[i].class_id;
             // console.log(class_id);
             var emp_name = curr_list[i].name;
-            var emp_id = curr_list[i].emp_id; 
+            var emp_id = curr_list[i].learner_id; 
             // console.log(`hehe: ${emp_name}, ${emp_id}, ${class_id}`)
             record += `<tr>
 
@@ -404,7 +404,7 @@ async function updateLearners(update_type, emp_id, class_id) {
     // var course_id = course_id;
     console.log(`update info: ${update_type}, ${emp_id}. ${class_id}, ${course_id}`);
 
-    var url = update_type == "assign" ? 'http://localhost:5000/assign_course' : 'http://localhost:5000/withdraw_course';
+    var url = update_type == "assign" ? 'http://localhost:5000/assign_learner' : 'http://localhost:5000/withdraw_enrolled_learner';
     var method = update_type == "assign" ? 'POST' : 'PUT';
     console.log(url, method);
 
@@ -450,8 +450,8 @@ async function updateLearners(update_type, emp_id, class_id) {
         // location.reload(true);
         
     }
-
-    var data = JSON.stringify({ 'emp_id': emp_id, 
+    
+    var data = JSON.stringify({ 'learner_id': emp_id, 
                                 'course_id': course_id,
                                 'class_id': class_id
     });
