@@ -404,7 +404,7 @@ async function updateLearners(update_type, emp_id, class_id) {
     // var course_id = course_id;
     console.log(`update info: ${update_type}, ${emp_id}. ${class_id}, ${course_id}`);
 
-    var url = update_type == "assign" ? 'http://localhost:5000/assign_learner' : 'http://localhost:5000/withdraw_enrolled_learner';
+    var url = update_type == "assign" ? assignLearner_POST_HR : withdrawLearner_POST_HR;
     var method = update_type == "assign" ? 'POST' : 'PUT';
     console.log(url, method);
 
