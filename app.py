@@ -271,7 +271,7 @@ class Question(db.Model):
 class Question_Option(db.Model):
     __tablename__ = "question_option"
     quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
-    option_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    option = db.Column(db.String(255), primary_key=True, nullable=False)
 
 class Chapter_Quiz_Result(db.Model): 
     __tablename__ = "chapter_quiz_result"
