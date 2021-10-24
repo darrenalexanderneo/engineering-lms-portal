@@ -186,20 +186,20 @@ class Class_Record(db.Model):
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
 
-class Registration(db.Model):
-    __tablename__ = "registration"
-    class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
-    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
-    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
-    reg_date = db.Column(db.String(50),nullable=False)
+# class Registration(db.Model):
+#     __tablename__ = "registration"
+#     class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
+#     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
+#     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+#     reg_date = db.Column(db.String(50),nullable=False)
 
 
-    # Why must this be inside Reg class? Mmmm...
-    def get_current_date():
-        now = datetime.now()
-        current_date = now.strftime("%Y-%m-%d")
-        print(current_date)
-        return current_date
+#     # Why must this be inside Reg class? Mmmm...
+#     def get_current_date():
+#         now = datetime.now()
+#         current_date = now.strftime("%Y-%m-%d")
+#         print(current_date)
+#         return current_date
 
     # def getClassId(self):
     #     return self.class_id
@@ -215,7 +215,80 @@ class Registration(db.Model):
 
 # db.create_all()
 
+class Registration(db.Model):
+    __tablename__ = "registration"
+    class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+    reg_date = db.Column(db.String(50),nullable=False)
 
+
+    # Why must this be inside Reg class? Mmmm...
+    def get_current_date():
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+        print(current_date)
+        return current_date
+
+class Chapter(db.Model): 
+    __tablename__ = "chapter" 
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    
+
+class Chapter_Learner(db.Model):
+    __tablename__ = "chapter_learner"
+    # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+    completion = db.Column(db.Integer, nullable=False)
+
+class Quiz(db.Model):
+    __tablename__ = "quiz"
+    quiz_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    timing = db.Column(db.String(50),nullable=False)
+
+class Chapter_Quiz(Quiz):
+    __tablename__ = "chapter_quiz"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    # Need to fix this - Somehow the chapter_id is not able to be referenced - Darren 24/10
+    # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+
+class Final_Quiz(Quiz): 
+    __tablename__ = "final_quiz"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
+
+class Question(db.Model):
+    __tablename__ = "question"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    question_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    question = db.Column(db.String(255), nullable=False)
+    question_type = db.Column(db.String(10), nullable=False)
+    answer = db.Column(db.String(255), nullable=False)
+
+class Question_Option(db.Model):
+    __tablename__ = "question_option"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    option_id = db.Column(db.String(10), primary_key=True, nullable=False)
+
+class Chapter_Quiz_Result(db.Model): 
+    __tablename__ = "chapter_quiz_result"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+    marks = db.Column(db.String(10), nullable=False)
+
+
+class Final_Quiz_Result(db.Model):
+    __tablename__ = "final_quiz_result"
+    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+    marks = db.Column(db.String(10), nullable=False)
+
+
+
+# db.create_all()
 
 @app.route("/enroll_course_details/<string:course_id>")
 def retrieve_course_class(course_id):
