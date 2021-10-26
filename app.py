@@ -233,56 +233,108 @@ class Registration(db.Model):
 class Chapter(db.Model): 
     __tablename__ = "chapter" 
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
-    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
+
+    def json(self):
+        chapter_info = {
+            'course_id': self.course_id,
+            'chapter_id': self.chapter_id
+        }
+        return chapter_info
     
 
 class Chapter_Learner(db.Model):
     __tablename__ = "chapter_learner"
     # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
-    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     completion = db.Column(db.Integer, nullable=False)
 
+    def update_completion(self):
+        self.completion = 1
+
+    def json(self):
+        info = {
+            'chapter_id': self.chapter_id,
+            'learner_id': self.learner_id,
+            'completion': self.completion
+        }
+
+        return info
+
 class Quiz(db.Model):
     __tablename__ = "quiz"
-    quiz_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), primary_key=True, nullable=False)
     timing = db.Column(db.String(50),nullable=False)
 
 class Chapter_Quiz(Quiz):
     __tablename__ = "chapter_quiz"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     # Need to fix this - Somehow the chapter_id is not able to be referenced - Darren 24/10
     # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
-    chapter_id = db.Column(db.String(10), primary_key=True, nullable=False)
+    chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
+    total_marks = db.Column(db.String(10), nullable=False)
+
+    def check_pass(self,learner_marks):
+        is_pass = 1
+        percentage = (int(learner_marks) / int(self.total_marks)) * 100
+        if(percentage >= 50):
+            return is_pass
+        is_pass = 0
+        return is_pass
+
 
 class Final_Quiz(Quiz): 
     __tablename__ = "final_quiz"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
+    total_marks = db.Column(db.String(10), nullable=False)
 
 class Question(db.Model):
     __tablename__ = "question"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     question_id = db.Column(db.String(10), primary_key=True, nullable=False)
     question = db.Column(db.String(255), nullable=False)
     question_type = db.Column(db.String(10), nullable=False)
+    option = db.Column(db.String(10000), nullable=False)
+    question_mark = db.Column(db.String(10), nullable=False)
     answer = db.Column(db.String(255), nullable=False)
 
-class Question_Option(db.Model):
-    __tablename__ = "question_option"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
-    option = db.Column(db.String(255), primary_key=True, nullable=False)
+    def json(self):
+        self.quiz_id = {
+            'quiz_id': self.quiz_id,
+            'question_id': self.question_id,
+            'question': self.question,
+            'question_type': self.question_type,
+            'option': self.option,
+            'question_mark': self.question_mark,
+            'answer': self.answer
+        }
+        return self.quiz_id 
+
+    def compute_marks(self,answer):
+        if(self.answer ==answer):
+            return int(self.question_mark)
+        return 0 
+
+# class Question_Option(db.Model):
+#     __tablename__ = "question_option"
+#     quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+#     option = db.Column(db.String(255), primary_key=True, nullable=False)
 
 class Chapter_Quiz_Result(db.Model): 
     __tablename__ = "chapter_quiz_result"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     marks = db.Column(db.String(10), nullable=False)
+
+    def update_mark_existing_chapter_quiz_result(self, learner_marks):
+        self.marks = learner_marks
 
 
 class Final_Quiz_Result(db.Model):
     __tablename__ = "final_quiz_result"
-    quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
+    quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     marks = db.Column(db.String(10), nullable=False)
 
@@ -929,6 +981,243 @@ def withdraw_learner_registration():
                 },
             }
         ), 404
+
+
+
+############################# sprint  5 #####################
+
+#this endpoint is for retrieve quiz for particular course,class,chapter 
+#frontend pass me quiz id eg: coursename_class_chaptX
+@app.route("/retrieve_question/<string:quiz_id>")
+def retrieve_question_by_course_class_chapter(quiz_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+
+    question_list = Question.query.filter_by(quiz_id=quiz_id).all()
+    print(question_list)
+    if len(question_list):
+        quiz_record = Quiz.query.filter_by(quiz_id=quiz_id).first()
+
+        return jsonify(
+            {
+                'code': 200,
+                'duration':quiz_record.timing,
+                "question_records": [question.json() for question in question_list]
+                
+            }
+        )
+
+def auto_compute_grade(data):
+
+    learner_marks = 0 
+    question_list = Question.query.filter_by(quiz_id=data['quiz_id']).order_by("question_id").all()
+    answer_array = []
+    answer_array = data['answer'].split(",")
+    for i in range(0,len(question_list)):
+        learner_marks += question_list[i].compute_marks(answer_array[i])
+
+    return learner_marks
+
+def insert_update_into_chapter_quiz_result_db(data,learner_marks,record):
+    print(data)
+    print(learner_marks)
+    print(record)
+    try:
+        print("yes")
+        if(record == None):
+            print(data['quiz_id'])
+            print(data['learner_id'])
+
+            #def __init__(self,emp_id,course_id,class_id,completed):
+            result = Chapter_Quiz_Result(
+                quiz_id=data['quiz_id'],
+                learner_id=data['learner_id'],
+                marks=learner_marks
+                
+            )
+            db.session.add(result)
+            db.session.commit()
+            return 200
+        else:
+            #update instead
+            record.update_mark_existing_chapter_quiz_result(learner_marks)
+            db.session.commit()
+            return 200
+            
+    except Exception as e:
+        return 500
+
+
+def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_learner):
+    try:
+        chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id =data['quiz_id']).first()
+        completion = chapter_quiz.check_pass(learner_marks)
+
+        if(is_exist_chapter_learner == None):
+            #no record no matter what just insert.
+            result = Chapter_Learner(
+                chapter_id=data['quiz_id'][0:-1],
+                learner_id=data['learner_id'],
+                completion=completion      
+            ) 
+            db.session.add(result)
+            db.session.commit()
+            return 200
+        else:
+            # got data inside  if completion fail doesnt matter because either 0 or 1 which is impt to pass dont needoverwrite
+            #if completion is 1 just update
+            if(completion == 1):
+                is_exist_chapter_learner.update_completion()
+                db.session.commit()
+                return 200
+
+    except Exception as e:
+        return 500
+
+
+@app.route("/submit_quiz", methods=['POST'])
+def submit_quiz():
+    #insert into class record, update slot available, delete from registration
+    try:
+        is_exist_chapter_quiz_result = ""
+        is_exist_chapter_learner = ""
+        data = request.get_json()
+        print(data)
+
+        learner_marks = auto_compute_grade(data)
+
+        ##check if this data is already in db
+        
+        is_exist_chapter_quiz_result = Chapter_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
+        code = insert_update_into_chapter_quiz_result_db(data,learner_marks,is_exist_chapter_quiz_result)
+        if(code != 200):
+            return jsonify(
+            {
+                "code" : code,
+                "message": "there is an error insert/update into chapter quiz result db"
+            }), 200
+
+        is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
+
+        #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
+        code_chapter_learner = insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_learner)
+        if(code_chapter_learner != 200):
+            return jsonify(
+            {
+                "code" : code_chapter_learner,
+                "message": "there is an error insert/update into chapter learner result db"
+            }), 200
+
+        # print(question_list)
+        return jsonify(
+            {
+                "code" : code,
+                "message": "successfully"
+            }), 200
+
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occur when executing the function" + str(e)
+            }
+        ), 500
+
+
+#class_id like BEM460_C1
+@app.route("/retrieve_progress_learner_id/<string:class_id>/<string:learner_id>")
+def retrieve_progress_learner_id(class_id,learner_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+
+    Chapter_quiz_list = Chapter_Quiz.query.filter(Chapter_Quiz.quiz_id.contains(class_id)).all()
+
+    final_quiz_list = Final_Quiz.query.filter(Final_Quiz.quiz_id.contains(class_id)).all()
+    total_length = len(Chapter_quiz_list) + len(final_quiz_list)
+    print("total length" , total_length)
+
+    learner_chapter_completion_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(class_id)).filter_by(learner_id = learner_id, completion = 1).all()
+
+    array = class_id.split("_")
+    print(array[0])
+    final_quiz_completion = Completion_Record.query.filter_by(course_id = array[0],learner_id = learner_id).all()
+    total_completion = len(learner_chapter_completion_list) + len(final_quiz_completion)
+    print("total_completion" , total_completion)
+
+    return jsonify(
+    {
+        'code': 200,
+        'progress_percentage':(total_completion/ total_length) * 100
+        
+    })
+
+
+#################### finals need to do insert into db, ultimately, when pass , INSERT into completion record
+
+### 26 oct 2021
+
+#i need eg ME111_C1
+@app.route("/retrieve_chapter/<string:course_class_id>/")
+def retrieve_chapter(course_class_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+
+    chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(course_class_id)).all()
+    if(len(chapter_list)):
+
+        return jsonify(
+        {
+            'code': 200,
+            'results': [chapter.json() for chapter in chapter_list]
+        })
+    return jsonify(
+    {
+        'code': 404,
+        'results': "no results found"
+    })
+
+
+
+#bem460_c3 and learner_id
+@app.route("/retrieve_chapter_learner_by_learner_id/<string:course_class_id>/<string:learner_id>/")
+def retrieve_chapter_learner_by_learner_id(course_class_id,learner_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+
+    chapter_learner_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(course_class_id)).filter_by(learner_id = learner_id).all()
+    if(len(chapter_learner_list)):
+
+        return jsonify(
+        {
+            'code': 200,
+            'results': [chapter_learner.json() for chapter_learner in chapter_learner_list]
+        })
+    return jsonify(
+    {
+        'code': 404,
+        'results': "no results found"
+    })
+
+
+
+##trigger this to see if quiz should be make available anot  if so then use back one of the app route to get questions to let them do it
+@app.route("/is_complete_all_chapters/<string:course_class_id>/<string:learner_id>/")
+def is_complete_all_chapters(course_class_id,learner_id):
+
+    chapter_learner_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(course_class_id)).filter_by(learner_id = learner_id,completion = 1).all()
+
+
+    if(len(chapter_learner_list)):
+
+        return jsonify(
+        {
+            'code': 200,
+            'results': [chapter_learner.json() for chapter_learner in chapter_learner_list]
+        })
+    return jsonify(
+    {
+        'code': 404,
+        'results': "no results found"
+    })
+
+
+
 
 if __name__ == '__main__':
     print("RUNNING TEST LETS GO")
