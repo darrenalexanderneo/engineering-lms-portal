@@ -1199,22 +1199,279 @@ def retrieve_chapter_learner_by_learner_id(course_class_id,learner_id):
 ##trigger this to see if quiz should be make available anot  if so then use back one of the app route to get questions to let them do it
 @app.route("/is_complete_all_chapters/<string:course_class_id>/<string:learner_id>/")
 def is_complete_all_chapters(course_class_id,learner_id):
-
+    chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(course_class_id)).all()
     chapter_learner_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(course_class_id)).filter_by(learner_id = learner_id,completion = 1).all()
-
-
+    no_of_completion = 0
+    no_chapter_list = 0 
+    results = 0
     if(len(chapter_learner_list)):
+        no_of_completion = len(chapter_learner_list)
+    if(len(chapter_list)):
+        no_chapter_list = len(chapter_list)
+        
+    print(no_of_completion)
+    print(no_chapter_list)
+
+    if(no_chapter_list == 0 ):
+        return jsonify(
+        {
+            'code': 404,
+            'results': "no results found",
+            'number_of_completion': 0
+        })
+
+    if(no_of_completion == no_chapter_list):
+        results = 1 
+    return jsonify(
+    {
+        'code': 200,
+        'results': results,
+        'number_of_completion': str(no_of_completion) + "/" + str(no_chapter_list)
+    })
+
+
+
+
+
+################ Trainer 
+@app.route("/retrieve_all_course_details_by_trainer_id/<string:trainer_id>/")
+def retrieve_all_course_details_by_trainer_id(trainer_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+    array_list = []
+
+    try:
+        trainer_record_list = Trainer_Record.query.filter_by(trainer_id = trainer_id).all()
+        if(len(trainer_record_list)):
+            for trainer_record in trainer_record_list:
+                    course_detail = Course.query.filter_by(course_id = trainer_record.course_id).first()
+                    #course_detail.course_name
+                    #trainer_record.class_id
+                    chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(trainer_record.class_id)).all()
+                    num_of_chapter = 0
+                    if(len(chapter_list)):
+                        num_of_chapter = len(chapter_list)     
+
+                    course_info = {
+                        "course_name" : course_detail.course_name,
+                        "class_id" : trainer_record.class_id,
+                        "num_of_chapter" : num_of_chapter
+                    }
+                    array_list.append(course_info)
+            
+            return jsonify(
+            {
+                'code': 200,
+                'results': array_list
+            })
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "data": {
+                        "message": "This trainer are unable to find in trainer record"
+                    },
+                }
+            ), 404
+
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "message": "An error occur when retrieve trainer course details" + str(e)
+                },
+            }
+        ), 404
+
+
+
+def retrieve_chapter_detail(class_id):
+    array_list = []
+    chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(class_id)).all()
+    if(len(chapter_list)):
+        for chapter in chapter_list:
+            array_chap = chapter.chapter_id.split("_")
+            chapter_name = "Chapter " + array_chap[2][5:]
+            #print(chapter_name)
+            #because we know that naming convention for quiz is always like ____ so 
+            #quiz_id = 
+            quiz_record = Chapter_Quiz.query.filter_by(chapter_id = chapter.chapter_id).first()
+            print(quiz_record)
+            is_created = 0
+            if(quiz_record!= None):
+                is_created = 1 
+                quiz_id = quiz_record.quiz_id
+            else:
+                #help frontend create the quiz name 
+                quiz_id = chapter.chapter_id  + "q"
+            
+            string = {
+                'type': "chapter_quiz",
+                'chapter_id' : chapter.chapter_id,
+                'chapter_name': chapter_name,
+                'is_created': is_created,
+                'quiz_id' : quiz_id
+            }
+            array_list.append(string)
+
+    return array_list
+
+def retrieve_quiz_chapter_detail(class_id):
+    ########## QUIZ ############
+    array_list = []
+    quiz_record = Final_Quiz.query.filter(Final_Quiz.quiz_id.contains(class_id)).first()
+    string = ""
+    if(quiz_record != None):
+        string = {
+            'type': "final_quiz",
+            'chapter_name': "Finals",
+            'is_created': 1,
+            'quiz_id' : quiz_record.quiz_id
+        }
+    else:
+        string = {
+            'type': "final_quiz",
+            'chapter_name': "Finals",
+            'is_created': 0,
+            'quiz_id' : class_id + "_FinalQuizq"
+        }
+    array_list.append(string)
+    return array_list
+
+
+
+
+#class id is ME111_C1
+@app.route("/retrieve_course_details_by_class_id/<string:class_id>/")
+def retrieve_course_details_by_class_id(class_id):
+    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+    try:
+        chapter_quiz_array = retrieve_chapter_detail(class_id)
+
+        final_quiz_array = retrieve_quiz_chapter_detail(class_id)
+
 
         return jsonify(
         {
             'code': 200,
-            'results': [chapter_learner.json() for chapter_learner in chapter_learner_list]
+            'results': chapter_quiz_array + final_quiz_array
         })
-    return jsonify(
-    {
-        'code': 404,
-        'results': "no results found"
-    })
+
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "message": "An error occur when retrieve chapters quiz informations." + str(e)
+                },
+            }
+        ), 404
+
+
+
+# def create_quiz_db(quiz_id,timing):
+#     print("yes")
+#     try:
+#         quiz_record = Quiz(
+#             quiz_id=quiz_id,
+#             timing=timing
+#         )
+#         db.session.add(quiz_record)
+#         db.session.commit()
+#         return 200
+#     except Exception as e:
+#         return 500
+
+
+
+def create_question(data):
+    try:
+        print(data['num_of_questions'])
+        for i in range(data['num_of_questions']):
+            print(i)
+            question_record = Question(
+                quiz_id=data['quiz_id'],
+                question_id=data['question_id'][i],
+                question=data['question'][i],
+                question_type=data['question_type'][i],
+                option=data['option'][i],
+                question_mark=data['question_mark'][i],
+                answer=data['answer'][i]
+            )
+            print(question_record)
+            db.session.add(question_record)
+            db.session.commit()
+        return 200
+    except Exception as e:
+        return 500
+
+def insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing):
+    #quiz is a parent of chapter_quiz same as final quiz
+
+    try:
+        chapter_quiz = Chapter_Quiz(
+            quiz_id=quiz_id,
+            chapter_id=chapter_id,
+            total_marks = total_marks,
+            timing = timing
+        )
+        db.session.add(chapter_quiz)
+        db.session.commit()
+        print("done")
+        return 200
+    except Exception as e:
+        print(e)
+        return 500
+
+def insert_final_quiz(quiz_id,course_id,total_marks,timing):
+    print(course_id)
+    try:
+        final_quiz = Final_Quiz(
+            quiz_id=quiz_id,
+            course_id=course_id,
+            total_marks = total_marks,
+            timing = timing
+        )
+        db.session.add(final_quiz)
+        db.session.commit()
+        return 200
+    except Exception as e:
+        return 500
+
+
+@app.route("/create_quiz", methods=['POST'])
+def create_quiz():
+    data = request.get_json()
+    try:
+        # create_quiz_code = create_quiz_db(data['quiz_id'],data['timing'])
+
+        if(data['type'] == 'chapter_quiz'):
+            #is chapter quiz
+            insert_chapter_quiz(data['quiz_id'] ,data['quiz_id'][:-1] ,data['total_marks'],data['timing'])
+        elif(data['type'] == 'final_quiz'):
+            array = data['quiz_id'].split("_")
+            course_id = array[0]
+            insert_final_quiz(data['quiz_id'] ,course_id ,data['total_marks'],data['timing'])
+
+        print("done insertion into chapter/final quiz table")
+        create_question_code = create_question(data)
+        print("---------done create question-----------")
+
+
+        return jsonify(
+        {
+            'code': 200,
+            'results': "Successfully create the quiz"
+            
+        })
+    
+    except Exception as e:
+        return jsonify(
+        {
+            'code': 500,
+            'results': "error in creating the quiz"
+            
+        })
 
 
 
