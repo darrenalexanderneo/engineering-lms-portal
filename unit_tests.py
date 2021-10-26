@@ -1,6 +1,7 @@
 import unittest
 from datetime import datetime
-from app import Employee, Senior_Engineer, Engineer, Trainer, Completion_Record, Course, Course_Prerequisite, Class_Run, Trainer_Record, Class_Record, Registration
+# from app import Employee, Senior_Engineer, Engineer, Trainer, Completion_Record, Course, Course_Prerequisite, Class_Run, Trainer_Record, Class_Record, Registration
+from app import *
 
 
 class TestEmployee(unittest.TestCase):
