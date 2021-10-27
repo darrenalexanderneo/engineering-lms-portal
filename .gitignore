@@ -145,3 +145,4 @@ profiler_output/
 **/.vscode/
 frontend/apikey.js
 frontend/apikey.json
+frontend/pdf_database.json

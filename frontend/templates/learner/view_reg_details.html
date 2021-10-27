@@ -28,8 +28,12 @@
           <div class="my-3">
             <button onclick="location.href='view_reg_courses.html'" class="btn btn-outline-light ms-5">Browse Courses</button>
             <button class="btn btn-outline-light active" onclick="location.href='view_reg_details.html'">View/Change Status</button>
+            <button onclick="location.href='enrolled_courses.html'" class="btn btn-outline-light">Enrolled Courses</button>
+
           </div>
           <div class="my-3 float-end">
+            <img src="../../static/img/download.jfif" class="rounded-circle me-2" width="45px" height="45px" alt="...">
+            <span class="text-white">Darren Neo</span>
             <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
           </div>
       </nav>
@@ -65,7 +69,7 @@
         </table>
     </div>
 
-    <div id="no-reg-course" class="container rounded py-4 d-none" style="background-color: white;">
+    <div id="no-reg-course" class="container rounded mt-5 py-5 d-none text-center" style="background-color: white;">
       <h6>You have not registered for any courses yet</h6>
     </div>
    
