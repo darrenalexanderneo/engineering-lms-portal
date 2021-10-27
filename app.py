@@ -1473,13 +1473,6 @@ def create_quiz():
             
         })
 
-@app.route("/testHeroku") 
-def test_heroku():
-    return jsonify(
-        {
-            "code": "All's good!"
-        }
-    )
 
 
 if __name__ == '__main__':
