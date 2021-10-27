@@ -11,7 +11,6 @@ from app import *
 
 class TestApp(flask_testing.TestCase):
     # app.config['SQLALCHEMY_DATABASE_URI'] = config('testURL') or environ.get('testURL')
-    #Testing
     app.config['SQLALCHEMY_DATABASE_URI'] = config('testURLRDS') or environ.get('testURLRDS')
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
