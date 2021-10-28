@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+
+
+
+    <title>Register for Classes</title>
+</head>
+<body style="background-color: #eee;" onload="renderCourseDetailsPage()">
+    <!-- navigation bar -->
+    <nav class="navbar navbar-dark bg-dark d-flex float-left">
+        <div class="my-3"> </div>
+        <div class="my-3 float-end">
+            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+        </div>
+    </nav>
+    <br>
+
+    <!-- title -->
+    <div class="container ">
+        <h1>Classes</h1>
+    </div>
+    <br>
+
+    <div class="container" >
+        <div class="row" id="cards">
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">EM206 Engineering Management</h5>
+                      <h6 class="card-title">Class 1, 4 quizzes</h6>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button> 
+                    </div>
+               </div>
+            </div>
+            
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">${course_id} ${course_name}</h5>
+                      <p class="card-text">${class_num}, ${quiz_num}</p>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button>
+                    </div>
+               </div>
+            </div>
+            
+        </div>
+
+        
+    </div>
+
+    
+
+
+   
+    
+</body>
+
+    <script src="../../static/js/main.js"></script> 
+
+    <script>
+        //initialise localStorage
+        const storage = window.localStorage;
+
+        //hardcoded learner_id because learner login is not implemented yet
+        const trn_id = "TNR1";
+
+        // to retrieve api keys without exposing
+        function getAPIkeys() {  
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var api_keys = JSON.parse(this.response);
+                    getCourseList_TNR = api_keys.getCourseList_TNR;
+                    getCourseDetails_TNR = api_keys.getCourseDetails_TNR;
+                    createQuiz_POST_TNR = api_keys.createQuiz_POST_TNR;
+
+                    // console.log(getCourseList_TNR);
+                    // console.log(getCourseDetails_TNR);
+                    // console.log(createQuiz_POST_TNR);
+                }
+            }
+            request.open("GET", "../../apikey.json", false);
+            request.send();
+        }
+
+        function renderCourseDetailsPage() {
+            getAPIkeys();
+        
+            // course_id = storage.getItem("course_id"); 
+            console.log(trn_id);
+        
+            getCourseCards(trn_id);
+            // showClassesforRegistration(course_id, learner_id);
+        
+        }
+
+        function getCourseCards(trn_id) {
+            getAPIkeys();
+        
+            document.getElementById("cards").innerHTML = "";
+        
+            var html_content = "";
+        
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var course_list = JSON.parse(this.response).results;
+                    console.log(course_list);
+        
+        
+                    for (course of course_list) {
+                        console.log(course);
+                        var course_id = course.class_id.slice(0, -3);
+                        var class_id = course.class_id;
+                        var class_name = course.class_id.slice(-2, -1) + "lass " + course.class_id.slice(-1);
+                        var course_name = course.course_name;
+                        var chap_num = course.num_of_chapter;
+                        console.log(course_id, class_name, chap_num) 
+                        
+                        html_content += 
+                        `<div class="col-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                  <h5 class="card-title">${course_id} ${course_name}</h5>
+                                  <p class="card-text">${class_name}, ${chap_num} Quizzes</p>
+                                  <button onclick="redirectToViewQuizList('tnr_view_quiz_list', '${class_id}', '${course_name}')" class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                </div>
+                           </div>
+                        </div>`;
+                    }
+                    
+                    document.getElementById("cards").innerHTML = html_content;
+                }
+            };
+        
+            var url = getCourseList_TNR + trn_id;
+            request.open("GET", url, true);
+            request.send();
+        }
+
+
+        function redirectToViewQuizList(page, class_id, course_name) {
+            storage.setItem("class_id", class_id);
+            storage.setItem("course_name", course_name);
+            redirectToPage(page);
+        }
+
+        
+  
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>

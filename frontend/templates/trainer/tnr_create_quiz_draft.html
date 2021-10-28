@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+
+
+
+    <title>Register for Classes</title>
+</head>
+<body style="background-color: #eee;">
+    <!-- navigation bar -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="my-3"> </div>
+        <div class="my-3 float-end">
+            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+        </div>
+    </nav>
+    <br>
+
+    <!-- title -->
+    <div class="container mb-4">
+        <h2>EM206 Engineering Management</h2> 
+        <h4>Class 1, Chapter 2</h4>  
+        Quiz Timing: 56 minutes   
+    </div>
+    
+    <!-- question 1 -->
+    <div id="qn-list" class="">
+        
+
+    </div>
+
+
+    <div class="container mt-4">
+        <button onclick="addAQn()" class="btn btn-outline-primary float-right px-4 py-2" style="border-radius: 2rem;">Add a Question</button>
+    </div>
+    <br><br><br><br><br>
+    <!-- submit button -->
+    <div class="container">
+        Total Marks: 10 <br>
+        Number of Questions: 5
+        <button class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem;">Save & Create Quiz</button>
+    </div>
+
+    <br><br><br><br>
+   
+    
+</body>
+    
+    <!-- <script src="../../static/js/class_registration.js"></script> -->
+
+    <script>
+        //hardcoded learner_id because learner login is not implemented yet
+        const learner_id = "LNR8";
+
+        //
+        var num_of_qn = 0;
+        total_qns = 0; // with deleted
+        var id_ls = [];
+
+        function removeItemFromArray(array, n) {
+            const newArray = [];
+        
+            for ( let i = 0; i < array.length; i++) {
+                if(array[i] !== n) {
+                    newArray.push(array[i]);
+                }
+            }
+            return newArray;
+        }
+        
+        function deleteAQn(btn_id) {
+            console.log(btn_id, 'btn_id')
+            qn_id = btn_id.slice(0, 2);
+            document.getElementById(`${qn_id}`).remove(); // delete div
+            console.log(qn_id, typeof(qn_id), 'qn_id')
+            id_ls = removeItemFromArray(id_ls, qn_id);
+            console.log('after remove qn: ', id_ls);
+
+            num_of_qn -= 1;
+
+            changeQnNum();
+        }
+
+        function changeQnNum() {
+            var num = 1;
+
+            for (let i = 0; i < id_ls.length; i++) {
+                title_id = `${id_ls[i]}-title`;
+                console.log('id: ', title_id, num);
+                console.log(document.getElementById(title_id));
+                document.getElementById(title_id).innerHTML = `Question ${num}`;
+                num += 1;
+            }
+
+            
+        }
+
+        function addAQn() {
+            num_of_qn += 1;
+            total_qns += 1;
+            changeQnNum();
+            qn_id = `q${total_qns}`;
+            id_ls.push(qn_id);
+            console.log('after add qn: ', id_ls);
+            
+            
+
+
+            html_user_selection = `
+            <!-- question format -->
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <select id="${qn_id}-type" onchange="changeQnType(this.id)" class="form-control" placeholder="Question Type">
+                        <option value="tf-selected" selected>True/False</option>
+                        <option value="mcq-selected">MCQ</option>
+                    </select>
+                </div>
+                <div id="${qn_id}-mcq-num" class="form-group col-md-3 d-none">
+                    <input type="number" onchange="changeNumOfOptions(this.id)" id="${qn_id}-mcq-num-input" class="form-control" placeholder="# of Options" value="2">
+                </div>
+                <div class="form-group col-md-3" style="margin-right: 0;">
+                    <input type="number" class="form-control" id="inputZip" placeholder="Marks">
+                </div>
+            </div>
+            
+            <!-- input question -->
+            <div class="form-group">
+                <input type="text" class="form-control" id="inputCity" placeholder="Enter your question">
+            </div>`;
+
+            html_option_ls = `
+            <!-- options part -->
+            <p>Options</p>
+            <div id="${qn_id}-options" class="container">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                    <label class="form-check-label" for="exampleRadios1">True</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                    <label class="form-check-label" for="exampleRadios2">False</label>
+                </div>
+            </div>`;
+
+            html_content = `
+            <!-- question -->
+            <div id="${qn_id}" class="container p-4 border" style="background-color: white;">
+                <div class="row align-items-center mb-3">
+                    <div class="col-8"> <h5 id="${qn_id}-title"> Question ${num_of_qn}</h5> </div>
+                    <div id='${qn_id}-del-btn' class="col-4" onclick="deleteAQn(this.id);"  style="text-align: right;"> <button type="button" class="btn btn-outline-danger">Delete</button> </div>
+                </div>
+
+                ${html_user_selection}
+
+                ${html_option_ls}
+            </div>`;
+            // console.log(html_content)
+            document.getElementById('qn-list').innerHTML += html_content;
+
+        }
+
+        function changeQnType(qn_id) { // q1-type, q2-type
+            console.log(qn_id.slice(0, 2))
+            qn_num = qn_id.slice(0, 2);
+            qn_type = document.getElementById(`${qn_id}`).value; // tf-selected, mcq-selected
+            console.log(`qn type: ${qn_type}`);
+
+            document.getElementById(`${qn_id.slice(0, 2)}-options`).innerHTML = "";
+            html_content = "";
+
+            if(qn_type == 'tf-selected') {
+                html_content = `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                    <label class="form-check-label" for="exampleRadios1">True</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                    <label class="form-check-label" for="exampleRadios2">False</label>
+                </div>
+                `;
+                document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3 d-none');
+            } 
+            else if(qn_type == 'mcq-selected') {
+                html_content = `
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" aria-label="Radio button for following text input">
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with radio button">
+                </div>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" aria-label="Radio button for following text input">
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with radio button">
+                </div>
+                `;
+                document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
+            }
+
+            document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+        }
+
+        function changeNumOfOptions(option_id) {
+            qn_id = option_id.slice(0, 2);
+            option_num = document.getElementById(`${qn_id}-mcq-num-input`).value; // tf-selected, mcq-selected
+            console.log(option_num, 'hehe')
+            
+            html_content = "";
+            each_option_html = `
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" aria-label="Radio button for following text input">
+                    </div>
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with radio button">
+            </div>
+            `;
+
+            for (let i = 0; i < option_num; i++) {
+                html_content += each_option_html;
+            }
+
+            // console.log(html_content)
+            document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+
+
+        }
+  
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>
