@@ -35,10 +35,15 @@
     </div>
 
     <!-- title -->
-    <div id="quiz-title" class="container mb-4">
-        <!-- <h2>EM206 Engineering Management</h2> 
-        <h4>Class 1, Chapter 2</h4>  
-        Quiz Timing: 56 minutes    -->
+    <div class="container mb-4">
+        <div id="quiz-title"></div>
+        <form>
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label" style="font-size: 20px;">Duration: </label>
+                <input type="number" class="form-control col-sm-2" id="hour" placeholder="HH">
+                <input type="number" class="form-control col-sm-2" id="minute" placeholder="MM">
+            </div>
+          </form>
     </div>
 
     <!-- question list -->
@@ -50,6 +55,8 @@
     </div>
     <br><br><br><br>
 
+    <div id="create-quiz-alert" class="container"></div>
+
     <div id="feedback-text" class="container">
        <div class="row">
             <div id="quiz-summary" class="col-6">
@@ -60,12 +67,7 @@
                 <button onclick='createQuiz()' class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
             </div>
        </div>
-    </div>
-
-    
-    
-
-   
+    </div>   
     
 </body>
     
@@ -108,6 +110,8 @@
 
         document.getElementById(div_id).innerHTML = html_content;
     }
+
+    
 
     function addAQn() {
         QID += 1;
@@ -230,30 +234,69 @@
     // POST REQUEST
     function createQuiz() {
         post_obj = getFinalQunInput();
+        var json_string = JSON.stringify(post_obj); // stringify json object into a string
 
         console.log('===== quiz values =====')
         console.log(post_obj);
+        
+        // create POST HTTP request
+        var request = new XMLHttpRequest();
+                
+        request.onreadystatechange = function () {
 
-       
+            var message = "";
+            var html_content = "";
 
+            if (this.readyState == 4 && this.status == 200) {
 
+                message = JSON.parse(this.response).message;
+                // console.log(message);
+                var chap_name = quiz_type == 'chapter_quiz' ? `Chapter ${quiz_id_list[2].slice(-2, -1)} Quiz` : 'Final Quiz'
+                html_content = `<br><div class="alert alert-success fade show" role="alert">
+                                You have successfully created ${chap_name} for ${quiz_id_list[0]} Class ${quiz_id_list[1].slice(1)}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div><br>`;
+                document.getElementById("create-quiz-alert").innerHTML = html_content;
+                //break
+            } 
+            else {
+                // console.log(message);
+                console.log("code: 500 - code is not 200 or 201")
+                //break
+            }
+            
+        }
+
+        var url = createQuiz_POST_TNR;
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(json_string);
     }
 
     function getFinalQunInput() {
          // left timing
          var post_obj = {
-            type: quiz_type,
-            quiz_id: quiz_id,
-            question_id: [],
-            question: [], // ["How many ggghashira are there in demon slayer?","Is Rengoku a flameeeee hashira?"]
-            question_type: [], //["MCQ", "T/F"]
-            option: [], // ["11,12,13,14", "True,False"]
-            question_mark: [], // ["2","2"]
-            answer: [], // ["13", "True"]
-            total_marks: 0, // 6
-            timing: "00:00", // '50:00'
-            num_of_questions: num_of_qns // 2
+            'type': `${quiz_type}`,
+            'quiz_id': `${quiz_id}`,
+            'question_id': [],
+            'question': [], // ["How many ggghashira are there in demon slayer?","Is Rengoku a flameeeee hashira?"]
+            'question_type': [], //["MCQ", "T/F"]
+            'option': [], // ["11,12,13,14", "True,False"]
+            'question_mark': [], // ["2","2"]
+            'answer': [], // ["13", "True"]
+            'total_marks': 0, // 6
+            'timing': "00:00", // '50:00'
+            'num_of_questions': `${num_of_qns}` // 2
         }
+
+        // timing: HH:MM
+        hours = document.getElementById(`hour`).value;
+        minutes = document.getElementById(`minute`).value;
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        post_obj.timing = `${hours}:${minutes}`;
+        // console.log('post_obj.timing', post_obj.timing)
+
 
         // true, false  
         for (i = 0; i < QID_LS.length; i++) {
