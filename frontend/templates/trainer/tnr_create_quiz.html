@@ -64,7 +64,7 @@
                 <p>Number of Questions: </p>
             </div>
             <div class="col-6">
-                <button onclick='createQuiz()' class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
+                <button onclick='createQuiz(); updateInput();' class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
             </div>
        </div>
     </div>   
@@ -126,13 +126,13 @@
         <!-- question format -->
         <div class="form-row">
             <div class="form-group col-md-3">
-                <select id="q${QID}-type" onchange="setSelectedValue(this.id)" class="form-control" placeholder="Question Type">
+                <select id="q${QID}-type" onchange="setQnType(this.id)" class="form-control" placeholder="Question Type">
                     <option value="tf-selected" selected>T/F</option>
                     <option value="mcq-selected">MCQ</option>
                 </select>
             </div>
             <div id="q${QID}-mcq-num" class="form-group col-md-3 d-none">
-                <input type="number" onchange="changeNumOfOptions(this.id)" id="q${QID}-mcq-num-input" class="form-control" placeholder="# of Options" value="2">
+                <input type="number" onchange="changeNumOfOptions(this.id)" id="q${QID}-mcq-num-input" min="2" max="6" class="form-control" placeholder="# of Options" value="2">
             </div>
             <div class="form-group col-md-3" style="margin-right: 0;">
                 <input type="number" onchange="updateQuizSummary()" class="form-control" id="q${QID}-marks" placeholder="Marks">
@@ -191,6 +191,85 @@
 
         changeQnNumber();
     }
+
+    function setQnType(qn_id) { // q1-type, q2-type //q${QID}-type
+        const qn_id_ls = qn_id.split("-");
+        qn_num = qn_id.slice(0, 2);
+        qn_type = document.getElementById(`${qn_id}`).value; // tf-selected, mcq-selected
+        console.log(`qn type: ${qn_type}`);
+
+        document.getElementById(`${qn_id_ls[0]}-options`).innerHTML = "";
+        html_content = "";
+
+        if(qn_type == 'tf-selected') {
+            html_content = `
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="true" value="True" checked>
+                <label class="form-check-label" for="true">True</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="false" value="False">
+                <label class="form-check-label" for="false">False</label>
+            </div>
+            `;
+            document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3 d-none');
+        } 
+        else if(qn_type == 'mcq-selected') {
+            html_content = `
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" name="${qn_id_ls[0]}-options"  placeholder="Input text">
+                    </div>
+                </div>
+                <input type="text" id="${qn_id_ls[0]}-option1" name="${qn_id_ls[0]}-options" class="form-control" aria-label="Text input with radio button">
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" name="${qn_id_ls[0]}-options" aria-label="Radio button for following text input">
+                    </div>
+                </div>
+                <input type="text" id="${qn_id_ls[0]}-option2" name="${qn_id_ls[0]}-options" class="form-control" placeholder="Input text">
+            </div>
+            `;
+            document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
+        }
+
+        document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+    }
+
+    function updateInput(){
+        // console.log(`document.getElementById(id).value: ${document.getElementById(id).value} || ${input_val}`)
+        // document.getElementById(id).value = input_val;
+    }
+
+    function changeNumOfOptions(option_id) {
+        qn_id = option_id.slice(0, 2);
+        option_num = document.getElementById(`${qn_id}-mcq-num-input`).value; // tf-selected, mcq-selected
+        console.log(option_num, 'hehe')
+        
+        html_content = "";
+
+        for (let i = 1; i <= option_num; i++) { // need change qn_id
+            html_content +=  `
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" aria-label="Radio button for following text input">
+                    </div>
+                </div>
+                <input type="text" id='${qn_id}-option${i}' name="${qn_id}-mcq-options" class="form-control" placeholder="Input text">
+            </div>
+            `;
+        }
+
+        // console.log(html_content)
+        document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+
+
+    }
+
 
     function setSelectedValue(BTN_ID) {
         console.log(BTN_ID);
@@ -312,6 +391,8 @@
             if (each_qn_type == 'T/F') {
                 each_option_ls = 'True,False';
             } else { 
+                // each_option_ls = document.querySelector(`input[name="${QID_LS[i]}-mcq-options"]`).value;
+                // console.log(each_option_ls, 'each_option_ls');
                 each_option_ls = "11, 12, 13";
             }
             post_obj.option.push(each_option_ls);
