@@ -1480,8 +1480,9 @@ def retrieve_course_details_by_class_id(class_id):
 
 def create_question(data):
     try:
-        print(data['num_of_questions'])
+        print("numb of question" , data['num_of_questions'])
         for i in range(data['num_of_questions']):
+            print("num")
             print(i)
             question_record = Question(
                 quiz_id=data['quiz_id'],
@@ -1497,6 +1498,7 @@ def create_question(data):
             db.session.commit()
         return 200
     except Exception as e:
+        print("error", e)
         return 500
 
 def insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing):
@@ -1543,7 +1545,7 @@ def create_quiz():
             #is chapter quiz
             is_exist_chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
 
-            if(is_exist_chapter_quiz  == None):
+            if(is_exist_chapter_quiz  != None):
                 return jsonify(
                 {
                     'code': 201,
@@ -1553,10 +1555,11 @@ def create_quiz():
 
             insert_chapter_quiz(data['quiz_id'] ,data['quiz_id'][:-1] ,data['total_marks'],data['timing'])
         elif(data['type'] == 'final_quiz'):
-
+            print("go into create quiz part 2 ")
             is_exist_final_quiz = Final_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
-
-            if(is_exist_final_quiz  == None):
+            print("is exist ?? -> " , is_exist_final_quiz)
+            if(is_exist_final_quiz  != None):
+                print("here")
                 return jsonify(
                 {
                     'code': 201,
@@ -1593,17 +1596,20 @@ def create_quiz():
 
 @app.route("/view_quiz/<string:quiz_id>/")
 def view_quiz(quiz_id):
+    print("inside view quiz")
     array_list = []
     timing = ""
     total_marks = ""
     chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id = quiz_id).first()
     final_quiz = Final_Quiz.query.filter_by(quiz_id = quiz_id).first()
     if(chapter_quiz != None):
+        print("chapter_quiz_view")
         timing = chapter_quiz.timing 
         total_marks = chapter_quiz.total_marks
         print(timing)
         print(total_marks)
     if(final_quiz != None):
+        print("quiz_quiz_view")
         timing = final_quiz.timing 
         total_marks = final_quiz.total_marks
         print(timing)

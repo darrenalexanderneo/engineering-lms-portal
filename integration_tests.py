@@ -26,9 +26,17 @@ class TestApp(flask_testing.TestCase):
         emp_2 = Employee(emp_id="EMP15", emp_name="Mark Lim")
         emp_3 = Employee(emp_id="EMP17", emp_name="Mary Rose Jane")
 
+        emp_4 = Employee(emp_id="EMP20", emp_name="Peter John")
+        emp_5 = Employee(emp_id="EMP21", emp_name="Harry Larry")
+        emp_6 = Employee(emp_id="EMP22", emp_name="Mary Goh")
+
         learner_1 = Learner(emp_id="EMP16", learner_id="LNR16")
         learner_2 = Learner(emp_id="EMP15", learner_id="LNR15")
         learner_3 = Learner(emp_id="EMP17", learner_id="LNR17")
+
+        trainer_1 = Trainer(emp_id="EMP20", trainer_id="TNR20")
+        trainer_2 = Trainer(emp_id="EMP21", trainer_id="TNR21")
+        trainer_3 = Trainer(emp_id="EMP22", trainer_id="TNR22")
 
         course_1 = Course(course_id="BEM460", course_name="Basic Engineering Management", course_desc="Learning the basic concepts of engineering. In addition, real life concepts will be introduced as well.", prerequisite=0)
         course_2 = Course(course_id="EE200", course_name="Electricity & Electronics", course_desc="Develop and build analog electronics circuits. You will build multiple circuits from sound buzzers to bionics where we actually control a servo motor by reading signals from your muscles", prerequisite=1)
@@ -49,6 +57,13 @@ class TestApp(flask_testing.TestCase):
 
         completion_record_1 = Completion_Record(course_id="BEM460", learner_id="LNR15")
 
+
+
+        chapter_1 = Chapter(course_id="BEM460", chapter_id ="BEM460_C1_Chapt1")
+        chapter_2 = Chapter(course_id="BEM460", chapter_id ="BEM460_C1_Chapt2")
+        chapter_3 = Chapter(course_id="BEM460", chapter_id ="BEM460_C1_Chapt3")
+
+        chapter_learner_1 = Chapter_Learner(chapter_id ="BEM460_C1_Chapt1",learner_id="LNR17",completion = 1)
         db.session.add(emp_1)
         db.session.commit()
 
@@ -58,6 +73,15 @@ class TestApp(flask_testing.TestCase):
         db.session.add(emp_3)
         db.session.commit()
 
+        db.session.add(emp_4)
+        db.session.commit()
+
+        db.session.add(emp_5)
+        db.session.commit()
+
+        db.session.add(emp_6)
+        db.session.commit()
+
         db.session.add(learner_1)
         db.session.commit()
 
@@ -65,6 +89,13 @@ class TestApp(flask_testing.TestCase):
         db.session.commit()
 
         db.session.add(learner_3)
+        db.session.commit()
+
+        db.session.add(trainer_1)
+        db.session.commit()
+        db.session.add(trainer_2)
+        db.session.commit()
+        db.session.add(trainer_3)
         db.session.commit()
         
         db.session.add(course_1)
@@ -91,6 +122,53 @@ class TestApp(flask_testing.TestCase):
         db.session.commit()
 
         db.session.add(completion_record_1)
+        db.session.commit()
+
+        chapter_quiz_1 = Chapter_Quiz(quiz_id="BEM460_C1_Chapt1q" , chapter_id="BEM460_C1_Chapt1" ,total_marks="2",timing="10:00")
+        chapter_quiz_2 = Chapter_Quiz(quiz_id="BEM460_C2_Chapt1q" , chapter_id="BEM460_C2_Chapt1" ,total_marks="3",timing="10:00")
+        #final_quiz
+        final_quiz_1 = Final_Quiz(quiz_id="BEM460_C1_finalQuizq" , course_id="BEM460" ,total_marks="2",timing="30:00")
+        final_quiz_2= Final_Quiz(quiz_id="BEM460_C2_finalQuizq" , course_id="BEM460" ,total_marks="2",timing="30:00")
+        db.session.add(chapter_quiz_1)
+        db.session.commit()
+        db.session.add(chapter_quiz_2)
+        db.session.commit()
+        db.session.add(final_quiz_1)
+        db.session.commit()
+        db.session.add(final_quiz_2)
+        db.session.commit()
+
+
+        #question for chapter_quiz and final_quiz
+        chap_question_1 = Question(quiz_id="BEM460_C1_Chapt1q", question_id="Q1" , question="What SPM means" , question_type ="MCQ", option="S,P,M,A",question_mark="2",answer="S")
+
+        final_question_1 = Question(quiz_id="BEM460_C1_finalQuizq", question_id="Q1" , question="What final es means" , question_type ="MCQ", option="V,A,L,O",question_mark="2",answer="L")
+
+        db.session.add(chap_question_1)
+        db.session.commit()
+ 
+        db.session.add(final_question_1)
+        db.session.commit()
+
+        chapter_quiz_result_1 = Chapter_Quiz_Result(quiz_id = 'BEM460_C1_Chapt1q' , learner_id="LNR16", marks='0')
+        db.session.add(chapter_quiz_result_1)
+        db.session.commit()
+
+
+        db.session.add(chapter_1)
+        db.session.commit()
+        db.session.add(chapter_2)
+        db.session.commit()
+        db.session.add(chapter_3)
+        db.session.commit()
+
+
+        db.session.add(chapter_learner_1)
+        db.session.commit()
+
+        trainer_record_1 = Trainer_Record(class_id ="BEM460_C1" , course_id ="BEM460", trainer_id = "TNR20")
+
+        db.session.add(trainer_record_1)
         db.session.commit()
 
 
@@ -439,13 +517,418 @@ class Test_Registration_Endpoint(TestApp):
         self.assertEqual(response.status_code, 500)
     
 
+######### sprint 6
+
+class Test_Question_Endpoint(TestApp):
+    def test_retrieve_question_by_course_class_chapter_code_200(self):
+
+        quiz_id = "BEM460_C1_Chapt1q"
+        endpoint = "retrieve_question/" + quiz_id
+
+        response = self.client.get(endpoint)
+        self.assertEqual(response.json, {'code': 200, 'duration': '10:00', 'question_records': [{'answer': 'S', 'option': 'S,P,M,A', 'question': 'What SPM means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_Chapt1q'}]})
 
 
+    def test_retrieve_question_by_course_class_chapter_code_500(self):
+  
+        quiz_id = "BEM460_C1_Chapt1qunknown"
+        endpoint = "retrieve_question/" + quiz_id
+
+        response = self.client.get(endpoint)
+        print(response.json)
+        self.assertEqual(response.json, {'code': 500, 'message': 'question not found'})
+
+class Test_auto_compute_quiz_Endpoint(TestApp):
+    def test_compute_quiz_wrong(self):
+        print('test compute quiz')
+        data = {
+                "type" : "chapter_quiz",
+                "quiz_id" : "BEM460_C1_Chapt1q",
+                "learner_id" : "LNR16",
+                "question": "Q1",
+                "answer": "M" 
+                }
+        marks = auto_compute_grade(data)
+        print(marks)
+        self.assertEqual(marks, 0)
+
+    def test_compute_quiz_wrong(self):
+        print('test compute quiz')
+        data = {
+                "type" : "chapter_quiz",
+                "quiz_id" : "BEM460_C1_Chapt1q",
+                "Learner_id" : "LNR16",
+                "question": "Q1",
+                "answer": "S" 
+                }
+        marks = auto_compute_grade(data)
+        print(marks)
+        self.assertEqual(marks, 2)
+
+class Test_insert_update_chapter_quiz_db(TestApp):
+    def test_insert_chapter_quiz_db(self):
+        data = {
+            "type" : "chapter_quiz",
+            "quiz_id" : "BEM460_C1_Chapt1q",
+            "learner_id" : "LNR17",
+            "question": "Q1",
+            "answer": "M" 
+            }
+        learner_marks = 2
+        record = None
+        code = insert_update_into_quiz_result_db(data,learner_marks,record)
+        self.assertEqual(code, 200)
+
+    def test_update_chapter_quiz_db(self):
+        data = {
+            "type" : "chapter_quiz",
+            "quiz_id" : "BEM460_C1_Chapt1q",
+            "learner_id" : "LNR16",
+            "question": "Q1",
+            "answer": "M" 
+            }
+        learner_marks = 2
+        record = Chapter_Quiz_Result(
+            quiz_id="BEM460_C1_Chapt1q",
+            learner_id ="LNR16",
+            marks= "0"
+
+
+        )
+        code = insert_update_into_quiz_result_db(data,learner_marks,record)
+        self.assertEqual(code, 200)
+
+
+class Test_insert_update_final_quiz_db(TestApp):
+    def test_insert_chapter_quiz_db(self):
+        data = {
+            "type" : "final_quiz",
+            "quiz_id" : "BEM460_C1_finalQuizq",
+            "learner_id" : "LNR17",
+            "question": "Q1",
+            "answer": "M" 
+            }
+        learner_marks = 2
+        record = None
+        code = insert_update_into_quiz_result_db(data,learner_marks,record)
+        self.assertEqual(code, 200)
+
+    def test_update_chapter_quiz_db(self):
+        data = {
+            "type" : "final_quiz",
+            "quiz_id" : "BEM460_C1_finalQuizq",
+            "learner_id" : "LNR16",
+            "question": "Q1",
+            "answer": "M" 
+            }
+        learner_marks = 2
+        record = Final_Quiz_Result(
+            quiz_id="BEM460_C1_Chapt1q",
+            learner_id ="LNR16",
+            marks= "0"
+
+
+        )
+        code = insert_update_into_quiz_result_db(data,learner_marks,record)
+        self.assertEqual(code, 200)
+
+
+class test_submit_quiz(TestApp):
+    def test_submit_quiz(self):
+        request_body = {
+            "type": "chapter_quiz",
+            "quiz_id" : "BEM460_C1_Chapt1q",
+            "learner_id" : "LNR17",
+            "question": "Q1",
+            "answer": "S" 
+        }
+        endpoint = "submit_quiz"
+
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_submit_quiz_final(self):
+        request_body = {
+            "type": "final_quiz",
+            "quiz_id" : "BEM460_C1_finalQuizq",
+            "learner_id" : "LNR17",
+            "question": "Q1",
+            "answer": "S" 
+        }
+        endpoint = "submit_quiz"
+
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+
+class test_progress_learner(TestApp):
+    def test_progress_learner_id(self):
+        class_id = "BEM460_C1"
+        learner_id = "LNR16"
+        result = retrieve_progress_learner_id(class_id,learner_id)
+        print(result.json)
+        self.assertEqual(result.json , {'code': 200, 'progress_percentage': 0.0})
+
+class Test_retrieve_chapter_details_for_learner(TestApp):
+    def test_retrieve_chapter(self):
+        print("COME IN")
+        course_id = "BEM460_C1"
+        endpoint = "retrieve_chapter/" + course_id
+        response = self.client.get(endpoint)
+        print(response.json)
+        self.assertEqual(response.json, {'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'course_id': 'BEM460'}, {'chapter_id': 'BEM460_C1_Chapt2', 'course_id': 'BEM460'}, {'chapter_id': 'BEM460_C1_Chapt3', 'course_id': 'BEM460'}]})
     
+    def test_retrieve_chapter_learner_by_learner_id(self):
+        course_id = "BEM460_C1"
+        learner_id = "LNR17"
+        endpoint = "retrieve_chapter_learner_by_learner_id/" + course_id + "/" + learner_id + "/"
+        response = self.client.get(endpoint)
+        print(response.json)
+        self.assertEqual(response.json, {'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'completion': 1, 'learner_id': 'LNR17'}]})
 
+    def test_is_complete_all_chapters(self):
+        course_class_id = "BEM460_C1"
+        learner_id = "LNR17"
+        endpoint = "is_complete_all_chapters/" + course_class_id + "/" + learner_id + "/"
+        response = self.client.get(endpoint)
+        print("test_is_complete_all_chapters")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 200, 'number_of_completion': '1/3', 'results': 0})
+
+    def test_is_complete_all_chapters_empty(self):
+        course_class_id = "BEM460_C2"
+        learner_id = "LNR17"
+        endpoint = "is_complete_all_chapters/" + course_class_id + "/" + learner_id + "/"
+        response = self.client.get(endpoint)
+        print("test_is_complete_all_chapters")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 404, 'number_of_completion': 0, 'results': 'no results found'})
+
+class Test_Trainer_Chapter_Endpoint(TestApp):
+    def test_retrieve_all_course_details_by_trainer_id_success(self):
+        trainer_id = "TNR20"
+        endpoint = "retrieve_all_course_details_by_trainer_id/" + trainer_id +"/"
+        response = self.client.get(endpoint)
+        self.assertEqual(response.json, {'code': 200, 'results': [{'class_id': 'BEM460_C1', 'course_name': 'Basic Engineering Management', 'num_of_chapter': 3}]})
+
+
+    def test_retrieve_all_course_details_by_trainer_id_success(self):
+        trainer_id = "TNR21"
+        endpoint = "retrieve_all_course_details_by_trainer_id/" + trainer_id +"/"
+        response = self.client.get(endpoint)
+        self.assertEqual(response.json,{'code': 404, 'data': {'message': 'This trainer are unable to find in trainer record'}} )
     
+    def test_retrieve_chapter_detail(self):
+        class_id = "BEM460_C1"
+        array_list = retrieve_chapter_detail(class_id)
+        print("test_retrieve_chapter_detail")
+        print(array_list)
+        self.assertEqual(array_list, [{'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt1', 'chapter_name': 'Chapter 1', 'is_created': 1, 'quiz_id': 'BEM460_C1_Chapt1q'}, {'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt2', 'chapter_name': 'Chapter 2', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt2q'}, {'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt3', 'chapter_name': 'Chapter 3', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt3q'}])
+    
+    def test_retrieve_quiz_chapter_detail(self):
+        class_id = "BEM460_C1"
+        array_list = retrieve_quiz_chapter_detail(class_id)
+        print("test_retrieve_quiz_chapter_detail")
+        print(array_list)
+        self.assertEqual(array_list,[{'type': 'final_quiz', 'chapter_name': 'Finals', 'is_created': 1, 'quiz_id': 'BEM460_C1_finalQuizq'}])
+
+    def test_retrieve_course_details_by_class_id(self):
+        class_id = "BEM460_C1"
+        endpoint = "retrieve_course_details_by_class_id/" + class_id +"/"
+        response = self.client.get(endpoint)
+        print("test_retrieve_course_details_by_class_id")
+        print(response.json)
+        self.assertEqual(response.json,{'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'chapter_name': 'Chapter 1', 'is_created': 1, 'quiz_id': 'BEM460_C1_Chapt1q', 'type': 'chapter_quiz'}, {'chapter_id': 'BEM460_C1_Chapt2', 'chapter_name': 'Chapter 2', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt2q', 'type': 'chapter_quiz'}, {'chapter_id': 'BEM460_C1_Chapt3', 'chapter_name': 'Chapter 3', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt3q', 'type': 'chapter_quiz'}, {'chapter_name': 'Finals', 'is_created': 1, 'quiz_id': 'BEM460_C1_finalQuizq', 'type': 'final_quiz'}]})
 
 
+class Test_Trainer_Question_Endpoint(TestApp):
+    ## to let this work, need create object for chapter_quiz 
+    def test_create_question_chapter_success(self):
+        request_body = {
+            "type" : "chapter_quiz",
+            "quiz_id": "BEM460_C2_Chapt1q",
+            "question_id" : ["Q1","Q2","Q3"],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ","T/F"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan","True"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+
+        }
+        code = create_question(request_body)
+        print("test_create_question")
+        print(code)
+        self.assertEqual(code,200)
+
+    def test_create_question_final_success(self):
+        request_body = {
+            "type" : "final_quiz",
+            "quiz_id": "BEM460_C2_FinalQuizq",
+            "question_id" : ["Q1","Q2","Q3"],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ","T/F"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan","True"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+
+        }
+        code = create_question(request_body)
+        print("test_create_question")
+        print(code)
+        self.assertEqual(code,200)
+
+    def test_create_question_chapter_failure(self):
+        request_body = {
+            "type" : "chapter_quiz",
+            "quiz_id": "BEM460_C2_Chapt1q",
+            "question_id" : ["Q1","Q2",],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan","True"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+
+        }
+        ##question_mark have 2index instead of 3
+        code = create_question(request_body)
+        print("test_create_question")
+        print(code)
+        self.assertEqual(code,500)
+
+    def test_create_question_final_failure(self):
+        request_body = {
+            "type" : "final_quiz",
+            "quiz_id": "BEM460_C2_FinalQuizq",
+            "question_id" : ["Q1","Q2","Q3"],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ","T/F"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+
+        }
+
+        ##answer only got 2 position instead of 3
+        code = create_question(request_body)
+        print("test_create_question")
+        print(code)
+        self.assertEqual(code,500)
+
+    def test_insert_chapter_quiz_success(self):
+        quiz_id ="BEM460_C2_chapt2q"
+        total_marks = 2
+        chapter_id = "BEM460_C2_chapt2"
+        timing = "30:00"
+        code = insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing)
+        self.assertEqual(code, 200)
+
+    # def test_insert_chapter_quiz_failure(self):
+    #     quiz_id =""
+    #     total_marks = 2
+    #     chapter_id = ""
+    #     timing = "30:00"
+    #     code = insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing)
+    #     self.assertEqual(code, 500)
+
+    def test_insert_final_quiz_success(self):
+        quiz_id ="BEM460_C3_FinalQuizq"
+        total_marks = 2
+        course_id = "BEM460"
+        timing = "30:00"
+        code = insert_final_quiz(quiz_id,course_id,total_marks,timing)
+        self.assertEqual(code, 200)
+
+    def test_insert_final_quiz_failure(self):
+        quiz_id ="BEM460_C3_FinalQuizq"
+        total_marks = 2
+        course_id = ""
+        timing = "30:00"
+        code = insert_final_quiz(quiz_id,course_id,total_marks,timing)
+        self.assertEqual(code, 500)
+
+
+    def test_create_quiz_sucess(self):
+        request_body = {
+            "type" : "final_quiz",
+            "quiz_id": "BEM460_C3_FinalQuizq",
+            "question_id" : ["Q1","Q2","Q3"],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ","T/F"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan","True"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+            }
+        endpoint = "create_quiz"
+        print("go into create quiz")
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+        print("output")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 200, 'results': 'Successfully create the quiz'})
+
+
+    def test_create_quiz_created(self):
+        request_body = {
+            "type" : "final_quiz",
+            "quiz_id": "BEM460_C2_FinalQuizq",
+            "question_id" : ["Q1","Q2","Q3"],
+            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
+            "question_type" : ["MCQ","MCQ","T/F"],
+            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
+            "question_mark": ["2","2","2"],
+            "answer": ["13","Muzan","True"],
+            "total_marks" : 6,
+            "timing" : "50:00",
+            "num_of_questions":3
+            }
+        endpoint = "create_quiz"
+        print("go into create quiz")
+        response = self.client.post(endpoint,
+        data=json.dumps(request_body),
+        content_type="application/json")
+        print("output")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 201, 'results': 'Final Quiz have already been created. You are not allow to have multiple entry'})
+
+class Test_Trainer_View_Quiz_Endpoint(TestApp):
+    def test_view_quiz(self):
+        quiz_id = "BEM460_C1_Chapt1q"
+        endpoint = "view_quiz/" + quiz_id + "/"
+
+        response = self.client.get(endpoint)
+        print("test_view_quiz")
+        print(response.json)
+        self.assertEqual(response.json,{'code': 200, 'results': {'quiz_id': 'BEM460_C1_Chapt1q', 'results': [{'answer': 'S', 'option': 'S,P,M,A', 'question': 'What SPM means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_Chapt1q'}], 'timing': '10:00', 'total_marks': '2'}})
+
+    def test_view_final_quiz(self):
+        quiz_id = "BEM460_C1_finalQuizq"
+        endpoint = "view_quiz/" + quiz_id + "/"
+
+        response = self.client.get(endpoint)
+        print("test_view_quiz")
+        print(response.json)
+        self.assertEqual(response.json,{'code': 200, 'results': {'quiz_id': 'BEM460_C1_finalQuizq', 'results': [{'answer': 'L', 'option': 'V,A,L,O', 'question': 'What final es means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_finalQuizq'}], 'timing': '30:00', 'total_marks': '2'}})
 
 
 

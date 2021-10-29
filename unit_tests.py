@@ -109,6 +109,111 @@ class TestClassRun(unittest.TestCase):
         })
 
 
+class TestQuestion(unittest.TestCase):
+    def test_json(self):
+        question_1 = Question(quiz_id="BEM460_C1_Chapt1q", question_id="Q1", question="does BEM stand for Basic Engineering Management?", question_type="T/F", option =  "True,False", question_mark= "2", answer="True")
+        self.assertEqual(question_1.json(), {
+            'quiz_id': "BEM460_C1_Chapt1q", 
+            'question_id': "Q1",
+            'question': "does BEM stand for Basic Engineering Management?",
+            'question_type': "T/F",
+            'option': "True,False",
+            'question_mark': "2",
+            'answer': "True"
+            })
+
+    def test_compute_marks_correct(self):
+        question_1 = Question(quiz_id="BEM460_C1_Chapt1q", question_id="Q1", question="does BEM stand for Basic Engineering Management?", question_type="T/F", option =  "True,False", question_mark= "2", answer="True")
+
+        marks = question_1.compute_marks("True")
+        self.assertEqual(marks, 2)
+
+    def test_compute_marks_wrong(self):
+        question_1 = Question(quiz_id="BEM460_C1_Chapt1q", question_id="Q1", question="does BEM stand for Basic Engineering Management?", question_type="T/F", option =  "True,False", question_mark= "2", answer="True")
+
+        marks = question_1.compute_marks("False")
+        self.assertEqual(marks, 0)
+
+
+class TestChapter_Quiz_Result(unittest.TestCase):
+    def test_update_mark_existing_chapter_quiz_result(self):
+        learner_marks = 5
+        chapter_quiz_result = Chapter_Quiz_Result(
+            quiz_id ="BEM460_C1_Chapt1q",
+            learner_id = "LNR16",
+            marks="4"
+        )
+        chapter_quiz_result.update_mark_existing_chapter_quiz_result(learner_marks)
+        self.assertEqual(chapter_quiz_result.marks,learner_marks)
+
+
+class TestFinal_Quiz_Result(unittest.TestCase):
+    def test_update_mark_existing_chapter_quiz_result(self):
+        learner_marks = 5
+        chapter_quiz_result = Final_Quiz_Result(
+            quiz_id ="BEM460_C1_FinalQuizq",
+            learner_id = "LNR16",
+            marks="4"
+        )
+        chapter_quiz_result.update_mark_existing_final_quiz_result(learner_marks)
+        self.assertEqual(chapter_quiz_result.marks,learner_marks)
+
+class TestChapter_Quiz(unittest.TestCase):
+    def test_check_pass_pass(self):
+        chapter_quiz_1 = Chapter_Quiz(
+            quiz_id="BEM460_C1_Chapt1q",
+            chapter_id="BEM460_C1_Chapt1",
+            total_marks = "10"
+        )
+        result = chapter_quiz_1.check_pass(5)
+        self.assertEqual(result,1)
+    
+    def test_check_pass_fail(self):
+        chapter_quiz_1 = Chapter_Quiz(
+            quiz_id="BEM460_C1_Chapt1q",
+            chapter_id="BEM460_C1_Chapt1",
+            total_marks = "10"
+        )
+        result = chapter_quiz_1.check_pass(4)
+        self.assertEqual(result,0)
+
+class TestChapter_Learner(unittest.TestCase):
+    def test_json_completion_test_case_1(self):
+        chapter_learner_1 = Chapter_Learner(chapter_id="BEM460_C1_Chapt1", learner_id="LNR17",
+        completion=1)
+        self.assertEqual(chapter_learner_1.json(), {
+            'chapter_id' : "BEM460_C1_Chapt1",
+            "learner_id" : "LNR17",
+            "completion": 1
+            })
+
+    def test_json_completion_test_case_2(self):
+        chapter_learner_1 = Chapter_Learner(chapter_id="BEM460_C1_Chapt1", learner_id="LNR17",
+        completion=0)
+        self.assertEqual(chapter_learner_1.json(), {
+            'chapter_id' : "BEM460_C1_Chapt1",
+            "learner_id" : "LNR17",
+            "completion": 0
+            })
+
+    def test_update_completion(self):
+        chapter_learner_1 = Chapter_Learner(
+            chapter_id = "BEM460_C1_Chapt1",
+            learner_id = "LNR17",
+            completion = "0"
+        )
+        chapter_learner_1.update_completion()
+        ###can see that completion from 0 become 1
+        self.assertEqual(chapter_learner_1.completion,1)
+
+class TestChapter(unittest.TestCase):
+    def test_json(self):
+        chapter_1 = Chapter(course_id="BEM460", chapter_id="BEM460_C1_Chapt1")
+        self.assertEqual(chapter_1.json(), {
+            'course_id' : "BEM460",
+            "chapter_id" : "BEM460_C1_Chapt1"
+            })
+    
 
 
 if __name__ == "__main__":
