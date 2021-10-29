@@ -276,6 +276,16 @@ class Chapter_Quiz(Quiz):
     chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
     total_marks = db.Column(db.String(10), nullable=False)
 
+    def json(self):
+        info = {
+            'quiz_id': self.quiz_id,
+            'chapter_id': self.chapter_id,
+            'total_marks': self.total_marks,
+            'timing': Quiz.timing
+        }
+
+        return info
+
     def check_pass(self,learner_marks):
         is_pass = 1
         percentage = (int(learner_marks) / int(self.total_marks)) * 100
@@ -290,6 +300,16 @@ class Final_Quiz(Quiz):
     quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
     total_marks = db.Column(db.String(10), nullable=False)
+    def json(self):
+        final_quiz_info = {
+            'quiz_id': self.quiz_id,
+            'course_id': self.course_id,
+            'total_marks': self.total_marks,
+            'timing': Quiz.timing
+
+        }
+        return final_quiz_info
+
 
 class Question(db.Model):
     __tablename__ = "question"
@@ -1495,6 +1515,47 @@ def create_quiz():
         })
 
 
+
+
+
+@app.route("/view_quiz/<string:quiz_id>/")
+def view_quiz(quiz_id):
+    array_list = []
+    timing = ""
+    total_marks = ""
+    chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id = quiz_id).first()
+    final_quiz = Final_Quiz.query.filter_by(quiz_id = quiz_id).first()
+    if(chapter_quiz != None):
+        timing = chapter_quiz.timing 
+        total_marks = chapter_quiz.total_marks
+        print(timing)
+        print(total_marks)
+    if(final_quiz != None):
+        timing = final_quiz.timing 
+        total_marks = final_quiz.total_marks
+        print(timing)
+        print(total_marks)
+
+    question_list = Question.query.filter_by(quiz_id = quiz_id).all()
+    if(len(question_list)):
+        for question in question_list:
+            question_json = question.json()
+            array_list.append(question_json)
+
+    result = {
+        "quiz_id" : quiz_id,
+        "timing" : timing,
+        "total_marks" : total_marks,
+        "results": array_list
+    }
+
+    return jsonify(
+        {
+            'code': 200,
+            'results': result
+            
+        })
+        
 
 
 if __name__ == '__main__':
