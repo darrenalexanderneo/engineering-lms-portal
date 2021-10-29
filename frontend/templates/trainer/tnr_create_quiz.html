@@ -70,8 +70,6 @@
     </div>   
     
 </body>
-    
-    <script src="../../static/js/get_api_keys.js"></script>
     <script src="../../static/js/main.js"></script>
 
     <script>
@@ -219,18 +217,18 @@
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                    <input type="radio" name="${qn_id_ls[0]}-options"  placeholder="Input text">
+                    <input type="radio" id='${qn_id_ls[0]}-mcq-options[1]-radio' name="${qn_id_ls[0]}-mcq-options-radio"  placeholder="Input text">
                     </div>
                 </div>
-                <input type="text" id="${qn_id_ls[0]}-option1" name="${qn_id_ls[0]}-options" class="form-control" aria-label="Text input with radio button">
+                <input type="text" id='${qn_id_ls[0]}-mcq-options[1]' name="${qn_id_ls[0]}-mcq-options[1]" class="form-control" placeholder="Input text">
             </div>
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                    <input type="radio" name="${qn_id_ls[0]}-options" aria-label="Radio button for following text input">
+                    <input type="radio" id='${qn_id_ls[0]}-mcq-options[2]-radio' name="${qn_id_ls[0]}-mcq-options-radio" aria-label="Radio button for following text input">
                     </div>
                 </div>
-                <input type="text" id="${qn_id_ls[0]}-option2" name="${qn_id_ls[0]}-options" class="form-control" placeholder="Input text">
+                <input type="text" id='${qn_id_ls[0]}-mcq-options[2]' name="${qn_id_ls[0]}-mcq-options[2]" class="form-control" placeholder="Input text">
             </div>
             `;
             document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
@@ -256,10 +254,10 @@
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                    <input type="radio" aria-label="Radio button for following text input">
+                    <input type="radio" id='${qn_id}-mcq-options[${i}]-radio' name="${qn_id}-mcq-options-radio" aria-label="Radio button for following text input">
                     </div>
                 </div>
-                <input type="text" id='${qn_id}-option${i}' name="${qn_id}-mcq-options" class="form-control" placeholder="Input text">
+                <input type="text" id='${qn_id}-mcq-options[${i}]' name="${qn_id}-mcq-options[${i}]" class="form-control" placeholder="Input text">
             </div>
             `;
         }
@@ -389,17 +387,28 @@
 
             // options list
             if (each_qn_type == 'T/F') {
+                // option list
                 each_option_ls = 'True,False';
+
+                // answer
+                each_answer = document.querySelector(`input[name="${QID_LS[i]}-options"]:checked`).value;
             } else { 
-                // each_option_ls = document.querySelector(`input[name="${QID_LS[i]}-mcq-options"]`).value;
-                // console.log(each_option_ls, 'each_option_ls');
-                each_option_ls = "11, 12, 13";
+                // option list
+                each_option_ls = '';
+                option_num = document.getElementById(`${QID_LS[i]}-mcq-num-input`).value;
+                for (j=0;j<option_num;j++) { // get by element id
+                    each_option_ls += document.getElementById(`${QID_LS[i]}-mcq-options[${j+1}]`).value;
+                    if ((j+1) != option_num){each_option_ls += ',';}
+                    selected_id = document.querySelector(`input[name="${QID_LS[i]}-mcq-options-radio"]:checked`).getAttribute('id'); //q1-mcq-options[2]-radio 
+                    each_answer = document.getElementById(selected_id.slice(0, -6)).value;
+                } 
+                
             }
             post_obj.option.push(each_option_ls);
-
-            // answer list: to be changed BC of mcq option??
-            each_answer = document.querySelector(`input[name="${QID_LS[i]}-options"]:checked`).value;
             post_obj.answer.push(each_answer);
+
+            
+            
 
             // question list
             each_qn = document.getElementById(`${QID_LS[i]}-qn`).value;

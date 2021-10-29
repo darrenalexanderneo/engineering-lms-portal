@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,7 @@
 
     <title>Register for Classes</title>
 </head>
-<body style="background-color: #eee;">
+<body style="background-color: #eee;" onload="renderCreateQuizPage()">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark">
         <div class="my-3"> </div>
@@ -27,222 +28,471 @@
     </nav>
     <br>
 
+    <!-- back to prev page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('tnr_view_quiz_list')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
     <!-- title -->
     <div class="container mb-4">
-        <h2>EM206 Engineering Management</h2> 
-        <h4>Class 1, Chapter 2</h4>  
-        Quiz Timing: 56 minutes   
-    </div>
-    
-    <!-- question 1 -->
-    <div id="qn-list" class="">
-        
-
-    </div>
-
-
-    <div class="container mt-4">
-        <button onclick="addAQn()" class="btn btn-outline-primary float-right px-4 py-2" style="border-radius: 2rem;">Add a Question</button>
-    </div>
-    <br><br><br><br><br>
-    <!-- submit button -->
-    <div class="container">
-        Total Marks: 10 <br>
-        Number of Questions: 5
-        <button class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem;">Save & Create Quiz</button>
+        <div id="quiz-title"></div>
+        <form>
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label" style="font-size: 20px;">Duration: </label>
+                <input type="number" class="form-control col-sm-2" id="hour" placeholder="HH">
+                <input type="number" class="form-control col-sm-2" id="minute" placeholder="MM">
+            </div>
+          </form>
     </div>
 
-    <br><br><br><br>
-   
-    
-</body>
-    
-    <!-- <script src="../../static/js/class_registration.js"></script> -->
+    <!-- question list -->
+    <div id="qn-list">
+        <!-- question -->
+        <div id="q1" class="container p-4 border" style="background-color: white;">
+            <div class="row align-items-center mb-3">
+                <div class="col-8"> <h5 id="q1-title"> Question 1</h5> </div>
+                <div id='q1-del-btn' class="col-4" onclick="delAQn(this.id);"  style="text-align: right;"> <button type="button" onclick="updateQuizSummary()" class="btn btn-outline-danger">Delete</button> </div>
+            </div>
 
-    <script>
-        //hardcoded learner_id because learner login is not implemented yet
-        const learner_id = "LNR8";
-
-        //
-        var num_of_qn = 0;
-        total_qns = 0; // with deleted
-        var id_ls = [];
-
-        function removeItemFromArray(array, n) {
-            const newArray = [];
-        
-            for ( let i = 0; i < array.length; i++) {
-                if(array[i] !== n) {
-                    newArray.push(array[i]);
-                }
-            }
-            return newArray;
-        }
-        
-        function deleteAQn(btn_id) {
-            console.log(btn_id, 'btn_id')
-            qn_id = btn_id.slice(0, 2);
-            document.getElementById(`${qn_id}`).remove(); // delete div
-            console.log(qn_id, typeof(qn_id), 'qn_id')
-            id_ls = removeItemFromArray(id_ls, qn_id);
-            console.log('after remove qn: ', id_ls);
-
-            num_of_qn -= 1;
-
-            changeQnNum();
-        }
-
-        function changeQnNum() {
-            var num = 1;
-
-            for (let i = 0; i < id_ls.length; i++) {
-                title_id = `${id_ls[i]}-title`;
-                console.log('id: ', title_id, num);
-                console.log(document.getElementById(title_id));
-                document.getElementById(title_id).innerHTML = `Question ${num}`;
-                num += 1;
-            }
-
-            
-        }
-
-        function addAQn() {
-            num_of_qn += 1;
-            total_qns += 1;
-            changeQnNum();
-            qn_id = `q${total_qns}`;
-            id_ls.push(qn_id);
-            console.log('after add qn: ', id_ls);
-            
-            
-
-
-            html_user_selection = `
             <!-- question format -->
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <select id="${qn_id}-type" onchange="changeQnType(this.id)" class="form-control" placeholder="Question Type">
-                        <option value="tf-selected" selected>True/False</option>
-                        <option value="mcq-selected">MCQ</option>
+                    <select id="q1-type" onchange="setQnType(this.id)" class="form-control" placeholder="Question Type">
+                        <option value="tf-selected">T/F</option>
+                        <option value="mcq-selected" selected>MCQ</option>
                     </select>
                 </div>
-                <div id="${qn_id}-mcq-num" class="form-group col-md-3 d-none">
-                    <input type="number" onchange="changeNumOfOptions(this.id)" id="${qn_id}-mcq-num-input" class="form-control" placeholder="# of Options" value="2">
+                <div id="q1-mcq-num" class="form-group col-md-3 d-none">
+                    <input type="number" onchange="changeNumOfOptions(this.id)" id="q1-mcq-num-input" min="2" max="6" class="form-control" placeholder="# of Options" value="2">
                 </div>
                 <div class="form-group col-md-3" style="margin-right: 0;">
-                    <input type="number" class="form-control" id="inputZip" placeholder="Marks">
+                    <input type="number" onchange="updateQuizSummary()" class="form-control" id="q1-marks" placeholder="Marks">
                 </div>
             </div>
             
             <!-- input question -->
             <div class="form-group">
-                <input type="text" class="form-control" id="inputCity" placeholder="Enter your question">
-            </div>`;
+                <input type="text" class="form-control" id="q1-qn" placeholder="Enter your question">
+            </div>`
 
-            html_option_ls = `
             <!-- options part -->
             <p>Options</p>
-            <div id="${qn_id}-options" class="container">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                    <label class="form-check-label" for="exampleRadios1">True</label>
+            <div id="q1-options" class="container">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" aria-label="Radio button for following text input">
+                        </div>
+                    </div>
+                    <input type="text" id='q1-option1' name="q1-mcq-options" class="form-control" placeholder="Input text">
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                    <label class="form-check-label" for="exampleRadios2">False</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" aria-label="Radio button for following text input">
+                        </div>
+                    </div>
+                    <input type="text" id='q1-option2' name="q1-mcq-options" class="form-control" placeholder="Input text">
                 </div>
-            </div>`;
+            </div>
+        </div>
+        
 
+
+    </div>
+
+    <!-- actions -->
+    <div class="container mt-4">
+        <button onclick="addAQn(); updateQuizSummary();" class="btn btn-outline-primary float-right px-4 py-2" style="border-radius: 2rem;">Add a Question</button>
+    </div>
+    <br><br><br><br>
+
+    <div id="create-quiz-alert" class="container"></div>
+
+    <div id="feedback-text" class="container">
+       <div class="row">
+            <div id="quiz-summary" class="col-6">
+                <p>Total Marks: </p> 
+                <p>Number of Questions: </p>
+            </div>
+            <div class="col-6">
+                <button onclick='createQuiz(); updateInput();' class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
+            </div>
+       </div>
+    </div>   
+    
+</body>
+    
+    <script src="../../static/js/"></script>
+    <script src="../../static/js/main.js"></script>
+
+    <script>
+    //initialise localStorage
+    const storage = window.localStorage;
+    
+    // variables
+    const quiz_id = storage.getItem("quiz_id"); 
+    const quiz_id_list = quiz_id.split("_");
+    const quiz_type = storage.getItem("quiz_type"); 
+
+    //
+    var num_of_qns = 0; // curr qn number
+    var QID = 0; // # of questions created including deleted ones
+    var QID_LS = [];
+
+    function renderCreateQuizPage() {
+        getAPIkeys();
+    
+        console.log("===== localStorage.getItem() =====")
+        console.log(`quiz_id: ${quiz_id} || quiz_type: ${quiz_type}`);
+    
+        getTitle('quiz-title');
+    }
+
+    function getTitle(div_id) {
+        document.getElementById(div_id).innerHTML = "";
+        console.log(quiz_id_list, quiz_id_list[2].slice(-2, -1));
+        var chap_name = quiz_type == 'chapter_quiz' ? `Chapter ${quiz_id_list[2].slice(-2, -1)} Quiz` : 'Final Quiz'; // _FinalQuizq, _Chapt3q
+        
+        var html_content = `
+        <h2>${chap_name}</h2>
+        <h4>${quiz_id_list[0]} Class ${quiz_id_list[1].slice(1)}</h4> 
+        
+        `;
+
+        document.getElementById(div_id).innerHTML = html_content;
+    }
+
+    
+
+    function addAQn() {
+        QID += 1;
+        num_of_qns += 1;
+        QID_LS.push(`q1`);
+
+
+        console.log("===== clicked on addAQn() =====")
+        console.log(`QID: ${QID} || NUM_OF_QNS: ${num_of_qns} || ${QID_LS}`)
+
+        html_user_selection = `
+        <!-- question format -->
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <select id="q1-type" onchange="setQnType(this.id)" class="form-control" placeholder="Question Type">
+                    <option value="tf-selected" selected>T/F</option>
+                    <option value="mcq-selected">MCQ</option>
+                </select>
+            </div>
+            <div id="q1-mcq-num" class="form-group col-md-3 d-none">
+                <input type="number" onchange="changeNumOfOptions(this.id)" id="q1-mcq-num-input" min="2" max="6" class="form-control" placeholder="# of Options" value="2">
+            </div>
+            <div class="form-group col-md-3" style="margin-right: 0;">
+                <input type="number" onchange="updateQuizSummary()" class="form-control" id="q1-marks" placeholder="Marks">
+            </div>
+        </div>
+        
+        <!-- input question -->
+        <div class="form-group">
+            <input type="text" class="form-control" id="q1-qn" placeholder="Enter your question">
+        </div>`;
+
+        html_option_ls = `
+        <!-- options part -->
+        <p>Options</p>
+        <div id="q1-options" class="container">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="q1-options" id="true" value="True" checked>
+                <label class="form-check-label" for="true">True</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="q1-options" id="false" value="False">
+                <label class="form-check-label" for="false">False</label>
+            </div>
+        </div>`;
+
+        html_content = `
+        <!-- question -->
+        <div id="q1" class="container p-4 border" style="background-color: white;">
+            <div class="row align-items-center mb-3">
+                <div class="col-8"> <h5 id="q1-title"> Question ${QID}</h5> </div>
+                <div id='q1-del-btn' class="col-4" onclick="delAQn(this.id);"  style="text-align: right;"> <button type="button" onclick="updateQuizSummary()" class="btn btn-outline-danger">Delete</button> </div>
+            </div>
+
+            ${html_user_selection}
+
+            ${html_option_ls}
+        </div>`;
+
+        document.getElementById('qn-list').innerHTML += html_content;
+
+        changeQnNumber();
+    }
+
+    function delAQn(BTN_ID) {
+        num_of_qns -= 1;
+        var btn_id_ls = BTN_ID.split("-");
+        var QID = btn_id_ls[0].slice(1);
+        console.log("===== clicked on delAQn() =====")
+        console.log(`BTN_ID: ${BTN_ID} || NUM_OF_QNS: ${num_of_qns} || ${btn_id_ls} || ${QID}`);
+        
+        
+        document.getElementById(`q1`).remove(); // delete div
+        QID_LS = removeItemFromArray(QID_LS, `q1`);
+
+        console.log(QID_LS);
+
+        changeQnNumber();
+    }
+
+    function setQnType(qn_id) { // q1-type, q2-type //q1-type
+        const qn_id_ls = qn_id.split("-");
+        qn_num = qn_id.slice(0, 2);
+        qn_type = document.getElementById(`q1`).value; // tf-selected, mcq-selected
+        console.log(`qn type: ${qn_type}`);
+
+        document.getElementById(`${qn_id_ls[0]}-options`).innerHTML = "";
+        html_content = "";
+
+        if(qn_type == 'tf-selected') {
             html_content = `
-            <!-- question -->
-            <div id="${qn_id}" class="container p-4 border" style="background-color: white;">
-                <div class="row align-items-center mb-3">
-                    <div class="col-8"> <h5 id="${qn_id}-title"> Question ${num_of_qn}</h5> </div>
-                    <div id='${qn_id}-del-btn' class="col-4" onclick="deleteAQn(this.id);"  style="text-align: right;"> <button type="button" class="btn btn-outline-danger">Delete</button> </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="true" value="True" checked>
+                <label class="form-check-label" for="true">True</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="false" value="False">
+                <label class="form-check-label" for="false">False</label>
+            </div>
+            `;
+            document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3 d-none');
+        } 
+        else if(qn_type == 'mcq-selected') {
+            html_content = `
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" name="${qn_id_ls[0]}-options"  placeholder="Input text">
+                    </div>
                 </div>
-
-                ${html_user_selection}
-
-                ${html_option_ls}
-            </div>`;
-            // console.log(html_content)
-            document.getElementById('qn-list').innerHTML += html_content;
-
+                <input type="text" id="${qn_id_ls[0]}-option1" name="${qn_id_ls[0]}-options" class="form-control" aria-label="Text input with radio button">
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                    <input type="radio" name="${qn_id_ls[0]}-options" aria-label="Radio button for following text input">
+                    </div>
+                </div>
+                <input type="text" id="${qn_id_ls[0]}-option2" name="${qn_id_ls[0]}-options" class="form-control" placeholder="Input text">
+            </div>
+            `;
+            document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
         }
 
-        function changeQnType(qn_id) { // q1-type, q2-type
-            console.log(qn_id.slice(0, 2))
-            qn_num = qn_id.slice(0, 2);
-            qn_type = document.getElementById(`${qn_id}`).value; // tf-selected, mcq-selected
-            console.log(`qn type: ${qn_type}`);
+        document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+    }
 
-            document.getElementById(`${qn_id.slice(0, 2)}-options`).innerHTML = "";
-            html_content = "";
+    function updateInput(){
+        // console.log(`document.getElementById(id).value: ${document.getElementById(id).value} || ${input_val}`)
+        // document.getElementById(id).value = input_val;
+    }
 
-            if(qn_type == 'tf-selected') {
-                html_content = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                    <label class="form-check-label" for="exampleRadios1">True</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                    <label class="form-check-label" for="exampleRadios2">False</label>
-                </div>
-                `;
-                document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3 d-none');
-            } 
-            else if(qn_type == 'mcq-selected') {
-                html_content = `
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                        <input type="radio" aria-label="Radio button for following text input">
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" aria-label="Text input with radio button">
-                </div>
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                        <input type="radio" aria-label="Radio button for following text input">
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" aria-label="Text input with radio button">
-                </div>
-                `;
-                document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
-            }
+    function changeNumOfOptions(option_id) {
+        qn_id = option_id.slice(0, 2);
+        option_num = document.getElementById(`q1-mcq-num-input`).value; // tf-selected, mcq-selected
+        console.log(option_num, 'hehe')
+        
+        html_content = "";
 
-            document.getElementById(`${qn_num}-options`).innerHTML = html_content;
-        }
-
-        function changeNumOfOptions(option_id) {
-            qn_id = option_id.slice(0, 2);
-            option_num = document.getElementById(`${qn_id}-mcq-num-input`).value; // tf-selected, mcq-selected
-            console.log(option_num, 'hehe')
-            
-            html_content = "";
-            each_option_html = `
+        for (let i = 1; i <= option_num; i++) { // need change qn_id
+            html_content +=  `
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                     <input type="radio" aria-label="Radio button for following text input">
                     </div>
                 </div>
-                <input type="text" class="form-control" aria-label="Text input with radio button">
+                <input type="text" id='q1-option${i}' name="q1-mcq-options" class="form-control" placeholder="Input text">
             </div>
             `;
-
-            for (let i = 0; i < option_num; i++) {
-                html_content += each_option_html;
-            }
-
-            // console.log(html_content)
-            document.getElementById(`${qn_num}-options`).innerHTML = html_content;
-
-
         }
+
+        // console.log(html_content)
+        document.getElementById(`${qn_num}-options`).innerHTML = html_content;
+
+
+    }
+
+
+    function setSelectedValue(BTN_ID) {
+        console.log(BTN_ID);
+
+        var btn_ele = document.getElementById(`${BTN_ID}`);
+        var qn_type = btn_ele.options[btn_ele.selectedIndex].text;
+
+        if (qn_type == 'mcq-selected') {
+            btn_ele.remove(1);
+            document.querySelector('option[value=" + value +"]').selected = true
+        } else {
+            btn_ele.remove(2);
+        }
+
+        
+        console.log(qn_type, 'qn_type');
+    }
+    
+
+    function updateQuizSummary() {
+        document.getElementById('quiz-summary').innerHTML = "";
+        var total_marks = 0;
+        for (i = 0; i < QID_LS.length; i++) {
+            each_mark = parseInt(document.getElementById(`${QID_LS[i]}-marks`).value);
+            
+            if (!Number.isNaN(each_mark)) {
+                total_marks += each_mark;
+            }
+        }
+        
+        var html_content = `
+        <p>Total Marks: ${total_marks}</p> 
+        <p>Number of Questions: ${num_of_qns}</p>
+        `;
+
+        document.getElementById('quiz-summary').innerHTML = html_content;
+        console.log('===== quiz summary =====');
+        console.log(`total marks: ${total_marks}`)
+    }
+
+    // POST REQUEST
+    function createQuiz() {
+        post_obj = getFinalQunInput();
+        var json_string = JSON.stringify(post_obj); // stringify json object into a string
+
+        console.log('===== quiz values =====')
+        console.log(post_obj);
+        
+        // create POST HTTP request
+        var request = new XMLHttpRequest();
+                
+        request.onreadystatechange = function () {
+
+            var message = "";
+            var html_content = "";
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                message = JSON.parse(this.response).message;
+                // console.log(message);
+                var chap_name = quiz_type == 'chapter_quiz' ? `Chapter ${quiz_id_list[2].slice(-2, -1)} Quiz` : 'Final Quiz'
+                html_content = `<br><div class="alert alert-success fade show" role="alert">
+                                You have successfully created ${chap_name} for ${quiz_id_list[0]} Class ${quiz_id_list[1].slice(1)}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div><br>`;
+                document.getElementById("create-quiz-alert").innerHTML = html_content;
+                //break
+            } 
+            else {
+                // console.log(message);
+                console.log("code: 500 - code is not 200 or 201")
+                //break
+            }
+            
+        }
+
+        var url = createQuiz_POST_TNR;
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(json_string);
+    }
+
+    function getFinalQunInput() {
+         // left timing
+         var post_obj = {
+            'type': `${quiz_type}`,
+            'quiz_id': `${quiz_id}`,
+            'question_id': [],
+            'question': ['Q1'], // ["How many ggghashira are there in demon slayer?","Is Rengoku a flameeeee hashira?"]
+            'question_type': [], //["MCQ", "T/F"]
+            'option': [], // ["11,12,13,14", "True,False"]
+            'question_mark': [], // ["2","2"]
+            'answer': [], // ["13", "True"]
+            'total_marks': 0, // 6
+            'timing': "00:00", // '50:00'
+            'num_of_questions': `${num_of_qns}` // 2
+        }
+
+        // timing: HH:MM
+        hours = document.getElementById(`hour`).value;
+        minutes = document.getElementById(`minute`).value;
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        post_obj.timing = `${hours}:${minutes}`;
+        // console.log('post_obj.timing', post_obj.timing)
+
+
+        // true, false  
+        for (i = 0; i < QID_LS.length; i++) {
+            // question
+            post_obj.question_id.push(`Q${i+1}`);
+
+            // question type
+            type_ele = document.getElementById(`${QID_LS[i]}-type`)
+            each_qn_type = type_ele.options[type_ele.selectedIndex].text;
+            post_obj.question_type.push(each_qn_type);
+
+            // options list
+            if (each_qn_type == 'T/F') {
+                each_option_ls = 'True,False';
+            } else { 
+                // each_option_ls = document.querySelector(`input[name="${QID_LS[i]}-mcq-options"]`).value;
+                // console.log(each_option_ls, 'each_option_ls');
+                console.log(document.getElementsByName(`input[name="${QID_LS[i]}-mcq-options"]`)[0].value, '!!!')
+                each_option_ls = "11, 12, 13";
+            }
+            post_obj.option.push(each_option_ls);
+
+            // answer list: to be changed BC of mcq option??
+            each_answer = document.querySelector(`input[name="${QID_LS[i]}-options"]:checked`).value;
+            post_obj.answer.push(each_answer);
+
+            // question list
+            each_qn = document.getElementById(`${QID_LS[i]}-qn`).value;
+            post_obj.question.push(each_qn);
+
+            // question mark
+            each_mark = document.getElementById(`${QID_LS[i]}-marks`).value;
+            post_obj.question_mark.push(each_mark);
+
+            // marks
+            post_obj.total_marks += parseInt(document.getElementById(`${QID_LS[i]}-marks`).value);
+        }
+
+        return post_obj
+    }
+
+
+    // HELPER FUNCTION
+    function removeItemFromArray(array, n) {
+        const newArray = [];
+    
+        for ( let i = 0; i < array.length; i++) {
+            if(array[i] !== n) {
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
+
+    function changeQnNumber() {
+        var qn_cnt = 1;
+
+        for (let i=0; i < QID_LS.length; i++) {
+            document.getElementById(`${QID_LS[i]}-title`).innerHTML = `Question ${qn_cnt}`;
+            qn_cnt += 1;
+        }
+    }
+
   
     </script>
 
