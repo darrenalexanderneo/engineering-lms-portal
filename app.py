@@ -1448,8 +1448,28 @@ def create_quiz():
 
         if(data['type'] == 'chapter_quiz'):
             #is chapter quiz
+            is_exist_chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
+
+            if(is_exist_chapter_quiz  == None):
+                return jsonify(
+                {
+                    'code': 201,
+                    'results': "Chapter Quiz have already been created. You are not allow to have multiple entry"
+                    
+                })
+
             insert_chapter_quiz(data['quiz_id'] ,data['quiz_id'][:-1] ,data['total_marks'],data['timing'])
         elif(data['type'] == 'final_quiz'):
+
+            is_exist_final_quiz = Final_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
+
+            if(is_exist_final_quiz  == None):
+                return jsonify(
+                {
+                    'code': 201,
+                    'results': "Final Quiz have already been created. You are not allow to have multiple entry"
+                    
+                })
             array = data['quiz_id'].split("_")
             course_id = array[0]
             insert_final_quiz(data['quiz_id'] ,course_id ,data['total_marks'],data['timing'])
