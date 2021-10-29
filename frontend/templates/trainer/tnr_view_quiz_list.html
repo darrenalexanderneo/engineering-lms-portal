@@ -55,8 +55,7 @@
     </div>
     
 </body>
-    
-    <script src="../../static/js/get_api_keys.js"></script>
+
     <script src="../../static/js/main.js"></script>
 
     <script>
@@ -65,44 +64,23 @@
 
         //hardcoded learner_id because learner login is not implemented yet
         const trn_id = "TNR1";
-
         const class_id = storage.getItem("class_id"); 
         const course_name = storage.getItem("course_name"); 
-
-        // to retrieve api keys without exposing
-        function getAPIkeys() {  
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var api_keys = JSON.parse(this.response);
-                    getCourseList_TNR = api_keys.getCourseList_TNR;
-                    getCourseDetails_TNR = api_keys.getCourseDetails_TNR;
-                    createQuiz_POST_TNR = api_keys.createQuiz_POST_TNR;
-
-                    // console.log(getCourseList_TNR);
-                    // console.log(getCourseDetails_TNR);
-                    // console.log(createQuiz_POST_TNR);
-                }
-            }
-            request.open("GET", "../../apikey.json", false);
-            request.send();
-        }
+        const id_list = class_id.split("_"); // ['ME111', 'C1']
 
         function renderViewQuizListPage() {
-            getAPIkeys();
+            getAPIkeys_TNR();
         
             console.log("===== localStorage.getItem() =====")
             console.log(`class_id: ${class_id} || course_name: ${course_name}`)
         
             getQuizList();
             getTitle();
-        
         }
 
         function getTitle() {
             document.getElementById("quiz-list-title").innerHTML = "";
-
-            const id_list = class_id.split("_");
+            
             // console.log(id_list);
             
             var html_content = `

@@ -66,7 +66,6 @@
    
     
 </body>
-
     <script src="../../static/js/main.js"></script> 
 
     <script>
@@ -76,27 +75,8 @@
         //hardcoded learner_id because learner login is not implemented yet
         const trn_id = "TNR1";
 
-        // to retrieve api keys without exposing
-        function getAPIkeys() {  
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var api_keys = JSON.parse(this.response);
-                    getCourseList_TNR = api_keys.getCourseList_TNR;
-                    getCourseDetails_TNR = api_keys.getCourseDetails_TNR;
-                    createQuiz_POST_TNR = api_keys.createQuiz_POST_TNR;
-
-                    // console.log(getCourseList_TNR);
-                    // console.log(getCourseDetails_TNR);
-                    // console.log(createQuiz_POST_TNR);
-                }
-            }
-            request.open("GET", "../../apikey.json", false);
-            request.send();
-        }
-
         function renderCourseDetailsPage() {
-            getAPIkeys();
+            getAPIkeys_TNR();
         
             // course_id = storage.getItem("course_id"); 
             console.log(trn_id);
@@ -106,9 +86,7 @@
         
         }
 
-        function getCourseCards(trn_id) {
-            getAPIkeys();
-        
+        function getCourseCards(trn_id) {        
             document.getElementById("cards").innerHTML = "";
         
             var html_content = "";
