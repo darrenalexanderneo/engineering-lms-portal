@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+
+
+    <title>Enrolled Courses</title>
+
+</head>
+<body onload="renderPage()" style="background-color: rgb(255, 255, 255);">
+    <!-- navigation bar -->
+    <nav class="navbar navbar-dark bg-dark d-flex float-left">
+        <div class="my-3">
+          <button onclick="location.href='view_reg_courses.html'" class="btn btn-outline-light ms-5">Browse Courses</button>
+          <button class="btn btn-outline-light" onclick="location.href='view_reg_details.html'">View/Change Status</button>
+          <button class="btn btn-outline-light active" onclick="">Enrolled Courses</button>
+        </div>
+        <div class="my-3 float-end">
+            <img src="../../static/img/download.jfif" class="rounded-circle me-2" width="45px" height="45px" alt="...">
+            <span class="text-white">Darren Neo</span>
+            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+        </div>
+    </nav>
+    <br>
+
+    <div class="ms-5 mt-3"><svg xmlns="http://www.w3.org/2000/svg" onclick="goBackTo('chapter_contents')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+      </svg>
+    </div>
+
+    <div class="container" style="width: 60%;">
+
+        <h2 id="quiz-title" class="mx-auto text-center"></h2>
+    
+        <br><br>
+
+        <!-- quiz -->
+        <div id="quiz" class="mx-auto"></div>
+
+        <br><br>
+
+        <button id="submit" class="btn btn-outline-primary btn-lg mx-auto text-center">Submit Quiz</button>
+
+        <div id="results"></div>
+
+    </div>
+
+</body>
+    <script src="../../static/js/quiz_page.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>

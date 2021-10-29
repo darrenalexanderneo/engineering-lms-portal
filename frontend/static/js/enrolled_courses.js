@@ -94,7 +94,7 @@ function displayAllChapters (class_id) {
             for (chapter of chapter_list) {
                 console.log(chapter);
                 var chapter_id = chapter.chapter_id;
-                var chapter_name = "Chapter " + chapter_id.split("_")[2].replace("Chapt","")
+                var chapter_name = "Chapter " + chapter_id.split("_")[2].replace("Chapt","");
                 
                 //invoke function to check if chapter is completed or not
                 var status_html = ``;
