@@ -350,6 +350,7 @@ class Chapter_Quiz_Result(db.Model):
     marks = db.Column(db.String(10), nullable=False)
 
     def update_mark_existing_chapter_quiz_result(self, learner_marks):
+        print("inside " , learner_marks)
         self.marks = learner_marks
 
 
@@ -358,7 +359,9 @@ class Final_Quiz_Result(db.Model):
     quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     marks = db.Column(db.String(10), nullable=False)
-
+    def update_mark_existing_final_quiz_result(self, learner_marks):
+        print("inside " , learner_marks)
+        self.marks = learner_marks
 
 
 # db.create_all()
@@ -1027,6 +1030,12 @@ def retrieve_question_by_course_class_chapter(quiz_id):
             }
         )
 
+    return jsonify(
+    {
+        'code': 500,
+        'message' : "question not found"
+    })
+
 def auto_compute_grade(data):
 
     learner_marks = 0 
@@ -1038,33 +1047,57 @@ def auto_compute_grade(data):
 
     return learner_marks
 
-def insert_update_into_chapter_quiz_result_db(data,learner_marks,record):
+def insert_update_into_quiz_result_db(data,learner_marks,record):
     print(data)
     print(learner_marks)
     print(record)
     try:
         print("yes")
-        if(record == None):
-            print(data['quiz_id'])
-            print(data['learner_id'])
+        if(data['type'] == "chapter_quiz"):
+            if(record == None):
+                print(data['quiz_id'])
+                print(data['learner_id'])
 
-            #def __init__(self,emp_id,course_id,class_id,completed):
-            result = Chapter_Quiz_Result(
-                quiz_id=data['quiz_id'],
-                learner_id=data['learner_id'],
-                marks=learner_marks
-                
-            )
-            db.session.add(result)
-            db.session.commit()
-            return 200
+                #def __init__(self,emp_id,course_id,class_id,completed):
+                result = Chapter_Quiz_Result(
+                    quiz_id=data['quiz_id'],
+                    learner_id=data['learner_id'],
+                    marks=learner_marks
+                    
+                )
+                db.session.add(result)
+                db.session.commit()
+                return 200
+            else:
+                #update instead
+                print("come here ")
+                record.update_mark_existing_chapter_quiz_result(learner_marks)
+                db.session.commit()
+                return 200
         else:
-            #update instead
-            record.update_mark_existing_chapter_quiz_result(learner_marks)
-            db.session.commit()
-            return 200
+            if(record == None):
+                print(data['quiz_id'])
+                print(data['learner_id'])
+
+                #def __init__(self,emp_id,course_id,class_id,completed):
+                result = Final_Quiz_Result(
+                    quiz_id=data['quiz_id'],
+                    learner_id=data['learner_id'],
+                    marks=learner_marks
+                    
+                )
+                db.session.add(result)
+                db.session.commit()
+                return 200
+            else:
+                #update instead
+                print("come here ")
+                record.update_mark_existing_final_quiz_result(learner_marks)
+                db.session.commit()
+                return 200
             
     except Exception as e:
+        print(e)
         return 500
 
 
@@ -1095,6 +1128,18 @@ def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_le
         return 500
 
 
+def insert_into_completion_record(quiz_id,learner_id):
+    course_id = quiz_id.split("_")
+    course_id = course_id[0]
+    result = Completion_Record(
+        course_id=course_id,
+        learner_id=learner_id
+    ) 
+    db.session.add(result)
+    db.session.commit()
+    return 200
+
+
 @app.route("/submit_quiz", methods=['POST'])
 def submit_quiz():
     #insert into class record, update slot available, delete from registration
@@ -1107,26 +1152,46 @@ def submit_quiz():
         learner_marks = auto_compute_grade(data)
 
         ##check if this data is already in db
-        
-        is_exist_chapter_quiz_result = Chapter_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
-        code = insert_update_into_chapter_quiz_result_db(data,learner_marks,is_exist_chapter_quiz_result)
-        if(code != 200):
-            return jsonify(
-            {
-                "code" : code,
-                "message": "there is an error insert/update into chapter quiz result db"
-            }), 200
+        if(data['type'] == 'chapter_quiz'):
+            is_exist_chapter_quiz_result = Chapter_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
+            code = insert_update_into_quiz_result_db(data,learner_marks,is_exist_chapter_quiz_result)
+            if(code != 200):
+                return jsonify(
+                {
+                    "code" : code,
+                    "message": "there is an error insert/update into chapter quiz result db"
+                }), 200
 
-        is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
+            is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
 
-        #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
-        code_chapter_learner = insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_learner)
-        if(code_chapter_learner != 200):
-            return jsonify(
-            {
-                "code" : code_chapter_learner,
-                "message": "there is an error insert/update into chapter learner result db"
-            }), 200
+            #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
+            code_chapter_learner = insert_update_into_quiz_result_db(data,learner_marks,is_exist_chapter_learner)
+            if(code_chapter_learner != 200):
+                return jsonify(
+                {
+                    "code" : code_chapter_learner,
+                    "message": "there is an error insert/update into chapter learner result db"
+                }), 200
+        else:
+            #final
+            is_exist_final_quiz_result = Final_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
+            code = insert_update_into_quiz_result_db(data,learner_marks,is_exist_final_quiz_result)
+            if(code != 200):
+                return jsonify(
+                {
+                    "code" : code,
+                    "message": "there is an error insert/update into chapter quiz result db"
+                }), 200
+
+            #insert into completion table
+            #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
+            code_completion_record= insert_into_completion_record(data['quiz_id'],data['learner_id'])
+            if(code_completion_record != 200):
+                return jsonify(
+                {
+                    "code" : code_completion_record,
+                    "message": "there is an error insert/update into completion record db"
+                }), 200
 
         # print(question_list)
         return jsonify(
@@ -1162,6 +1227,12 @@ def retrieve_progress_learner_id(class_id,learner_id):
     final_quiz_completion = Completion_Record.query.filter_by(course_id = array[0],learner_id = learner_id).all()
     total_completion = len(learner_chapter_completion_list) + len(final_quiz_completion)
     print("total_completion" , total_completion)
+    print(jsonify(
+    {
+        'code': 200,
+        'progress_percentage':(total_completion/ total_length) * 100
+        
+    }))
 
     return jsonify(
     {
@@ -1176,12 +1247,14 @@ def retrieve_progress_learner_id(class_id,learner_id):
 ### 26 oct 2021
 
 #i need eg ME111_C1
-@app.route("/retrieve_chapter/<string:course_class_id>/")
+@app.route("/retrieve_chapter/<string:course_class_id>")
 def retrieve_chapter(course_class_id):
     #retrieve from registration is_approved = 0 and class_record is_approved = 1
-
+    print(course_class_id)
     chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(course_class_id)).all()
+    print(len(chapter_list))
     if(len(chapter_list)):
+        print("inside chap")
 
         return jsonify(
         {
@@ -1252,7 +1325,7 @@ def is_complete_all_chapters(course_class_id,learner_id):
 
 
 
-
+##do this later
 
 ################ Trainer 
 @app.route("/retrieve_all_course_details_by_trainer_id/<string:trainer_id>/")
