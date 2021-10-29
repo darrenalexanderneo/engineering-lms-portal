@@ -17,13 +17,13 @@
     <title>Enrolled Courses</title>
 
 </head>
-<body style="background-color: rgb(255, 255, 255);">
+<body onload="renderPage()" style="background-color: rgb(255, 255, 255);">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
         <div class="my-3">
           <button onclick="location.href='view_reg_courses.html'" class="btn btn-outline-light ms-5">Browse Courses</button>
           <button class="btn btn-outline-light" onclick="location.href='view_reg_details.html'">View/Change Status</button>
-          <button class="btn btn-outline-light active" onclick="">Enrolled Courses</button>
+          <button class="btn btn-outline-light active" onclick="renderPage()">Enrolled Courses</button>
         </div>
         <div class="my-3 float-end">
             <img src="../../static/img/download.jfif" class="rounded-circle me-2" width="45px" height="45px" alt="...">
@@ -37,15 +37,17 @@
     <br><br>
     <div class="container">
         <div class="float-end">        
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                <option value="BEM460" selected>BEM460 - Basic Engineering Management</option>
+            <select id="course-dropdown" onchange="displayAllChapters(this.value)" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <!-- <option value="BEM460" selected>BEM460 - Basic Engineering Management</option>
                 <option value="EE460">EE460 - Electrical Engineering</option>
-                <option value="CE101">CE101 - Computer Engineering</option>
+                <option value="CE101">CE101 - Computer Engineering</option> -->
             </select>
         </div>
-        <h5>Course Progress:</h5> 
-        <div class="progress rounded-pill bg-grey" style="height: 30px; width: 35%;">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+        <h5 id="course-progress-label" class="invisible">Course Progress:</h5> 
+        <div id="course-progress-bar" class="invisible">
+            <div class="progress rounded-pill bg-grey" style="height: 30px; width: 35%;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+            </div>
         </div>
         <br><br>
         <h2>Course Materials</h2>
@@ -53,7 +55,7 @@
     </div>
     <!-- list of chapters -->
     <div id="chapter-list" class="container">
-        <li class="list-group-item d-flex py-3 align-items-center">
+        <!-- <li class="list-group-item d-flex py-3 align-items-center">
             <div class="ms-2 me-auto"><h5 class="">Chapter 1</h5></div>
             <span style="margin-bottom: 0px;" class="badge bg-success rounded-pill px-2 py-2">Completed</span>
         </li>
@@ -72,15 +74,12 @@
         <li class="list-group-item d-flex py-3 align-items-center">
             <div class="ms-2 me-auto"><h5 class="">Chapter 5</h5></div>
             <button class="btn btn-outline-primary rounded-pill disabled">Learn</button>
-        </li>
+        </li> -->
     </div>
 
     <!-- message notifications -->
     <div id="message-container" class="container rounded p-4" style="background-color: white;">
-        <h6>You have no enrolled courses currently.</h6>
-        <ul id="message">
-
-        </ul>
+        <h5>Please Select One of Your Enrolled Courses.</h5>
     </div>
     <br><br>
     

@@ -1,111 +1,115 @@
-function renderPDF (course_id, chapter_id) {
-    var pdfUrl = "https://drive.google.com/file/d/1JgUvVSkrhFSrj9lWxX1CIO0gkLUD2KE0";
-    var html = `<iframe src="${pdfUrl}/preview" scrolling="no" style="overflow: hidden;" width="1000" height="10000" frameborder="0" allow="autoplay"></iframe>`;
-    document.getElementById("pdfviewer").innerHTML = html;
-}
-
 //initialise localStorage
 const storage = window.localStorage;
 
-//hardcoded learner_id because learner login is not implemented yet
-// const learner_id = "LNR8";  
-
-// USE LOCALSTORAGE AFTER LEARNER LOGIN IS IMPLEMENTED
-// storage.setItem("learner_id", "LNR8");
 const learner_id = storage.getItem("learner_id");
+const course_id = storage.getItem("course_id");
+const chapter_id = storage.getItem("chapter_id");
 
+$(window).on('scroll', function() {
+    if($(window).scrollTop() >= $('body').offset().top + $('body').outerHeight() - window.innerHeight) {
+    //   alert('Bottom');
+      loadQuizButton(chapter_id);
+    }
+});
 
-//initialise global variables to store api keys
-var getCoursesforRegistration;
-var getCourseDetails;
-var getClassesByEnrollmentStatus;
-var getEnrollmentStatus;
-var register_POST;
-var withdraw_POST;
+function renderPage() {
+    getPDFlink(course_id, chapter_id);
+    // loadQuizButton(chapter_id);
+}
 
-// to retrieve api keys without exposing
-function getAPIkeys () {  
+function renderPDFinAdobe (pdfUrl, adobeAPI) {
+    console.log(pdfUrl);
+
+    var adobeDCView = new AdobeDC.View({clientId:  `${adobeAPI}`, divId: "pdfviewer"});
+    adobeDCView.previewFile(
+        {
+            content:{location: {url: `${pdfUrl}/preview`,headers:[{key: "Access-Control-Allow-Origin", value: "*"}]},promise: ""},
+            metaData:{fileName: `${chapter_id}.pdf`},
+        }, 
+        {
+            defaultViewMode: "FIT_WIDTH", showLeftHandPanel: false, dockPageControls: false, 
+            showDownloadPDF: false, showPrintPDF: false
+        },
+    );
+}
+
+// retrieve PDF link using pdf_database.json based on given course_id and chapter_id
+function getPDFlink (course_id, chapter_id) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            var api_keys = JSON.parse(this.response);
-            getCoursesforRegistration = api_keys.getCoursesforRegistration;
-            getCourseDetails = api_keys.getCourseDetails;
-            getClassesByEnrollmentStatus = api_keys.getClassesByEnrollmentStatus;
-            getEnrollmentStatus = api_keys.getEnrollmentStatus;
-            register_POST = api_keys.register_POST;
-            withdraw_POST = api_keys.withdraw_POST;
+            var pdf_database = JSON.parse(this.response);
+            var pdfUrl = pdf_database[`${course_id}`][`${chapter_id}`];
 
-            console.log(getCoursesforRegistration);
-            console.log(getCourseDetails);
-            console.log(getClassesByEnrollmentStatus);
-            console.log(getEnrollmentStatus);
-            console.log(register_POST);
-            console.log(withdraw_POST);
+            // ---- if using adobe pdf viewer ----
+            // var adobeAPI = pdf_database.adobe_api;
+            // document.addEventListener("adobe_dc_view_sdk.ready", renderPDFinAdobe(pdfUrl, adobeAPI));
+
+            renderPDF(pdfUrl);
         }
     }
-    request.open("GET", "../../apikey.json", false);
+    request.open("GET", "../../pdf_database.json", false);
     request.send();
 }
 
+// render PDF link from google drive
+function renderPDF (pdfUrl) {
 
-function getCourseCards () {
-    getAPIkeys();
-
-    document.getElementById("cards").innerHTML = "";
-
-    var html_content = "";
-
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var course_list = JSON.parse(this.response).course_list;
-            console.log(course_list);
-
-
-            for (course of course_list) {
-                console.log(course);
-                var course_id = course.course_id;
-                var course_name = course.course_name;
-                var course_desc = course.course_desc;
-                var prereq_courses = course.prereq_courses;  // string   
-                
-                if (prereq_courses == "") {
-                    prereq_courses = "None";
-                }
-                
-                html_content += 
-                `<div class="col">
-                    <div class="card">
-                        <img src="https://source.unsplash.com/user/thisisengineering/daily" class="card-img-top img-fluid" alt="${course_name}">
-                        <div class="card-body">
-                            <h4 class="card-title">${course_name}</h4>
-                            <h5 class="card-title">${course_id}</h5>
-                            <p class="card-text">${course_desc}</p>
-                            <h6 class="card-subtitle fw-bold">Pre-requisites: ${prereq_courses}</h6><br>
-                            <button onclick="redirect_to_classRegistration('${course_id}', '${learner_id}')" class="btn btn-outline-primary float-end">Learn More</button>
-                        </div>
-                    </div>
-                </div>`;
-            }
-            
-            document.getElementById("cards").innerHTML = html_content;
-        }
-    };
-
-    var url = getCoursesforRegistration;
-    request.open("GET", url, true);
-    request.send();
+    console.log(pdfUrl);
+    // var pdfUrl = "https://drive.google.com/file/d/1JgUvVSkrhFSrj9lWxX1CIO0gkLUD2KE0";
+    // var html = `<iframe src="${pdfUrl}/preview" scrolling="no" style="overflow: hidden;" width="1000" height="16000" frameborder="0" allow="autoplay"></iframe>`;
+    var html = `<iframe id="pdf_doc" src="${pdfUrl}/preview#view=fitV&view=fitH" title="Chapter Content" scrolling="no" style="overflow: hidden;" height="100%" width="100%"  frameborder="0" allow="autoplay" />`;
+    document.getElementById("pdfviewer").innerHTML = html;
 }
 
-function redirect_to_classRegistration(course_id) {
-    storage.setItem("course_id",course_id);
+var obj = document.getElementById("pdfviewer");
+var obj = document.getElementById("pdf_doc");
+
+
+// function chk_scroll(e) {
+//     console.log(e);
+//     var elem = $(e.currentTarget);
+//     console.log(elem);
+//     if (elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) 
+//     {
+//         console.log("bottom");
+//         loadQuizButton;
+
+//     }
+// }
+
+// if ( obj.scrollTop === (obj.scrollHeight - obj.offsetHeight)) {
+//     console.log("Quiz button is out!");
+//     loadQuizButton;
+// }
+
+function loadQuizButton (chapter_id) {
+    document.getElementById("take-quiz-button").innerHTML = `<br><br><button class="btn btn-outline-success btn-lg text-center mx-auto" onclick="redirect_to_QuizPage('${chapter_id}')">Take Quiz</button><br><br><br>`;
+}
+
+// stores quiz_id to localStorage for retrieval before redirecting to quiz_page.html
+function redirect_to_QuizPage (chapter_id) {
+    var quiz_id = `${chapter_id}q`;
+    storage.setItem("quiz_id", quiz_id);
 
     setTimeout(function () { 
-        const courseid = storage.getItem("course_id"); 
-        console.log("localStorage.getItem():" + courseid);
-        window.location.replace("class_registration.html");  // redirect to class_registration.html 
+        const quizID = storage.getItem("quiz_id"); 
+        console.log("localStorage.getItem('quiz_id'):" + quizID);
+        window.location.replace("quiz_page.html");  
     }, 1000);
+}
+
+function goBackTo (prev_page) {
+    console.log(prev_page);
+
+    var current_location_arr = window.location.href.split("/");
+    var current_location = current_location_arr[current_location_arr.length - 1];
+    console.log(current_location);
+
+    if (prev_page == "viewEnrolledCourses" && current_location == "chapter_contents.html") {
+        console.log(prev_page);
+        window.location.replace("enrolled_courses.html");
+    } 
 }
 
 function logout () {
