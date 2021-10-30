@@ -513,6 +513,9 @@ def update_slot_available_for_class(class_id,action):
     try:
         class_info = Class_Run.query.filter_by(class_id = class_id).first()
         class_info.compute_slot_available(action)
+        if(class_info.slots_available == -1):
+            return 400
+
         db.session.commit()
         return 200
     except Exception as e:
@@ -575,6 +578,11 @@ def insert_class_record(data):
 
 def insert_registration(data):
     try:
+        is_exist  = Registration.query.filter_by(class_id=data['class_id'], course_id = data['course_id'], learner_id =data['learner_id']).first()
+        if(is_exist != None):
+            #exist already
+            return 404
+
         print(data)
         print(data['class_id'])
         print(data['course_id'])
@@ -605,9 +613,18 @@ def assign_to_course():
         data = request.get_json()
 
         # Should immediately exit upon failing this line.....
+        update_code = update_slot_available_for_class(data['class_id'],'Assign')
+        if(update_code == 400):
+            return jsonify(
+            {
+                "code": update_code,
+                "message": "Slot is full, unable to enroll anymore."
+            }
+            ), 400
+
         insert_code = insert_class_record(data)
         #update slot available 
-        update_code = update_slot_available_for_class(data['class_id'],'Assign')
+        
         delete_code = delete_registration(data)
 
         #remove the rest if found in class_run
@@ -616,9 +633,7 @@ def assign_to_course():
         if(insert_code == 500 or update_code == 501 or delete_code ==502):
             return jsonify(
             {
-                "insert_code": insert_code,
-                "update_code": update_code,
-                "delete_code": delete_code,
+                "code": 500,
                 "message": "There is an problem performing the execution"
             }
             ), 500
@@ -662,8 +677,7 @@ def withdraw_course():
         if(delete_code == 502 or update_code == 501):
             return jsonify(
             {
-                "delete_code": delete_code,
-                "update_code": update_code,
+                "code": 500,
                 "message": "There is an problem performing the execution"
             }
             ), 500
@@ -901,6 +915,13 @@ def register():
                 "message": "There is an problem performing the execution"
             }
             ), 500
+        elif(insert_code == 404):
+            return jsonify(
+            {
+                "insert_code": insert_code,
+                "message": "You already registered for the course"
+            }
+            ), 404
         return jsonify(
             {
                 "code": 200,
@@ -983,9 +1004,7 @@ def withdraw_learner_registration():
             return jsonify(
             {
 
-                "delete_code": delete_code,
-                "delete_class_code": delete_class_code,
-                "update_code": update_code,
+                "code": 500,
                 "message": "There is an problem performing the execution"
             }
             ), 500
@@ -1147,7 +1166,7 @@ def submit_quiz():
         is_exist_chapter_quiz_result = ""
         is_exist_chapter_learner = ""
         data = request.get_json()
-        print(data)
+        print(data) 
 
         learner_marks = auto_compute_grade(data)
 
@@ -1161,17 +1180,17 @@ def submit_quiz():
                     "code" : code,
                     "message": "there is an error insert/update into chapter quiz result db"
                 }), 200
+            ######### THINK DONT NEED
+            # is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
 
-            is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
-
-            #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
-            code_chapter_learner = insert_update_into_quiz_result_db(data,learner_marks,is_exist_chapter_learner)
-            if(code_chapter_learner != 200):
-                return jsonify(
-                {
-                    "code" : code_chapter_learner,
-                    "message": "there is an error insert/update into chapter learner result db"
-                }), 200
+            # #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
+            # code_chapter_learner = insert_update_into_quiz_result_db(data,learner_marks,is_exist_chapter_learner)
+            # if(code_chapter_learner != 200):
+            #     return jsonify(
+            #     {
+            #         "code" : code_chapter_learner,
+            #         "message": "there is an error insert/update into chapter learner result db"
+            #     }), 200
         else:
             #final
             is_exist_final_quiz_result = Final_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
@@ -1249,6 +1268,7 @@ def retrieve_progress_learner_id(class_id,learner_id):
 #i need eg ME111_C1
 @app.route("/retrieve_chapter/<string:course_class_id>")
 def retrieve_chapter(course_class_id):
+    print("test")
     #retrieve from registration is_approved = 0 and class_record is_approved = 1
     print(course_class_id)
     chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(course_class_id)).all()
@@ -1326,6 +1346,23 @@ def is_complete_all_chapters(course_class_id,learner_id):
 
 
 ##do this later
+@app.route("/retrieve_learner_chapter_grade/<string:chapter_id>/<string:learner_id>")
+def retrieve_learner_chapter_grade(chapter_id,learner_id):
+    quiz_id = chapter_id + "q"
+    learner_chapter_result = Chapter_Quiz_Result.query.filter_by(quiz_id = quiz_id, learner_id = learner_id).first()
+    marks = learner_chapter_result.marks
+    chapter_quiz = Chapter_Quiz.query.filter_by(chapter_id = chapter_id).first()
+    total_marks = chapter_quiz.total_marks
+    return jsonify(
+    {
+        "code": 200,
+        "data": {
+            "marks": marks,
+            "total_marks": total_marks
+        },
+    }), 200
+
+
 
 ################ Trainer 
 @app.route("/retrieve_all_course_details_by_trainer_id/<string:trainer_id>/")

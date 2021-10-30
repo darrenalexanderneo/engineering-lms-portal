@@ -391,6 +391,11 @@ class Test_WithdrawEnrolledLearner_Endpoint(TestApp):
 
         self.assertEqual(response.status_code, 500)
 
+    def test_assign_learner(self):
+        code= update_slot_available_for_class('BEM460_C2',"Assign")
+        print("test_assign_learner code should be 400 because full slot : ", code)
+        self.assertEqual(code, 400)
+
 class Test_RegistrationCourseList_Endpoint(TestApp):
     def test_registration_course_list(self):
         endpoint = "registration_course_list"
@@ -452,7 +457,7 @@ class Test_Registration_Endpoint(TestApp):
         data=json.dumps(request_body),
         content_type="application/json")
 
-        self.assertEqual(response.json['message'], "There is an problem performing the execution")
+        self.assertEqual(response.json['message'], 'You already registered for the course')
     
     def test_register_success(self):
         endpoint = "register"
@@ -677,6 +682,7 @@ class test_progress_learner(TestApp):
 class Test_retrieve_chapter_details_for_learner(TestApp):
     def test_retrieve_chapter(self):
         print("COME IN")
+        print('HERHERHEHHER')
         course_id = "BEM460_C1"
         endpoint = "retrieve_chapter/" + course_id
         response = self.client.get(endpoint)
@@ -717,7 +723,7 @@ class Test_Trainer_Chapter_Endpoint(TestApp):
         self.assertEqual(response.json, {'code': 200, 'results': [{'class_id': 'BEM460_C1', 'course_name': 'Basic Engineering Management', 'num_of_chapter': 3}]})
 
 
-    def test_retrieve_all_course_details_by_trainer_id_success(self):
+    def test_retrieve_all_course_details_by_trainer_id_failure(self):
         trainer_id = "TNR21"
         endpoint = "retrieve_all_course_details_by_trainer_id/" + trainer_id +"/"
         response = self.client.get(endpoint)
@@ -930,6 +936,7 @@ class Test_Trainer_View_Quiz_Endpoint(TestApp):
         print(response.json)
         self.assertEqual(response.json,{'code': 200, 'results': {'quiz_id': 'BEM460_C1_finalQuizq', 'results': [{'answer': 'L', 'option': 'V,A,L,O', 'question': 'What final es means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_finalQuizq'}], 'timing': '30:00', 'total_marks': '2'}})
 
+###### put AC onto the methods to refer
 
 
 if __name__ == '__main__':
