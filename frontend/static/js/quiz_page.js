@@ -6,7 +6,7 @@ const quiz_id = storage.getItem("quiz_id");
 const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
-var learners_Answers = [];
+var learners_Answers = {};
 var question_list = [];
 
 //initialise global variables to store api keys
@@ -56,10 +56,10 @@ function displayQuiz (quiz_id) {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             question_list = JSON.parse(this.response).question_records;
-            console.log(question_list);
+            // console.log(question_list);
 
             for (qn of question_list) {
-                console.log(qn);
+                // console.log(qn);
                 var question = qn.question;
                 var question_id = qn.question_id;
                 var question_mark = qn.question_mark;
@@ -68,13 +68,14 @@ function displayQuiz (quiz_id) {
 
                 options_array = qn_options.split(","); //array of questions  
                 
-                html_content += `<div id="${question_id}" class="mb-3">
-                <h5>${question_id}. ${question} (${question_type}) - ${question_mark} Marks</h5>`;
+                html_content += `<div id="${question_id}" class="mb-5 px-auto">
+                <h5><b>${question_id}.  ${question}</b> (${question_type})</h5>
+                <h6 class='float-end'>${question_mark} Marks</h6><br>`;
 
                 for (var option of options_array) {  // find out how to get selected value of radio buttons
                     html_content +=  `<div class="form-check"> 
-                    <input class="form-check-input" type="radio" onclick="gatherOptions('${question_id}',this.value)" name="${question_id}" id="${question_id}-${option}" required>
-                    <label class="form-check-label" for="${question_id}-${option}">
+                    <input class="form-check-input ms-3" type="radio" onclick="radioChecked('${question_id}','${option}')" name="${question_id}" id="${question_id}-${option}" required>
+                    <label class="form-check-label ms-3 fs-5" for="${question_id}-${option}">
                         ${option}
                     </label>
                     </div>`;
@@ -91,22 +92,76 @@ function displayQuiz (quiz_id) {
     request.open("GET", url, true);
     request.send();
 }
+// document.querySelector(input[name="${question_id}-options"]:checked).value;
 
-function gatherOptions (question_id,selected_option) {
-    var answer_obj = {};
-    answer_obj[`${question_id}`] = selected_option;
-    learners_Answers.push(answer_obj);
+function radioChecked (question_id, selected_option) {
+    console.log(selected_option);
+
+    learners_Answers[`${question_id}`] = selected_option;
+
 }
 
-submitButton.addEventListener('click', showResults);
+submitButton.addEventListener('click', submitQuiz)
 
-function showResults () {
-    console.log(learners_Answers);
-    console.log(question_list);
-    if (learners_Answers.length == question_list.length) {
+function submitQuiz () {
+
+    if (Object.keys(learners_Answers).length == question_list.length) {
         console.log("validation - all questions are answered!");
 
+        var answers_obj = learners_Answers;
+        answers_obj["quiz_id"] = quiz_id;
+        answers_obj["Learner_id"] = learner_id;
+
+        console.log(answers_obj);
+
+        // var request = new XMLHttpRequest();
+        // request.onreadystatechange = function () {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         var result = JSON.parse(this.response);
+
+        //         console.log(result);
+        //         displayQuizScore();
+
+        //     }
+        // }
+        // request.open("POST", submitQuiz_POST, true);
+        // request.setRequestHeader("Content-Type", "application/json");
+        // request.send(learners_Answers);
+
+    } else {
+        console.log("validation - NOT all questions are answered!");
+        alert("Please Attempt All The Questions!");
     }
+
+
+}
+
+function displayQuizScore () {
+    var html_content = `<!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Launch static backdrop modal
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+          </div>
+        </div>
+      </div>
+    </div>`
+
+    document.getElementById("results")
 
 }
 

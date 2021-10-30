@@ -5,16 +5,16 @@ const learner_id = storage.getItem("learner_id");
 const course_id = storage.getItem("course_id");
 const chapter_id = storage.getItem("chapter_id");
 
-$(window).on('scroll', function() {
-    if($(window).scrollTop() >= $('body').offset().top + $('body').outerHeight() - window.innerHeight) {
-    //   alert('Bottom');
-      loadQuizButton(chapter_id);
-    }
-});
+// $(window).on('scroll', function() {
+//     if($(window).scrollTop() >= $('body').offset().top + $('body').outerHeight() - window.innerHeight) {
+//     //   alert('Bottom');
+//       loadQuizButton(chapter_id);
+//     }
+// });
 
 function renderPage() {
     getPDFlink(course_id, chapter_id);
-    // loadQuizButton(chapter_id);
+    loadQuizButton(chapter_id);
 }
 
 function renderPDFinAdobe (pdfUrl, adobeAPI) {

@@ -146,3 +146,5 @@ profiler_output/
 frontend/apikey.js
 frontend/apikey.json
 frontend/pdf_database.json
+frontend/apikey_development.json
+frontend/apikey_production.json

@@ -19,7 +19,7 @@
     <title>Enrolled Courses</title>
 
 </head>
-<body onload="renderPage()" style="background-color: rgb(255, 255, 255);">
+<body onload="renderPage()" style="background-color: rgba(223, 223, 223, 0.541);">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
         <div class="my-3">
@@ -40,20 +40,22 @@
       </svg>
     </div>
 
-    <div class="container" style="width: 60%;">
+    <div class="container mx-auto">
 
         <h2 id="quiz-title" class="mx-auto text-center"></h2>
     
         <br><br>
 
         <!-- quiz -->
-        <div id="quiz" class="mx-auto"></div>
+        <div id="quiz" class="px-5 py-5 bg-white mx-auto"></div>
 
-        <br><br>
+        <br>
 
-        <button id="submit" class="btn btn-outline-primary btn-lg mx-auto text-center">Submit Quiz</button>
+        <button id="submit" class="btn btn-primary btn-lg float-end">Submit Quiz</button>
 
         <div id="results"></div>
+
+        <br><br><br>
 
     </div>
 
