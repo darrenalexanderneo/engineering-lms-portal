@@ -1148,6 +1148,7 @@ def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_le
 
 
 def insert_into_completion_record(quiz_id,learner_id):
+    #insert only if pass 
     course_id = quiz_id.split("_")
     course_id = course_id[0]
     result = Completion_Record(
@@ -1204,13 +1205,26 @@ def submit_quiz():
 
             #insert into completion table
             #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
-            code_completion_record= insert_into_completion_record(data['quiz_id'],data['learner_id'])
-            if(code_completion_record != 200):
+
+            final_quiz = Final_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
+            total_marks = final_quiz.total_marks
+            percentage = (int(learner_marks)/ int(total_marks)) * 100
+            #pass finals
+            if(percentage >= 50):
+                code_completion_record= insert_into_completion_record(data['quiz_id'],data['learner_id'])
+                if(code_completion_record != 200):
+                    return jsonify(
+                    {
+                        "code" : code_completion_record,
+                        "message": "there is an error insert/update into completion record db"
+                    }), 200
+            else:
                 return jsonify(
                 {
-                    "code" : code_completion_record,
-                    "message": "there is an error insert/update into completion record db"
+                    "code" : code,
+                    "message": "successfully done submitting final quiz, but fail not updated into completion table"
                 }), 200
+
 
         # print(question_list)
         return jsonify(
@@ -1362,6 +1376,20 @@ def retrieve_learner_chapter_grade(chapter_id,learner_id):
         },
     }), 200
 
+@app.route("/retrieve_learner_final_grade/<string:quiz_id>/<string:learner_id>")
+def retrieve_learner_final_grade(quiz_id,learner_id):
+    learner_final_result = Final_Quiz_Result.query.filter_by(quiz_id = quiz_id, learner_id = learner_id).first()
+    marks = learner_final_result.marks
+    final_quiz = Final_Quiz.query.filter_by(quiz_id = quiz_id).first()
+    total_marks = final_quiz.total_marks
+    return jsonify(
+    {
+        "code": 200,
+        "data": {
+            "marks": marks,
+            "total_marks": total_marks
+        },
+    }), 200
 
 
 ################ Trainer 
