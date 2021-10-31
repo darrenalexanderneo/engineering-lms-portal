@@ -16,7 +16,7 @@ var getQuizQuestions;
 var submitQuiz_POST;
 var getCompletedChapters;
 
-$('#submit').modal({ show: false})
+$('#submit').modal({ show: false});
 
 // to retrieve api keys without exposing
 function getAPIkeys () {  
@@ -62,8 +62,13 @@ function displayQuiz (quiz_id) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            question_list = JSON.parse(this.response).question_records;
-            // console.log(question_list);
+            var result = JSON.parse(this.response);
+
+            if (result.code == 500) {
+                console.log("Error 500: Unable to retrieve quiz questions.");
+            } else if (result.code == 200) {
+                var question_list = result.question_records;
+                // console.log(question_list);
 
             for (qn of question_list) {
                 // console.log(qn);
@@ -92,6 +97,8 @@ function displayQuiz (quiz_id) {
             }
             
             document.getElementById("quiz").innerHTML = html_content;
+            }
+            
         }
     };
 
