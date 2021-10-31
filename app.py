@@ -1062,14 +1062,20 @@ def auto_compute_grade(data):
     learner_marks = 0 
     question_list = Question.query.filter_by(quiz_id=data['quiz_id']).order_by("question_id").all()
     answer_array = []
-    question_id = data['question']
+    question_id = data['question'].split(",")
+    print("question id")
+    print(question_id)
     answer_array = data['answer'].split(",")
+    print(len(question_list))
     for i in range(0,len(question_list)):
         index = question_id.index(question_list[i].question_id)
+        print(question_list[i].question_id)
+        print(question_id[index])
         print("should tally")
         print(i)
         print(index)
         learner_marks += question_list[i].compute_marks(answer_array[index])
+        print("total marks is ", learner_marks)
 
     return learner_marks
 
