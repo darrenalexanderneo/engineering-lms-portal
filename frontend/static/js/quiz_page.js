@@ -2,6 +2,8 @@ const storage = window.localStorage;
 
 const learner_id = storage.getItem("learner_id");
 const quiz_id = storage.getItem("quiz_id");
+const class_id = storage.getItem("class_id");
+const chapter_id = storage.getItem("chapter_id");
 
 const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
@@ -12,6 +14,9 @@ var question_list = [];
 //initialise global variables to store api keys
 var getQuizQuestions;
 var submitQuiz_POST;
+var getCompletedChapters;
+
+$('#submit').modal({ show: false})
 
 // to retrieve api keys without exposing
 function getAPIkeys () {  
@@ -21,9 +26,11 @@ function getAPIkeys () {
             var api_keys = JSON.parse(this.response);
             getQuizQuestions = api_keys.getQuizQuestions;
             submitQuiz_POST = api_keys.submitQuiz_POST;
+            getCompletedChapters = api_keys.getCompletedChapters;
 
             console.log(getQuizQuestions);
             console.log(submitQuiz_POST);
+            console.log(getCompletedChapters);
         }
     }
     request.open("GET", "../../apikey.json", false);
@@ -101,78 +108,127 @@ function radioChecked (question_id, selected_option) {
 
 }
 
-submitButton.addEventListener('click', submitQuiz)
+// submitButton.addEventListener('click', submitQuiz)
 
 function submitQuiz () {
 
     if (Object.keys(learners_Answers).length == question_list.length) {
         console.log("validation - all questions are answered!");
 
-        var answers_obj = learners_Answers;
+        var questions_array = [];
+        var answers_array = [];
+        var questions_str = "";
+        var answers_str = "";
+
+        for (var key in learners_Answers) {
+            console.log(key);
+            questions_array.push(key);
+            answers_array.push(learners_Answers[`${key}`]);
+        }
+
+        questions_str = questions_array.join(",");
+        answers_str = answers_array.join(",");
+
+        var answers_obj = {};
         answers_obj["quiz_id"] = quiz_id;
-        answers_obj["Learner_id"] = learner_id;
+        answers_obj["learner_id"] = learner_id;
+        answers_obj["question"] = questions_str;
+        answers_obj["answer"] = answers_str;
+        answers_obj["type"] = "chapter_quiz";
 
-        console.log(answers_obj);
+        answers_json = JSON.stringify(answers_obj);
 
-        // var request = new XMLHttpRequest();
-        // request.onreadystatechange = function () {
-        //     if (this.readyState == 4 && this.status == 200) {
-        //         var result = JSON.parse(this.response);
+        console.log(answers_json);
 
-        //         console.log(result);
-        //         displayQuizScore();
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var result = JSON.parse(this.response);
 
-        //     }
-        // }
-        // request.open("POST", submitQuiz_POST, true);
-        // request.setRequestHeader("Content-Type", "application/json");
-        // request.send(learners_Answers);
+                console.log(result);
+                if (result.message == "successfully") {
+                    displayQuizScore();
+                } else {
+                    alert("Quiz Submission is Unsuccessful.");
+                }
+            }
+        }
+        request.open("POST", submitQuiz_POST, true);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(answers_json);
 
     } else {
         console.log("validation - NOT all questions are answered!");
         alert("Please Attempt All The Questions!");
     }
-
-
 }
 
 function displayQuizScore () {
-    var html_content = `<!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-      Launch static backdrop modal
-    </button>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
-          </div>
-        </div>
-      </div>
-    </div>`
 
-    document.getElementById("results")
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var results = JSON.parse(this.response).results;
+            var quiz_score;
+            for (var chapter of results) {
+                if (chapter.chapter_id == chapter_id) {
+                    quiz_score = chapter.completion  // 0 or 1
+                }
+            }
+            console.log(quiz_score);
 
+
+            var message = "";
+            var buttons = "";
+
+            if (quiz_score == 0) {
+                message = "You failed the quiz. You may retake it or move on to the next chapter.";
+                buttons = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='quiz_page.html'">Retake Quiz</button>
+                    <button type="button" class="btn btn-primary" onclick="redirect_to_EnrolledCourses()">Next Chapter</button>`;
+
+            } else {
+                message  = "You passed the quiz! You may now move on to the next chapter.";
+                buttons = `<button type="button" class="btn btn-primary" onclick="redirect_to_EnrolledCourses()">Next Chapter</button>`;
+            }
+
+            // var html_content = `
+            // <!-- Modal -->
+            // <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
+            // <div class="modal-dialog">
+            //     <div class="modal-content">
+            //     <div class="modal-header">
+            //         <h5 class="modal-title" id="submitLabel">Quiz Results</h5>
+            //     </div>
+            //     <div class="modal-body">
+            //         ${message}
+            //     </div>
+            //     <div class="modal-footer">
+            //         ${retake_quiz_btn}
+            //         ${next_btn}
+            //         
+            //     </div>
+            //     </div>
+            // </div>
+            // </div>`;
+
+            document.getElementsByClassName("modal-body")[0].innerHTML = message;
+            document.getElementsByClassName("modal-footer")[0].innerHTML = buttons;
+
+            $('#submit').modal('show');
+        }
+    }
+    request.open("GET", `${getCompletedChapters}${class_id}/${learner_id}`, true);
+    request.send();
 }
 
-function redirect_to_classRegistration(course_id) {
-    storage.setItem("course_id",course_id);
+function redirect_to_EnrolledCourses() {
+    // storage.setItem("course_id",course_id);
 
-    setTimeout(function () { 
-        const courseid = storage.getItem("course_id"); 
-        console.log("localStorage.getItem():" + courseid);
-        window.location.replace("class_registration.html");  // redirect to class_registration.html 
-    }, 1000);
+    // setTimeout(function () { 
+    //     const courseid = storage.getItem("course_id"); 
+    //     console.log("localStorage.getItem():" + courseid);
+    window.location.replace("enrolled_courses.html");  // redirect to enrolled_courses.html 
+    // }, 1000);
 }
 
 function goBackTo (prev_page) {

@@ -51,9 +51,28 @@
 
         <br>
 
-        <button id="submit" class="btn btn-primary btn-lg float-end">Submit Quiz</button>
+        <button class="btn btn-primary btn-lg float-end" onclick="submitQuiz()">Submit Quiz</button>
+        <!-- data-bs-toggle="modal" data-bs-target="#submit" -->
 
-        <div id="results"></div>
+        <!-- Modal -->
+        <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitLabel">Quiz Results</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- ${message} -->
+                </div>
+                <div class="modal-footer">
+                    <!-- ${retake_quiz_btn} -->
+                    <button type="button" class="btn btn-primary" onclick="">Next Chapter</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div id="results"></div> -->
 
         <br><br><br>
 

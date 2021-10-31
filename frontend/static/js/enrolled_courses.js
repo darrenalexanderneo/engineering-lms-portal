@@ -10,6 +10,7 @@ var getCourseCompletionStatus;
 var getCompletedChapters;
 var getEnrollmentStatus;
 
+
 function renderPage () {
     getAPIkeys();
     displayCourseDropdown();
@@ -104,10 +105,10 @@ function displayAllChapters (class_id) {
 
                 } else { //chapter is not completed yet
                     if (checkforFirst == 0) { //only enable "Learn" button for first uncompleted chapter
-                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}')" class="btn btn-outline-primary rounded-pill">Learn</button>`;
+                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill">Learn</button>`;
                         checkforFirst = 1;
                     } else { //disable the other "Learn" buttons
-                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}')" class="btn btn-outline-primary rounded-pill disabled">Learn</button>`;
+                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill disabled">Learn</button>`;
                     }   
                 }
     
@@ -189,15 +190,21 @@ function showCourseProgressBar(course_id) {
 
 }
 
-function redirect_to_chapterContents(course_id,chapter_id) {
+function redirect_to_chapterContents(course_id,chapter_id, class_id) {
     storage.setItem("chapter_id",chapter_id);
     storage.setItem("course_id",course_id);
+    storage.setItem("class_id",class_id);
+
 
     setTimeout(function () { 
         const chapterID = storage.getItem("chapter_id"); 
         console.log("localStorage.getItem():" + chapterID);
+
         const courseID = storage.getItem("course_id"); 
         console.log("localStorage.getItem():" + courseID);
+
+        const classID = storage.getItem("class_id"); 
+        console.log("localStorage.getItem():" + classID);
 
         window.location.replace("chapter_contents.html");  // redirect to chapter_contents.html 
     }, 1000);
