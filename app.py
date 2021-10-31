@@ -929,7 +929,7 @@ def register():
                 "code": 200,
                 "message": "Successfully register for " + data['class_id'] + "."
             }
-            ), 200
+            ), 200 
 
 
     except Exception as e:
@@ -1194,17 +1194,17 @@ def submit_quiz():
                     "code" : code,
                     "message": "there is an error insert/update into chapter quiz result db"
                 }), 200
-            ######### THINK DONT NEED
-            # is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
+            ######### NEED
+            is_exist_chapter_learner = Chapter_Learner.query.filter_by(chapter_id=data['quiz_id'][0:-1],learner_id =data['learner_id']).first()
 
-            # #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
-            # code_chapter_learner = insert_update_into_quiz_result_db(data,learner_marks,is_exist_chapter_learner)
-            # if(code_chapter_learner != 200):
-            #     return jsonify(
-            #     {
-            #         "code" : code_chapter_learner,
-            #         "message": "there is an error insert/update into chapter learner result db"
-            #     }), 200
+            #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
+            code_chapter_learner = insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_learner)
+            if(code_chapter_learner != 200):
+                return jsonify(
+                {
+                    "code" : code_chapter_learner,
+                    "message": "there is an error insert/update into chapter learner result db"
+                }), 200
         else:
             #final
             is_exist_final_quiz_result = Final_Quiz_Result.query.filter_by(quiz_id=data['quiz_id'],learner_id = data['learner_id']).first()
