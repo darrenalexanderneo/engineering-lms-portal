@@ -99,8 +99,10 @@ function displayAllChapters (class_id) {
                 
                 //invoke function to check if chapter is completed or not
                 var status_html = ``;
-                if (checkforCompletedChapters(class_id, chapter_id)) {
+                console.log(checkforCompletedChapters(class_id, chapter_id));
+                if (checkforCompletedChapters(class_id, chapter_id) == true) {
                     // chapter is completed
+                    console.log(`${chapter_id} IS COMPLETED!`);
                     status_html = `<span style="margin-bottom: 0px;" class="badge bg-success rounded-pill px-2 py-2">Completed</span>`;
 
                 } else { //chapter is not completed yet
@@ -131,31 +133,36 @@ function displayAllChapters (class_id) {
 
 function checkforCompletedChapters (class_id, chapter_id) {
 
+    var chapter_completed = false;
+
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var chapter_list = JSON.parse(this.response).results;
             console.log(chapter_list);
 
-            var chapter_completed = false;
 
             for (var chapter of chapter_list) {
-                console.log(chapter);
+                // console.log(chapter);
                 var completion_status = chapter.completion;
-                var chapterID = chapter.course_id;
+                var chapterID = chapter.chapter_id;
+                // console.log(completion_status);
+                // console.log(chapterID);
 
                 if (completion_status == 1 && chapterID == chapter_id) {
-                    chapter_completed =  true;
+                    // console.log("chapter is completed!");
+                    chapter_completed = true;
                 }
             }
-            
-            return chapter_completed; // true or false
         }
     };
 
     var url = `${getCompletedChapters}${class_id}/${learner_id}`;
-    request.open("GET", url, true);
+    request.open("GET", url, false);
     request.send();
+
+    // console.log(chapter_completed);
+    return chapter_completed; // true or false
 }
 
 function showCourseProgressBar(course_id) {
