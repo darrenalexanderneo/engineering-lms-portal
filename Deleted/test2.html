@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+    <link rel="stylesheet" href="../../static/css/hr.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <title>Admin Portal - View Learners</title>
+</head>
+<body onload="getCourseDetails(); getLearnersOfClass('All'); getClassDropdown();">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse ms-4" id="navbarSupportedContent">
+
+              <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" onclick="window.location.href='./test1.html'"  for="learners">Learners</label>
+  
+              <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
+              <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>
+          </div>
+          <div class="float-end"><img src="../../static/img/sampleprofilepic.jfif" alt="profile picture"></div>
+          <div class="pt-3 me-4">
+            <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
+          </div>
+
+        </div>
+    </nav>
+
+    <!-- section 1: course details -->
+    <div class="container">
+        <h2 id="course_title"></h2>
+        <p> <strong>Description</strong></p>
+        <p id="course_description"></p>
+    </div>
+
+
+    <div class="container">
+        <!-- section 2: class dropdown list -->
+
+        <span class="fw-bold">Class: &nbsp;</span> 
+        <select class="form-select" aria-label="dropdownforClasses" onchange="getLearnersOfClass(this.value)">
+            <!-- dropdown list options -->
+            <!-- <option selected value="All" onclick="getAllLearnersOfClass()">All</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3" >Three</option> -->
+        </select>
+
+        <!-- section 3: pagination -->
+
+        <ul class="pagination float-end me-2">
+            <li class="page-item active" id="preassign">
+                <a class="page-link" href='#' onclick="getAllPreassignLearners()">PREASSIGN</a>
+            </li>
+            <li class="page-item " id="registered">
+                <a class="page-link" href='#' onclick="getAllRegisteredLearners()" aria-current="registered">REGISTERED</a>
+            </li>
+            <li class="page-item" id="enrolled">
+                <a class="page-link" href='#' onclick="getAllEnrolledLearners()">ENROLLED</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- section 4: table content for learners -->
+    <div class="container">
+        <table class="table table-borderless">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Student ID</th>
+                <th scope="col" class="text-center" id="app_dt">Application Date/Time</th> 
+                <th scope="col" class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="learners_list">
+    
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- javascript -->
+    <script>
+        // configure dotenv package for env variables
+        require('dotenv').config();
+
+        /* section 1: load files*/
+        // get the course selected
+        const course_selected = localStorage['course_selected'];
+        //localStorage.removeItem( 'course_selected' ); // Clear the localStorage
+        console.log('course selected: ' + course_selected);
+
+        // we need a function to load files
+        var loadFile = function (filePath, done) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () { return done(this.response) }
+            xhr.open("GET", filePath, true);
+            xhr.send();
+        }
+        // paths to all of your files
+        var myFiles = [ "../course_list.json", "../learners-v2.json"];
+        var jsonData = [];
+        myFiles.forEach(function (file, i) {
+            // and call loadFile
+            loadFile(file, function (response) {
+                jsonData[i] = JSON.parse(response);
+            }
+        )});
+
+        console.log(jsonData);
+
+        /* section 2: get course details */
+        function getCourseDetails() {
+            // global variables
+            const course_ls = jsonData[0].courses;
+            const class_ls = jsonData[0].course_classes;
+            const learner_ls = jsonData[1][course_selected];
+            
+            // registered
+            var reg_ls = learner_ls.registered_learners;
+
+            // get description 
+            for (var j = 0; j < course_ls.length; j++) { 
+                var c_id = course_ls[j].course_id;
+                if (course_selected == c_id) { 
+                    var c_name = course_ls[j].course_name;
+                    var c_desc = course_ls[j].course_description;
+                    break
+                }
+            }
+
+            // console.log('check', c_name, c_id, c_desc);
+            document.getElementById("course_title").innerHTML = `${c_id} - ${c_name}`;
+            document.getElementById("course_description").innerHTML = `${c_desc}`;
+        }
+
+        /* section 3: dropdown */
+        function getRowDetails(list, cols) { 
+            var record = '';
+
+            for (var i = 0; i < list.length; i++) {
+                // declare variables
+                var course_avail = 0;
+
+                // learners details
+                var name = list[i].name;
+                var id = list[i].id; 
+                var app_dt = list[i].apply_datetime;
+                var class_id = list[i].class_id;
+                var class_name = list[i].class;
+                
+                if (cols == 4) {
+                // input row details
+                record += `<tr onclick="" id="${id}"><a href="#">
+
+                    <td class="text-center align-middle">${name}</td>
+                    <td class="text-center align-middle">${id}</td>
+                    <td class="text-center align-middle">${app_dt}</td>
+                    <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto'>Assign</p></td>
+
+                    <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                    
+                </a></tr>`;
+                } else if (cols == 3) {
+                    record += `<tr onclick="" id="${id}"><a href="#">
+
+                        <td class="text-center align-middle">${name}</td>
+                        <td class="text-center align-middle">${id}</td>
+                        <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})">Assign</p></td>
+
+                        <td><i class="fa bi bi-chevron-double-right" ></i></td>
+
+                        </a></tr>`;
+                }
+            }
+
+            return record;
+        }
+
+        // populate list
+        function getClassDropdown() { 
+            // var class_dropdown = document.getElementById('class_dropdown');
+            const class_ls = jsonData[0].course_classes[course_selected];
+            console.log(`class ls: ${class_ls}`);
+            console.log(`num of class: ${class_ls.length}`)
+
+            var class_dropdown = `<option selected value="All">All</option>`;
+            for(var i = 0; i < class_ls.length; i++) {
+                // var opt = options[i]; 
+                // console.log(opt)
+                var class_name = class_ls[i].class_name;
+                var class_id = class_ls[i].class_id;
+
+                class_dropdown += `<option value="${class_id}">${class_name}</option>`;
+                // // create element
+                // var li = document.createElement("li");
+                // var link = document.createElement("a");             
+                // var text = document.createTextNode(opt);
+                // link.appendChild(text);
+
+                // // set attributes: text, onclick event
+                // link.setAttribute("class", "dropdown-item");
+                // link.setAttribute("onclick", `getLearnersOfClass('${opt}')`);
+                // //link.href = "#";
+                
+                // li.appendChild(link);
+                // class_dropdown.appendChild(li);
+            }
+            document.getElementsByClassName("form-select")[0].innerHTML = class_dropdown;
+            // console.log(class_dropdown);
+        }
+
+        // function getAllLearnersOfClass() { 
+        //     const learner_ls = jsonData[1][course_selected];
+        //     var preassigned_ls = learner_ls.preassign_learners;
+
+        //     record = getRowDetails(preassigned_ls);
+
+        //     // update table with data
+        //     document.getElementById("learners_list").innerHTML = record;
+        // }
+
+
+    // global variable to store selected class_ID
+    var class_ID; 
+
+        function getLearnersOfClass(class_id) { 
+            class_ID = class_id;
+            const learner_ls = jsonData[1][course_selected];
+            var preassigned_ls = learner_ls.preassign_learners;
+            document.getElementById("app_dt").classList.add("d-none");
+
+
+            if (class_id == "All") {
+                console.log("class_id = All");
+                record = getRowDetails(preassigned_ls,3);
+
+                // update table with data
+                // document.getElementById("learners_list").innerHTML = record;
+
+            } else {
+                console.log(`Preassign - class: ${class_id}`);
+
+                var class_preassigned_ls = [];
+                var curr_class_id;
+                // console.log(preassigned_ls); 
+                for (value of preassigned_ls) {
+                    curr_class_id = value.class_id;
+                    // console.log(class_id, curr_class_id);
+
+                    if (class_id == curr_class_id) { 
+                        class_preassigned_ls.push(value);
+                    }
+                }
+                //console.log(class_preassigned_ls);
+                record = getRowDetails(class_preassigned_ls,3);
+            }
+
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+            // console.log(record);
+        }
+
+        
+
+        /* section 3: tabs */
+        function getAllRegisteredLearners() { 
+            console.log("Registered",class_ID);
+            const learner_ls = jsonData[1][course_selected];
+            var reg_ls = learner_ls.registered_learners;
+
+            console.log(reg_ls);
+
+            document.getElementById("learners_list").innerHTML = "";
+            
+            //to set table headers
+            if (document.getElementById("app_dt").classList.contains("d-none")) {
+                document.getElementById("app_dt").classList.remove("d-none");
+            }
+
+            var record = '';
+            var record_count = 0;
+
+            if (class_ID == "All") {
+
+                record = getRowDetails(reg_ls,4);
+                record_count = 1 // hardcoded this part -- need to check for no. of records even if class_ID == "All"
+
+            } else {
+                for (var i = 0; i < reg_ls.length; i++) {
+                    // declare variables
+                    var course_avail = 0;
+
+                    if (reg_ls[i].class_id == class_ID) {
+                        record_count += 1;
+
+                        // learners details
+                        var name = reg_ls[i].name;
+                        var id = reg_ls[i].id; 
+                        var app_dt = reg_ls[i].apply_datetime;
+                        var class_id = reg_ls[i].class_id;
+                        var class_name = reg_ls[i].class;
+
+                        record += `<tr>
+
+                                            <td class="text-center align-middle">${name}</td>
+                                            <td class="text-center align-middle">${id}</td>
+                                            <td class="text-center align-middle">${app_dt}</td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Approve</p></td>
+
+                                            </tr>`;
+                    }
+
+                }
+
+            }
+            console.log(record_count);
+            if (record_count == 0) {
+                record = `There are currently no registered learners in ${class_ID}`;
+            }
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+        }
+
+        function getAllEnrolledLearners() {
+            console.log("Enrolled",class_ID);
+
+            const learner_ls = jsonData[1][course_selected];
+            var enrolled_ls = learner_ls.enrolled_learners;
+
+            console.log(enrolled_ls);
+
+            document.getElementById("learners_list").innerHTML = "";
+
+            // hide table header for application datetime 
+            document.getElementById("app_dt").classList.add("d-none");
+
+            var record = '';
+            var record_count = 0;
+
+            if (class_ID == "All") {
+
+                record = getRowDetails(enrolled_ls,3);
+                record_count = 1 // hardcoded this part -- need to check for no. of records even if class_ID == "All"
+
+            } else {
+                for (var i = 0; i < enrolled_ls.length; i++) {
+                    // declare variables
+                    var course_avail = 0;
+
+                    if (enrolled_ls[i].class_id == class_ID) {
+                        record_count += 1;
+
+                        // learners details
+                        var name = enrolled_ls[i].name;
+                        var id = enrolled_ls[i].id; 
+                        // var app_dt = enrolled_ls[i].apply_datetime;
+                        var class_id = enrolled_ls[i].class_id;
+                        var class_name = enrolled_ls[i].class;
+
+                        record += `<tr>
+
+                                            <td class="text-center align-middle">${name}</td>
+                                            <td class="text-center align-middle">${id}</td>
+                                            <td class="text-center align-middle my-auto"><p class='btn-danger btn rounded-pill align-middle my-auto' onclick="withdraw_learners(${id}, ${class_id})" id="${id}">Withdraw</p></td>
+
+                                            </tr>`;
+                    }
+
+                }
+
+            }
+            console.log(record_count);
+            if (record_count == 0) {
+                record = `There are currently no enrolled learners in ${class_ID}`;
+            }
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+            
+        }
+          
+
+        function getAllPreassignLearners() {
+            const learner_ls = jsonData[1][course_selected];
+            var preassign_ls = learner_ls.preassign_learners;
+
+            // console.log(preassign_ls);
+
+            document.getElementById("learners_list").innerHTML = "";
+
+            //to set table headers
+            // if (document.getElementById("app_dt").classList.contains("d-none")) {
+            //     document.getElementById("app_dt").classList.remove("d-none");
+            // }
+
+            document.getElementById("app_dt").classList.add("d-none");
+        
+            var record = '';
+            for (var i = 0; i < preassign_ls.length; i++) {
+                // declare variables
+                var course_avail = 0;
+
+                // learners details
+                var name = preassign_ls[i].name;
+                var id = preassign_ls[i].id; 
+                // var assign_deadline = preassign_ls[i].assign_deadline;
+                var class_id = preassign_ls[i].class_id;
+                var class_name = preassign_ls[i].class;
+                
+                // input row details
+                record += `<tr>
+
+                <td class="text-center align-middle">${name}</td>
+                <td class="text-center align-middle">${id}</td>
+                <td class="text-center align-middle my-auto"><p class='btn-success btn rounded-pill align-middle my-auto' onclick="approve_learners(${id}, ${class_id})" id="${id}">Assign</p></td>
+
+                </tr>`;
+            }
+            
+            // update table with data
+            document.getElementById("learners_list").innerHTML = record;
+            console.log(record);
+            console.log('hi');
+        }
+
+        function approve_learners(emp_id, class_id) {
+        // updates database by removing record from registered + adding record to enrolled
+            var course_id = course_selected;
+            console.log("APPROVE: ", course_id, emp_id, class_id);
+             // update the table data on both preassign and enrolled || registered and enrolled
+            
+            
+            // send a json to backend - {emp_id: "", course_id: "", class_id: ""}
+
+        //refresh page
+        } 
+
+        function preassign_learners() {
+        // updates database by removing record from preassigned + adding record to ...??? (not sure)
+        }
+
+        function withdraw_learners(class_id, emp_id) { 
+            //updates database by removing record from enrolled
+            var course_id = course_selected;
+
+            // AJAX call to invoke update of Learner's table in database to change available_slots
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+                    console.log("update of available slots is successful");
+                    
+                } else {
+                    console.log("update of available slots failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            var json_obj = {emp_id: emp_id, course_id: course_id, class_id: class_id};
+            var json_string = JSON.stringify(json_obj);
+            request.open("PUT", url, true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(json_string); 
+            
+
+            // AJAX call to invoke deletion of record from enrolled learners table in database
+            var request2 = new XMLHttpRequest();
+
+            request2.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.response);
+                    // var message = obj.message;
+                    // var status = obj.code;
+
+                    var message = `Successfully withdrew the enrollment of Learner #${emp_id} from ${class_id} of ${course_id}.`;
+                    console.log("deletion of learner from enrol table is successful");
+                    document.getElementById("learners_list").innerHTML = message; // to do
+                } else {
+                    console.log("deletion of learner from enrol table - failed");
+                }
+            };
+
+            url = "";  // api endpoint
+            request2.open("DELETE", url, true);
+            request2.send(json_string); 
+
+            // refresh page OR invoke getAllEnrolledLearners()
+            getAllEnrolledLearners();
+
+        }
+
+
+    </script>
+    <!-- <script src="../../static/js/learners.js"></script> -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>

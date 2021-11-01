@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+
+
+
+    <title>Register for Classes</title>
+</head>
+<body style="background-color: #eee;" onload="debug()">
+    <!-- navigation bar -->
+    <nav class="navbar navbar-dark bg-dark d-flex float-left">
+        <div class="my-3"> </div>
+        <div class="my-3 float-end">
+            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+        </div>
+    </nav>
+    <br>
+
+    <!-- redirect to previous page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('tnr_view_quiz_list')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
+    <!-- title: quiz_id, quiz_type -->
+    <div class="container">
+        <h1>Chapter 1 Quiz</h1>
+        <h4>BEM460 Class 3</h4>
+    </div>
+    <br>
+
+    <div></div>
+
+
+    
+
+   
+    
+</body>
+    <script src="../../static/js/get_api_keys.js"></script>
+    <script src="../../static/js/main.js"></script>
+
+    <script>
+        //initialise localStorage
+        const storage = window.localStorage;
+
+        // storage
+        const quiz_id = storage.getItem("quiz_id"); 
+        const quiz_type = storage.getItem("quiz_type"); 
+
+        function debug() {
+            console.log("storage: ", quiz_id, quiz_type)
+        }
+
+       
+  
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>

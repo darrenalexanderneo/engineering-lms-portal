@@ -1,0 +1,46 @@
+body {
+    font-family: 'Poppins';
+}
+
+button.btn-outline-light {
+    /* border: none; */
+    margin-left: 1rem;
+}
+
+button.btn-outline-light:hover {
+    color: black;
+}
+
+button.btn.btn-outline-light.active {
+    color: black;
+}
+
+/* information card */
+.card {
+    border: none;
+    border-radius: 10px
+}
+
+span {
+    margin-bottom: 30px;
+}
+
+img.card-img-top {
+    height: 100px;
+    object-fit: cover;
+}
+
+/* svg {
+    stroke: rgb(13, 110, 253);
+} */
+
+svg:hover {
+    fill: rgb(13, 110, 253);
+    filter: drop-shadow(2px 2px 2px rgb(255 255 255 / 0.8));
+}
+
+#pdfviewer {
+    overflow: hidden;
+    height: 100vh;
+}
+

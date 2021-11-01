@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/hr.css">
+
+
+
+    <title>Admin Portal - View Learners</title>
+</head>
+<body onload="getAllCourses()">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse ms-4" id="navbarSupportedContent">
+
+              <input type="radio"  name="emp_type" class="btn-check" id="learners" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" onclick="getAllCourses()"  for="learners">Learners</label>
+  
+              <input type="radio"  name="emp_type" class="btn-check" id="trainers" autocomplete="off">
+              <label class="btn btn-outline-primary" onclick='' for="trainers">Trainers</label>
+          </div>
+          <img src="../../static/img/sampleprofilepic.jfif" alt="profile picture">
+          <div class="pt-3 me-4">
+            <p class="text-end username">Veronica Teng <p class="text-muted text-end usertype">Human Resource</p></p>
+          </div>
+
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h1>Courses</h1>
+    </div>
+    <div class="container">
+        
+        <table class="table table-borderless table-hover" id="test">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Number of Class</th>
+                <th scope="col" class="text-center">Slots Available</th>
+                <th scope="col" class="text-center text-white"></th>
+                <!-- <i class="bi bi-check2"></i> -->
+              </tr>
+            </thead>
+            <tbody id="course_list">
+    
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+   
+
+    
+    <!-- <script src="../../static/js/learners.js"></script> -->
+
+    <script>
+    // we need a function to load files
+    // done is a "callback" function
+    // in this case, we're passing the `responseText` of the XML request
+    var loadFile = function (filePath, done) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () { return done(this.response) }
+        xhr.open("GET", filePath, true);
+        xhr.send();
+    }
+    // paths to all of your files
+    var myFiles = [ "../course_list.json"];
+    // where you want to store the data
+    var jsonData = [];
+    // loop through each file
+    myFiles.forEach(function (file, i) {
+        // and call loadFile
+        // note how a function is passed as the second parameter
+        // that's the callback function
+        loadFile(file, function (response) {
+            // we set jsonData[i] to the parse data since the requests
+            // will not necessarily come in order
+            jsonData[i] = JSON.parse(response);
+        }
+    )})
+    
+    function getAllCourses() { 
+        //
+        document.getElementById("course_list").innerHTML = "";
+
+        // get course and class data
+        var course_ls = jsonData[0].courses;
+        var class_ls = jsonData[0].course_classes;
+        
+        //
+        var record = '';
+        for (var i = 0; i < course_ls.length; i++) {
+            // declare variables
+            var course_avail = 0;
+
+            // get course details
+            var c_name = course_ls[i].course_name;
+            var c_id = course_ls[i].course_id;
+            var c_desc = course_ls[i].course_description;
+            var c_size = course_ls[i].class_size;
+
+            // get class details
+            var classes = class_ls[c_id];
+            var num_of_classes = classes.length;
+
+            // compute number of available slots per course
+            for (var j = 0; j < classes.length; j++) { 
+                var class_id = classes[j].class_id;
+                var each_class_avail = classes[j].slots_available;
+                course_avail += each_class_avail;  
+            }
+
+            // input row details
+            record += `<tr onclick="getAllLearners(this.id)" id="${c_id}"><a href="#">
+
+                <td class="text-center align-middle">${c_id}</td>
+                <td class="text-center align-middle">${c_name}</td>
+                <td class="text-center align-middle">${num_of_classes}</td>
+                <td class="text-center align-middle">${course_avail}</td>
+
+                <td><i class="fa bi bi-chevron-double-right" ></i></td>
+                
+            </a></tr>`;
+        }
+        
+        // update table with data
+        document.getElementById("course_list").innerHTML = record;
+    }
+
+    // when course is clicked, direct to another page
+    function getAllLearners(id) {
+        
+        localStorage.setItem('course_selected', id);
+        var course_selected = localStorage['course_selected'];
+        console.log(course_selected);
+        location.href = "test2.html";
+    }
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>

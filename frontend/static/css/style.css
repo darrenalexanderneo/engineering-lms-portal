@@ -1,0 +1,84 @@
+div #navbarSupportedContent{
+    font-family: 'Poppins';font-size: 22px;
+}
+ul {
+    font-family: 'Poppins';font-size: 14px;
+}
+p.username {
+    font-family: 'Poppins';font-size: 16px;
+    margin-bottom: 0;
+
+}
+p.usertype {
+    font-family: 'Poppins';font-size: 13px;
+    margin-bottom: 0;
+
+}
+table {
+    font-family: 'Poppins';font-size: 14px;
+}
+p.btn {
+    font-family: 'Poppins';font-size: 12px;
+    margin-right: 5%;
+}
+span.float-start {
+    font-family: 'Poppins';font-size: 14px;
+    margin-left: 5%;
+}
+div.container {
+    margin-top: 5%;
+}
+
+/* TABLE */
+.table-hover > tbody > tr.active:hover > th {
+    background-color: #D1D119;
+}
+
+i.fa {
+    display: none;
+  }
+tr:hover i.fa {
+    display: inline-block;
+}   
+
+/* NAVBAR */
+.navbar-light .navbar-nav .active>.nav-link {
+    border-bottom: 5px solid #F4C127;
+}
+
+h2,h1 {
+    font-family: 'Poppins';
+}
+
+img {
+    border-radius:75%;
+    height: 45px;
+    width: 45px;
+    margin-right: 20px;
+}
+
+select.form-select {
+    width: 20%;
+    display: inline;
+}
+
+div.container {
+    font-family: 'Poppins';
+}
+
+/* navbar - adapted from https://bbbootstrap.com/snippets/navigation-bar-brand-logo-and-name-39723760 */
+.btn-outline-secondary {
+    border: none;
+    margin-left: 50px;
+}
+
+span {
+    background-color: #D1D119;
+}
+
+#openPopup { outline:none; border-style: none; }
+
+
+#openPopup:hover, #openPopup:active, #openPopup:focus { outline: none; border-style: none; }
+
+
