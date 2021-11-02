@@ -48,52 +48,8 @@ const learnerTypeDict = {
     }
 }
 
-// function to load json files
-// var loadFile = function (filePath, done) {
-//     var xhr = new XMLHttpRequest();
-//     xhr.withCredentials = false;
-//     xhr.onload = function () { return done(this.response) }
-//     xhr.open("GET", filePath, true);
-//     xhr.send();
-// }
-
-
-// var course_ls;
-// var class_ls;
 var learner_ls;
 
-// function waitForstorage(key, cb, timer) {
-//         if (!storage.getItem(key)) {
-//             console.log(storage.getItem(key));
-//             return (timer = setTimeout(waitForstorage.bind(null, key, cb), 800));
-//             }
-
-//         clearTimeout(timer);
-
-//         if (typeof(cb) !== 'function') {
-//             return storage.getItem(key);
-//             }   
-//         console.log(storage.getItem(key));
-//         return cb(storage.getItem(key));
-//     } //set timeout to wait for Local Storage Session to be ready to "getItem()"
-
-// const asyncstorage = {
-//     setItem: async function (key, value) {
-//         await null;
-//         return storage.setItem(key, value);
-//     },
-//     getItem: async function (key) {
-//         await null;
-//         return storage.getItem(key);
-//     }
-// };
-
-// function waitForstorage(key) {
-//     const storage = storage;
-//     while (storage.getItem(key) == null) {
-
-//     }
-// }
 
 function getAPIkeys () {
 
@@ -135,30 +91,6 @@ function generateLearnerTypeDict () {
     request.open("GET", url, false);
     request.send();
 }
-// function getData() {
-//      // get course, class data
-        
-//     //set timeout to wait for Local Storage Session to be ready to "getItem()"  
-//     const learner_ls = JSON.parse(asyncstorage.getItem("learners_json"))[`${course_id}`];
-//     console.log("learners_ls: ", learner_ls);
-
-//     const course_ls = JSON.parse(asyncstorage.getItem("course_json"))["courses"];
-//      console.log("course_ls: ", course_ls);
-
-//     const class_ls = JSON.parse(asyncstorage.getItem("class_json"))[`${course_id}`];
-//      console.log("class_ls: ", class_ls);
-
-//      learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
-//      learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
-//      learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
-//      curr_num_of_learners = learner_ls.preassign_learners.length;
-    
-//      if (course_ls && class_ls && learner_ls) {
-//          console.log("hello");
-//         getCourseDetails();
-//      }
-
-// }
 
 function renderLearnersListPage () {
     getAPIkeys();
