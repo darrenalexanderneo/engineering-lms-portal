@@ -28,7 +28,7 @@ function getAPIkeys () {
 
 
     }
-    url = "../../apikey.json"; 
+    url = "../../apikey_development.json"; 
     request.open("GET", url, false);
     request.send();
 }
