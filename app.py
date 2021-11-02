@@ -84,15 +84,10 @@ class Completion_Record(db.Model):
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
 
 
-    def insert_into_completion_record(quiz_id,learner_id):
+    def insert_into_completion_record(self):
         #insert only if pass 
-        course_id = quiz_id.split("_")
-        course_id = course_id[0]
-        result = Completion_Record(
-            course_id=course_id,
-            learner_id=learner_id
-        ) 
-        db.session.add(result)
+
+        db.session.add(self)
         db.session.commit()
         return 200
 
@@ -783,7 +778,7 @@ def withdraw_course():
 
 ##########################################################sprint 5   ###########################################
 
-
+#####HEREEEEEEEEEEEEE DATE CHECK WITH REG START AND END! 
 @app.route("/registration_course_list")
 def registration_course_list():
     array = []
@@ -1269,7 +1264,8 @@ def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_le
             if(completion == 1):
                 is_exist_chapter_learner.update_completion()
                 db.session.commit()
-                return 200
+
+            return 200
 
     except Exception as e:
         return 500
@@ -1329,12 +1325,27 @@ def submit_quiz():
             percentage = (int(learner_marks)/ int(total_marks)) * 100
             #pass finals
             if(percentage >= 50):
-                code_completion_record= insert_into_completion_record(data['quiz_id'],data['learner_id'])
-                if(code_completion_record != 200):
+
+                course_id = data['quiz_id'].split("_")
+                course_id = course_id[0]
+                result = Completion_Record(
+                    course_id=course_id,
+                    learner_id=data['learner_id']
+                )
+                is_exist_completion_record = Completion_Record.query.filter_by(course_id = course_id,learner_id = data['learner_id']).first()
+                if(is_exist_completion_record == None):
+                    code_completion_record= result.insert_into_completion_record()
+                    if(code_completion_record != 200):
+                        return jsonify(
+                        {
+                            "code" : code_completion_record,
+                            "message": "there is an error insert/update into completion record db"
+                        }), 200
+                else:
                     return jsonify(
                     {
-                        "code" : code_completion_record,
-                        "message": "there is an error insert/update into completion record db"
+                        "code" : 200,
+                        "message": "already completed the final quiz"
                     }), 200
             else:
                 return jsonify(
