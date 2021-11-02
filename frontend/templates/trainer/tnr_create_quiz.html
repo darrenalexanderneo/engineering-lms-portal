@@ -51,87 +51,6 @@
         </form>
     </div>
 
-    <!-- test
-    <form class="row g-3 needs-validation" novalidate>
-        <div class="col-md-4">
-          <label for="validationCustom01" class="form-label">First name</label>
-          <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
-          <div class="valid-feedback">
-            Looks good!
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label for="validationCustom02" class="form-label">Last name</label>
-          <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
-          <div class="valid-feedback">
-            Looks good!
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label for="validationCustomUsername" class="form-label">Username</label>
-          <div class="input-group has-validation">
-            <span class="input-group-text" id="inputGroupPrepend">@</span>
-            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
-            <div class="invalid-feedback">
-              Please choose a username.
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <label for="validationCustom03" class="form-label">City</label>
-          <input type="text" class="form-control" id="validationCustom03" required>
-          <div class="invalid-feedback">
-            Please provide a valid city.
-          </div>
-        </div>
-        <div class="col-md-3">
-          <label for="validationCustom04" class="form-label">State</label>
-          <select class="form-select" id="validationCustom04" required>
-            <option selected disabled value="">Choose...</option>
-            <option>...</option>
-          </select>
-          <div class="invalid-feedback">
-            Please select a valid state.
-          </div>
-        </div>
-        <div class="col-md-3">
-          <label for="validationCustom05" class="form-label">Zip</label>
-          <input type="text" class="form-control" id="validationCustom05" required>
-          <div class="invalid-feedback">
-            Please provide a valid zip.
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-group">
-            <input class="form-group-input" type="checkbox" value="" id="invalidCheck" required>
-            <label class="form-group-label" for="invalidCheck">
-              Agree to terms and conditions
-            </label>
-            <div class="invalid-feedback">
-              You must agree before submitting.
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <button class="btn btn-primary" type="submit">Submit form</button>
-        </div>
-      </form> -->
-
-      <form class="row g-3 needs-validation" novalidate>
-       
-        <div class="col-md-4">
-          <div class="input-group has-validation">
-            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" placeholder="Enter a question" required>
-            <div class="invalid-feedback">
-              Please choose a username.
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <button class="btn btn-primary" type="submit">Submit form</button>
-        </div>
-      </form>
     <!-- question list -->
     <form id="quiz-form" class="needs-validation" novalidate>
         <div id="qn-list">
@@ -143,7 +62,7 @@
             <button onclick="addAQn(); updateQuizSummary();" class="btn btn-outline-primary float-right px-4 py-2" type="button" style="border-radius: 2rem;">Add a Question</button>
         </div>
        
-        <div id="create-quiz-alert" class="container"></div>
+        <br><br><br><br>
     
         <div id="feedback-text" class="container">
            <div class="row">
@@ -158,14 +77,10 @@
         </div>
 
     </form>   
+
+    <div id="create-quiz-alert" class="container"></div>
     
     <br><br><br><br>
-
-
-
-    
-    
-
     
     
 </body>
@@ -327,25 +242,6 @@
         changeQnNumber();
     }
 
-    /*
-    <form class="row g-3 needs-validation" novalidate>
-       
-        <div class="col-md-4">
-          <div class="input-group has-validation">
-            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" placeholder="Enter a question" required>
-            <div class="invalid-feedback">
-              Please choose a username.
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <button class="btn btn-primary" type="submit">Submit form</button>
-        </div>
-      </form>
-
-    */
-
     function delAQn(BTN_ID) {
         post_obj.num_of_questions -= 1;
         num_of_qns -= 1;
@@ -408,11 +304,6 @@
         }
 
         document.getElementById(`${qn_num}-options`).innerHTML = html_content;
-    }
-
-    function updateInput(){
-        // console.log(`document.getElementById(id).value: ${document.getElementById(id).value} || ${input_val}`)
-        // document.getElementById(id).value = input_val;
     }
 
     function changeNumOfOptions(option_id) {
@@ -490,15 +381,6 @@
         console.log(post_obj);
         console.log('validation', validation, invalid_msg);
 
-        /*
-                if (validation === false) {
-            document.getElementById("create-quiz-alert").innerHTML = `
-            <br><div class="alert alert-danger fade show" role="alert">
-            ${invalid_msg}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div><br>`;
-        }
-        */
         const form = document.getElementById("quiz-form");
         if (!form.checkValidity()) {
             return
@@ -534,13 +416,7 @@
         var url = createQuiz_POST_TNR;
         request.open("POST", url, true);
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(json_string);
-
-        
-
-        
-        
-        
+        request.send(json_string);        
     }
 
     function getFinalQunInput() {
