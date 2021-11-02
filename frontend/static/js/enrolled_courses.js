@@ -10,6 +10,7 @@ var getCourseCompletionStatus;
 var getCompletedChapters;
 var getEnrollmentStatus;
 
+document.getElementById("learner-id").innerHTML = learner_id;
 
 function renderPage () {
     getAPIkeys();
@@ -52,18 +53,32 @@ function displayCourseDropdown () {
             
             if (course_list.length == 0) {
                 document.getElementById("message-container").innerHTML = "<h5>You Do Not Have Any Enrolled Courses Currently.</h5>";
-            } else {
-                for (course of course_list) {
-                    console.log(course);
-                    var course_id = course.course_id;
-                    var course_name = course.course_name;
-                    var class_id = course.class_id;
-                    
-                    html_content += 
-                    `<option value="${class_id}">${course_id} - ${course_name}</option>`;
+
+            } else {       // course_list.length > 0 but need to check if there are any ENROLLED courses (not pending)
+                var enrolled = false;
+                for (var course of course_list) {
+                    if (course.is_approved == 1) {
+                        enrolled = true;
+                    }
                 }
+                if (enrolled == false) {
+                    document.getElementById("message-container").innerHTML = "<h5>You Do Not Have Any Enrolled Courses Currently.</h5>";
+                }
+                else { // enrolled == true
+                    for (var eachCourse of course_list) {
+                        if (eachCourse.is_approved == 1) {
+                            console.log(eachCourse);
+                            var course_id = eachCourse.course_id;
+                            var course_name = eachCourse.course_name;
+                            var class_id = eachCourse.class_id;
+                            
+                            html_content += 
+                            `<option value="${class_id}">${course_id} - ${course_name}</option>`;
+                        }
+                    }
                 
-                document.getElementById("course-dropdown").innerHTML = html_content;
+                }
+            document.getElementById("course-dropdown").innerHTML = html_content;
             }
         }
     };
@@ -77,9 +92,11 @@ function displayAllChapters (class_id) {
 
     var course_id = class_id.split("_")[0];
     console.log(course_id);
-    showCourseProgressBar(course_id);
+    showCourseProgressBar(class_id);
 
-    document.getElementById("chapter-list").innerHTML = "";
+    document.getElementById("chapter-list").innerHTML = `<div class="text-center mt-5">
+                                        <img src="../../static/img/loading_spinner.gif"  height="50px" width="50px" alt="loading gif">
+                                    </div>`;
     document.getElementById("message-container").innerHTML = "";
 
     var html_content = "";
@@ -87,41 +104,62 @@ function displayAllChapters (class_id) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            var chapter_list = JSON.parse(this.response).results;
-            console.log(chapter_list);
+            var results = JSON.parse(this.response);
+            // if (results.code == 500) {
+            //     console.log(chapter_list);
+            //     document.getElementById("chapter-list").innerHTML = "<h5>No Chapter Materials Found</h5>";
 
-            var checkforFirst = 0;
+            // } else {
+                var chapter_list = results.results;
+                console.log(chapter_list);
 
-            for (chapter of chapter_list) {
-                console.log(chapter);
-                var chapter_id = chapter.chapter_id;
-                var chapter_name = "Chapter " + chapter_id.split("_")[2].replace("Chapt","");
-                
-                //invoke function to check if chapter is completed or not
-                var status_html = ``;
-                console.log(checkforCompletedChapters(class_id, chapter_id));
-                if (checkforCompletedChapters(class_id, chapter_id) == true) {
-                    // chapter is completed
-                    console.log(`${chapter_id} IS COMPLETED!`);
-                    status_html = `<span style="margin-bottom: 0px;" class="badge bg-success rounded-pill px-2 py-2">Completed</span>`;
-
-                } else { //chapter is not completed yet
-                    if (checkforFirst == 0) { //only enable "Learn" button for first uncompleted chapter
-                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill">Learn</button>`;
-                        checkforFirst = 1;
-                    } else { //disable the other "Learn" buttons
-                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill disabled">Learn</button>`;
-                    }   
-                }
+                var checkforFirst = 0;
+                var num_completedChapters = 0;
     
-                html_content += 
-                `<li class="list-group-item d-flex py-3 align-items-center">
-                    <div class="ms-2 me-auto"><h5 class="">${chapter_name}</h5></div>
-                    ${status_html}
-                </li>`;
-            }
-            
-            document.getElementById("chapter-list").innerHTML = html_content;
+                for (chapter of chapter_list) {
+                    // console.log(chapter);
+                    var chapter_id = chapter.chapter_id;
+                    var chapter_name = "Chapter " + chapter_id.split("_")[2].replace("Chapt","");
+                    
+                    //invoke function to check if chapter is completed or not
+                    var status_html = ``;
+                    num_completedChapters += checkforCompletedChapters(class_id, chapter_id);
+                    console.log(num_completedChapters);
+
+                    if (num_completedChapters > 0) {
+                        // chapter is completed
+                        console.log(`${chapter_id} IS COMPLETED!`);
+                        status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill">View</button>
+                                        <span style="margin-bottom: 0px;" class="badge bg-success rounded-pill px-2 py-2">Completed</span>`;
+    
+                    } else { //chapter is not completed yet
+                        if (checkforFirst == 0) { //only enable "Learn" button for first uncompleted chapter
+                            status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill">Learn</button>`;
+                            checkforFirst = 1;
+                        } else { //disable the other "Learn" buttons
+                            status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill disabled">Learn</button>`;
+                        }   
+                    }
+        
+                    html_content += 
+                    `<li class="list-group-item d-flex py-3 align-items-center">
+                        <div class="ms-2 me-auto"><h5>${chapter_name}</h5></div>
+                        ${status_html}
+                    </li>`;
+                }
+                if (num_completedChapters == chapter_list.length) {
+                    disabled = "";  // final quiz button ENABLED
+                } else {
+                    disabled = "disabled";  // final quiz button DISABLED
+                }
+                var final_quiz_id = `${course_id}_FinalQuizq`;
+                html_content += `<li class="list-group-item d-flex py-3 align-items-center">
+                                <div class="ms-2 me-auto"><h5>Final Quiz</h5></div>
+                                <button onclick="redirect_to_FinalQuiz('${final_quiz_id}','${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill ${disabled}">Take Quiz</button>
+                                </li>`;
+
+                document.getElementById("chapter-list").innerHTML = html_content;
+            // }
         }
     };
 
@@ -133,7 +171,7 @@ function displayAllChapters (class_id) {
 
 function checkforCompletedChapters (class_id, chapter_id) {
 
-    var chapter_completed = false;
+    var chapter_completed = 0;
 
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
@@ -151,7 +189,7 @@ function checkforCompletedChapters (class_id, chapter_id) {
 
                 if (completion_status == 1 && chapterID == chapter_id) {
                     // console.log("chapter is completed!");
-                    chapter_completed = true;
+                    chapter_completed += 1;
                 }
             }
         }
@@ -162,15 +200,16 @@ function checkforCompletedChapters (class_id, chapter_id) {
     request.send();
 
     // console.log(chapter_completed);
-    return chapter_completed; // true or false
+    return chapter_completed; // count of completed chapters
 }
 
-function showCourseProgressBar(course_id) {
+function showCourseProgressBar(class_id) {
 
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var course_progress = JSON.parse(this.response).progress_percentage;
+            course_progress = Math.round(course_progress);
             console.log(course_progress);
 
             document.getElementById("course-progress-label").innerHTML = `Course Progress:`;
@@ -189,7 +228,7 @@ function showCourseProgressBar(course_id) {
         }
     };
 
-    var url = `${getCourseProgress}${course_id}/${learner_id}`;
+    var url = `${getCourseProgress}${class_id}/${learner_id}`;
     console.log(url);
     request.open("GET", url, true);
     request.send();
@@ -204,16 +243,38 @@ function redirect_to_chapterContents(course_id,chapter_id, class_id) {
 
 
     setTimeout(function () { 
-        const chapterID = storage.getItem("chapter_id"); 
+        var chapterID = storage.getItem("chapter_id"); 
         console.log("localStorage.getItem():" + chapterID);
 
-        const courseID = storage.getItem("course_id"); 
+        var courseID = storage.getItem("course_id"); 
         console.log("localStorage.getItem():" + courseID);
 
-        const classID = storage.getItem("class_id"); 
+        var classID = storage.getItem("class_id"); 
         console.log("localStorage.getItem():" + classID);
 
         window.location.replace("chapter_contents.html");  // redirect to chapter_contents.html 
+    }, 1000);
+}
+function redirect_to_FinalQuiz(final_quiz_id,course_id,chapter_id, class_id) {
+    storage.setItem("chapter_id",chapter_id);
+    storage.setItem("course_id",course_id);
+    storage.setItem("class_id",class_id);
+    storage.setItem("finalQuiz_id", final_quiz_id);
+
+    setTimeout(function () { 
+        var finalQuizID = storage.getItem("finalQuiz_id"); 
+        console.log("localStorage.getItem():" + finalQuizID);
+
+        var chapterID = storage.getItem("chapter_id"); 
+        console.log("localStorage.getItem():" + chapterID);
+
+        var courseID = storage.getItem("course_id"); 
+        console.log("localStorage.getItem():" + courseID);
+
+        var classID = storage.getItem("class_id"); 
+        console.log("localStorage.getItem():" + classID);
+
+        window.location.replace("final_quiz.html");  // redirect to final_quiz.html 
     }, 1000);
 }
 

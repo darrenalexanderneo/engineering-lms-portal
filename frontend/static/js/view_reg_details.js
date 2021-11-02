@@ -19,6 +19,9 @@
     const learner_id = storage.getItem("learner_id");  
     console.log(learner_id);
 
+    document.getElementById("learner-id").innerHTML = learner_id;
+
+
     var course_id;
     var getRegCoursesURL;
     var withdrawLearnerURL;
@@ -229,7 +232,8 @@
 
         // LOGOUT FUNCTION
         function logout () {
-            storage.removeItem("learner_id");
+            storage.clear();
+
 
             window.location.replace("./login.html");
         }

@@ -83,6 +83,17 @@ class Completion_Record(db.Model):
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
 
+
+    def insert_into_completion_record(self):
+        #insert only if pass 
+
+        db.session.add(self)
+        db.session.commit()
+        return 200
+
+
+
+
 class Course(db.Model):
     __tablename__ = "course"
     course_id = db.Column(db.String(10), primary_key=True, nullable=False)
@@ -155,11 +166,21 @@ class Class_Run(db.Model):
 
     
     def compute_slot_available(self,string):
-        if(string == "Assign"):
-            self.slots_available = self.slots_available- 1
-        elif(string == "Withdraw"):
-            self.slots_available = self.slots_available + 1
-        #return self.slots_available
+        try:
+            if(string == "Assign"):
+                if(self.slots_available == 0):
+                    return 400
+
+                self.slots_available = self.slots_available- 1
+            elif(string == "Withdraw"):
+                self.slots_available = self.slots_available + 1
+            
+            db.session.commit()
+            return 200
+        except Exception as e:
+            return 501
+
+
 
 
     def json(self):
@@ -173,6 +194,9 @@ class Class_Run(db.Model):
         }
         return class_run_info
 
+
+
+        
 class Trainer_Record(db.Model):
     __tablename__ = "trainer_record"
     class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
@@ -186,6 +210,26 @@ class Class_Record(db.Model):
     class_id = db.Column(db.String(10), db.ForeignKey("class_run.class_id"),primary_key=True, nullable=False)
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"), nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
+
+    def delete_class_record(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("delete_class_record error is " , e)
+            return 502
+
+    def insert_class_record(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            return 502
+
+            
+
 
 # class Registration(db.Model):
 #     __tablename__ = "registration"
@@ -223,6 +267,16 @@ class Registration(db.Model):
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     reg_date = db.Column(db.String(50),nullable=False)
 
+    def delete_registration_db(self):
+        print(self)
+        try:
+            print("going in part 3")  
+            db.session.delete(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error is " , e)
+            return 502
 
     # Why must this be inside Reg class? Mmmm...
     def get_current_date():
@@ -230,6 +284,14 @@ class Registration(db.Model):
         current_date = now.strftime("%Y-%m-%d")
         print(current_date)
         return current_date
+
+    def insert_registration(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            return 500
 
 class Chapter(db.Model): 
     __tablename__ = "chapter" 
@@ -263,6 +325,17 @@ class Chapter_Learner(db.Model):
 
         return info
 
+
+    def insert_chapter_learner(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print(e)
+            return 500
+
+
 class Quiz(db.Model):
     __tablename__ = "quiz"
     quiz_id = db.Column(db.String(30), primary_key=True, nullable=False)
@@ -275,6 +348,19 @@ class Chapter_Quiz(Quiz):
     # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
     chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
     total_marks = db.Column(db.String(10), nullable=False)
+
+    def insert_chapter_quiz(self):
+        #quiz is a parent of chapter_quiz same as final quiz
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+            print("done")
+            return 200
+        except Exception as e:
+            print(e)
+            return 500
+
 
     def json(self):
         info = {
@@ -310,6 +396,15 @@ class Final_Quiz(Quiz):
         }
         return final_quiz_info
 
+    def insert_final_quiz(self):
+        try:
+
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            return 500
+
 
 class Question(db.Model):
     __tablename__ = "question"
@@ -340,6 +435,17 @@ class Question(db.Model):
             return int(self.question_mark)
         return 0 
 
+    def create_question(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error", e)
+            return 500
+
+
+
 # class Question_Option(db.Model):
 #     __tablename__ = "question_option"
 #     quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
@@ -354,6 +460,16 @@ class Chapter_Quiz_Result(db.Model):
     def update_mark_existing_chapter_quiz_result(self, learner_marks):
         print("inside " , learner_marks)
         self.marks = learner_marks
+    
+    def insert_chapter_quiz_result(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error", e)
+            return 500
+ 
 
 
 class Final_Quiz_Result(db.Model):
@@ -364,6 +480,16 @@ class Final_Quiz_Result(db.Model):
     def update_mark_existing_final_quiz_result(self, learner_marks):
         print("inside " , learner_marks)
         self.marks = learner_marks
+
+    def insert_final_quiz_result(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error", e)
+            return 500
+ 
 
 
 # db.create_all()
@@ -412,14 +538,15 @@ def retrieve_all_courses():
                         #means allow to display 
                         total_slot_available = class_run.compute_total_slot_available(total_slot_available)
                         class_counter+=1
-                
-            value = {
-                "course_name": course_name,
-                "course_id":course_id,
-                "course_description":course_description,
-                "total_slot_available":total_slot_available,
-                "num_of_class": class_counter
-            }
+            if(class_counter !=0):
+            #dont show out!
+                value = {
+                    "course_name": course_name,
+                    "course_id":course_id,
+                    "course_description":course_description,
+                    "total_slot_available":total_slot_available,
+                    "num_of_class": class_counter
+                }
 
             array.append(value)
 
@@ -509,19 +636,7 @@ def retrieve_course_learners(course_id):
     )
 
 
-#@app.route("/update_slot_available_for_class/<string:class_id>", methods=['PUT'])
-def update_slot_available_for_class(class_id,action):
-    #taking in the account if there is only unique class_id in the database table ONLY
-    try:
-        class_info = Class_Run.query.filter_by(class_id = class_id).first()
-        class_info.compute_slot_available(action)
-        if(class_info.slots_available == -1):
-            return 400
 
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 501
 
 ##sprint4 , remove all the register if 1 of them have already approve NEED TEST
 def remove_class_run_by_learner_id(data):
@@ -535,77 +650,18 @@ def remove_class_run_by_learner_id(data):
         if(len(registration_list)!= 0):
             for reg in registration_list:
                 #update_code = update_slot_available_for_class(reg.class_id,'Withdraw')
-                db.session.delete(reg)
-                db.session.commit()
+                reg.delete_registration_db()
+
         else:
             return 502
     except Exception as e:
         return 502
     return 200
-#@app.route("/delete_registration", methods=['DELETE'])
-def delete_registration(data):
-    try:
-        class_id = data["class_id"]
-        course_id = data["course_id"]
-        learner_id = data["learner_id"]
-        #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
-        registration = Registration.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
-        db.session.delete(registration)
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 502
-
-#@app.route("/insert_class_record")
-def insert_class_record(data):
-    try:
-        print(data)
-        print(data['class_id'])
-        print(data['course_id'])
-        print(data['learner_id'])
-
-        #def __init__(self,emp_id,course_id,class_id,completed):
-        class_record = Class_Record(
-            class_id=data['class_id'],
-            course_id=data['course_id'],
-            learner_id=data['learner_id']
-        )
-        print(class_record)
-        db.session.add(class_record)
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 500
 
 
-def insert_registration(data):
-    try:
-        is_exist  = Registration.query.filter_by(class_id=data['class_id'], course_id = data['course_id'], learner_id =data['learner_id']).first()
-        if(is_exist != None):
-            #exist already
-            return 404
 
-        print(data)
-        print(data['class_id'])
-        print(data['course_id'])
-        print(data['learner_id'])
-        now = datetime.now()
-        current_date = now.strftime("%Y-%m-%d")
 
-        #def __init__(self,emp_id,course_id,class_id,completed):
-        registration = Registration(
-            class_id=data['class_id'],
-            course_id=data['course_id'],
-            learner_id=data['learner_id'],
-            reg_date = current_date
-            
-        )
-        print(registration)
-        db.session.add(registration)
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 500
+
 
 
 @app.route("/assign_learner", methods=['POST'])
@@ -615,7 +671,9 @@ def assign_to_course():
         data = request.get_json()
 
         # Should immediately exit upon failing this line.....
-        update_code = update_slot_available_for_class(data['class_id'],'Assign')
+       
+        class_info = Class_Run.query.filter_by(class_id = data['class_id']).first()
+        update_code = class_info.compute_slot_available('Assign')
         if(update_code == 400):
             return jsonify(
             {
@@ -623,11 +681,21 @@ def assign_to_course():
                 "message": "Slot is full, unable to enroll anymore."
             }
             ), 400
-
-        insert_code = insert_class_record(data)
-        #update slot available 
         
-        delete_code = delete_registration(data)
+        class_record = Class_Record(
+            class_id=data['class_id'],
+            course_id=data['course_id'],
+            learner_id=data['learner_id']
+        )
+
+        insert_code = class_record.insert_class_record()
+        #update slot available 
+        class_id = data["class_id"]
+        course_id = data["course_id"]
+        learner_id = data["learner_id"]
+        #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
+        registration = Registration.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
+        delete_code = registration.delete_registration_db()
 
         #remove the rest if found in class_run
         remove_class_run = remove_class_run_by_learner_id(data)
@@ -656,17 +724,7 @@ def assign_to_course():
         ), 500
 
 
-def delete_class_record(data):
-    class_id = data["class_id"]
-    course_id = data["course_id"]
-    learner_id = data["learner_id"]
-    try:
-        class_record = Class_Record.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
-        db.session.delete(class_record)
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 502
+
     
 
 
@@ -674,8 +732,22 @@ def delete_class_record(data):
 def withdraw_course():
     try:
         data = request.get_json()
-        delete_code = delete_class_record(data)
-        update_code = update_slot_available_for_class(data['class_id'],'Withdraw')
+        class_record = Class_Record.query.filter_by(class_id=data['class_id'],course_id = data['course_id'],learner_id = data['learner_id']).first()
+        print("part A")
+        if(class_record == None):
+            return jsonify(
+            {
+                "code": 500,
+                "message": "learner cannot be found in class record"
+            }
+            ), 500
+        delete_code = class_record.delete_class_record()
+        print("delete_code is " , delete_code)
+        ##refractor
+
+        class_info = Class_Run.query.filter_by(class_id = data['class_id']).first() 
+        update_code = class_info.compute_slot_available('Withdraw')
+        print("update_code is " , update_code)
         if(delete_code == 502 or update_code == 501):
             return jsonify(
             {
@@ -693,6 +765,7 @@ def withdraw_course():
             }
         )
     except Exception as e:
+        print("error is " , e)
         return jsonify(
             {
                 "code": 404,
@@ -705,7 +778,7 @@ def withdraw_course():
 
 ##########################################################sprint 5   ###########################################
 
-
+#####HEREEEEEEEEEEEEE DATE CHECK WITH REG START AND END! 
 @app.route("/registration_course_list")
 def registration_course_list():
     array = []
@@ -908,19 +981,40 @@ def register():
                 "message": data['class_id'] + " is currently full."
             }
             ), 200 
-        insert_code = insert_registration(data)
+
+        is_exist  = Registration.query.filter_by(class_id=data['class_id'], course_id = data['course_id'], learner_id =data['learner_id']).first()
+        if(is_exist != None):
+
+            return jsonify(
+            {
+                "insert_code": 404,
+                "message": "You already registered for the course"
+            }
+            ), 404
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+
+        #def __init__(self,emp_id,course_id,class_id,completed):
+        registration = Registration(
+            class_id=data['class_id'],
+            course_id=data['course_id'],
+            learner_id=data['learner_id'],
+            reg_date = current_date
+            
+        )
+        insert_code = registration.insert_registration()
         #update slot available
         if(insert_code == 500):
             return jsonify(
             {
-                "insert_code": insert_code,
+                "code": insert_code,
                 "message": "There is an problem performing the execution"
             }
             ), 500
         elif(insert_code == 404):
             return jsonify(
             {
-                "insert_code": insert_code,
+                "code": insert_code,
                 "message": "You already registered for the course"
             }
             ), 404
@@ -996,11 +1090,30 @@ def withdraw_learner_registration():
         #retrieve the slot available, if 0 cannot aply
         if(data["is_approved"] == 0):
             #is from registration table just remove can already
-            delete_code = delete_registration(data)
+
+
+            class_id = data["class_id"]
+            course_id = data["course_id"]
+            learner_id = data["learner_id"]
+            #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
+            registration = Registration.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
+            delete_code = registration.delete_registration_db()
         elif(data["is_approved"] == 1):
             #is from class_record withdraw
-            delete_class_code = delete_class_record(data)
-            update_code = update_slot_available_for_class(data['class_id'],'Withdraw')
+            class_record = Class_Record.query.filter_by(class_id=data['class_id'],course_id = data['course_id'],learner_id = data['learner_id']).first()
+            if(class_record == None):
+                return jsonify(
+                {
+                    "code": 500,
+                    "message": "learner cannot be found in class record"
+                }
+                ), 500
+            delete_code = class_record.delete_class_record()
+
+            class_info = Class_Run.query.filter_by(class_id = data['class_id']).first() 
+
+
+            update_code = class_info.compute_slot_available('Withdraw')
             
         if(delete_code ==502 or delete_class_code == 502 or update_code == 501):
             return jsonify(
@@ -1057,6 +1170,7 @@ def retrieve_question_by_course_class_chapter(quiz_id):
         'message' : "question not found"
     })
 
+#coding concatenation
 def auto_compute_grade(data):
 
     learner_marks = 0 
@@ -1069,16 +1183,13 @@ def auto_compute_grade(data):
     print(len(question_list))
     for i in range(0,len(question_list)):
         index = question_id.index(question_list[i].question_id)
-        print(question_list[i].question_id)
-        print(question_id[index])
-        print("should tally")
-        print(i)
-        print(index)
         learner_marks += question_list[i].compute_marks(answer_array[index])
-        print("total marks is ", learner_marks)
+
 
     return learner_marks
 
+
+#coding concatenation
 def insert_update_into_quiz_result_db(data,learner_marks,record):
     print(data)
     print(learner_marks)
@@ -1097,9 +1208,9 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
                     marks=learner_marks
                     
                 )
-                db.session.add(result)
-                db.session.commit()
-                return 200
+
+                code =  result.insert_chapter_quiz_result()
+                return code
             else:
                 #update instead
                 print("come here ")
@@ -1108,9 +1219,6 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
                 return 200
         else:
             if(record == None):
-                print(data['quiz_id'])
-                print(data['learner_id'])
-
                 #def __init__(self,emp_id,course_id,class_id,completed):
                 result = Final_Quiz_Result(
                     quiz_id=data['quiz_id'],
@@ -1118,9 +1226,9 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
                     marks=learner_marks
                     
                 )
-                db.session.add(result)
-                db.session.commit()
-                return 200
+                code = result.insert_final_quiz_result()
+                return code
+
             else:
                 #update instead
                 print("come here ")
@@ -1133,6 +1241,7 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
         return 500
 
 
+#coding concatenation
 def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_learner):
     try:
         chapter_quiz = Chapter_Quiz.query.filter_by(quiz_id =data['quiz_id']).first()
@@ -1144,33 +1253,25 @@ def insert_update_into_chapter_learner_db(data,learner_marks,is_exist_chapter_le
                 chapter_id=data['quiz_id'][0:-1],
                 learner_id=data['learner_id'],
                 completion=completion      
-            ) 
-            db.session.add(result)
-            db.session.commit()
-            return 200
+            )
+
+            code = result.insert_chapter_learner()
+
+            return code
         else:
             # got data inside  if completion fail doesnt matter because either 0 or 1 which is impt to pass dont needoverwrite
             #if completion is 1 just update
             if(completion == 1):
                 is_exist_chapter_learner.update_completion()
                 db.session.commit()
-                return 200
+
+            return 200
 
     except Exception as e:
         return 500
 
 
-def insert_into_completion_record(quiz_id,learner_id):
-    #insert only if pass 
-    course_id = quiz_id.split("_")
-    course_id = course_id[0]
-    result = Completion_Record(
-        course_id=course_id,
-        learner_id=learner_id
-    ) 
-    db.session.add(result)
-    db.session.commit()
-    return 200
+
 
 
 @app.route("/submit_quiz", methods=['POST'])
@@ -1224,12 +1325,27 @@ def submit_quiz():
             percentage = (int(learner_marks)/ int(total_marks)) * 100
             #pass finals
             if(percentage >= 50):
-                code_completion_record= insert_into_completion_record(data['quiz_id'],data['learner_id'])
-                if(code_completion_record != 200):
+
+                course_id = data['quiz_id'].split("_")
+                course_id = course_id[0]
+                result = Completion_Record(
+                    course_id=course_id,
+                    learner_id=data['learner_id']
+                )
+                is_exist_completion_record = Completion_Record.query.filter_by(course_id = course_id,learner_id = data['learner_id']).first()
+                if(is_exist_completion_record == None):
+                    code_completion_record= result.insert_into_completion_record()
+                    if(code_completion_record != 200):
+                        return jsonify(
+                        {
+                            "code" : code_completion_record,
+                            "message": "there is an error insert/update into completion record db"
+                        }), 200
+                else:
                     return jsonify(
                     {
-                        "code" : code_completion_record,
-                        "message": "there is an error insert/update into completion record db"
+                        "code" : 200,
+                        "message": "already completed the final quiz"
                     }), 200
             else:
                 return jsonify(
@@ -1456,7 +1572,7 @@ def retrieve_all_course_details_by_trainer_id(trainer_id):
         ), 404
 
 
-
+#flaoting method because it just help to comput
 def retrieve_chapter_detail(class_id):
     array_list = []
     chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(class_id)).all()
@@ -1488,6 +1604,9 @@ def retrieve_chapter_detail(class_id):
 
     return array_list
 
+
+
+#coding concatenation
 def retrieve_quiz_chapter_detail(class_id):
     ########## QUIZ ############
     array_list = []
@@ -1541,76 +1660,11 @@ def retrieve_course_details_by_class_id(class_id):
 
 
 
-# def create_quiz_db(quiz_id,timing):
-#     print("yes")
-#     try:
-#         quiz_record = Quiz(
-#             quiz_id=quiz_id,
-#             timing=timing
-#         )
-#         db.session.add(quiz_record)
-#         db.session.commit()
-#         return 200
-#     except Exception as e:
-#         return 500
 
 
 
-def create_question(data):
-    try:
-        print("numb of question" , data['num_of_questions'])
-        for i in range(data['num_of_questions']):
-            print("num")
-            print(i)
-            question_record = Question(
-                quiz_id=data['quiz_id'],
-                question_id=data['question_id'][i],
-                question=data['question'][i],
-                question_type=data['question_type'][i],
-                option=data['option'][i],
-                question_mark=data['question_mark'][i],
-                answer=data['answer'][i]
-            )
-            print(question_record)
-            db.session.add(question_record)
-            db.session.commit()
-        return 200
-    except Exception as e:
-        print("error", e)
-        return 500
 
-def insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing):
-    #quiz is a parent of chapter_quiz same as final quiz
 
-    try:
-        chapter_quiz = Chapter_Quiz(
-            quiz_id=quiz_id,
-            chapter_id=chapter_id,
-            total_marks = total_marks,
-            timing = timing
-        )
-        db.session.add(chapter_quiz)
-        db.session.commit()
-        print("done")
-        return 200
-    except Exception as e:
-        print(e)
-        return 500
-
-def insert_final_quiz(quiz_id,course_id,total_marks,timing):
-    print(course_id)
-    try:
-        final_quiz = Final_Quiz(
-            quiz_id=quiz_id,
-            course_id=course_id,
-            total_marks = total_marks,
-            timing = timing
-        )
-        db.session.add(final_quiz)
-        db.session.commit()
-        return 200
-    except Exception as e:
-        return 500
 
 
 @app.route("/create_quiz", methods=['POST'])
@@ -1630,8 +1684,14 @@ def create_quiz():
                     'results': "Chapter Quiz have already been created. You are not allow to have multiple entry"
                     
                 })
+            chapter_quiz = Chapter_Quiz(
+                quiz_id=data['quiz_id'],
+                chapter_id=data['quiz_id'][:-1],
+                total_marks = data['total_marks'],
+                timing = data['timing']
+            )
 
-            insert_chapter_quiz(data['quiz_id'] ,data['quiz_id'][:-1] ,data['total_marks'],data['timing'])
+            chapter_quiz.insert_chapter_quiz()
         elif(data['type'] == 'final_quiz'):
             print("go into create quiz part 2 ")
             is_exist_final_quiz = Final_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
@@ -1646,10 +1706,26 @@ def create_quiz():
                 })
             array = data['quiz_id'].split("_")
             course_id = array[0]
-            insert_final_quiz(data['quiz_id'] ,course_id ,data['total_marks'],data['timing'])
+            final_quiz = Final_Quiz(
+                quiz_id=data['quiz_id'],
+                course_id=course_id,
+                total_marks = data['total_marks'],
+                timing = data['timing']
+            )
+            final_quiz.insert_final_quiz()
 
-        print("done insertion into chapter/final quiz table")
-        create_question_code = create_question(data)
+ 
+        for i in range(data['num_of_questions']):
+            question_record = Question(
+                quiz_id=data['quiz_id'],
+                question_id=data['question_id'][i],
+                question=data['question'][i],
+                question_type=data['question_type'][i],
+                option=data['option'][i],
+                question_mark=data['question_mark'][i],
+                answer=data['answer'][i]
+            )
+            create_question_code = question_record.create_question()
         print("---------done create question-----------")
 
 

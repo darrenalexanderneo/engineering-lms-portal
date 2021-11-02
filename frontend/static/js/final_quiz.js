@@ -1,7 +1,7 @@
 const storage = window.localStorage;
 
 const learner_id = storage.getItem("learner_id");
-const quiz_id = storage.getItem("quiz_id");
+const quiz_id = storage.getItem("finalQuiz_id");
 const class_id = storage.getItem("class_id");
 const chapter_id = storage.getItem("chapter_id");
 
@@ -44,20 +44,18 @@ function getAPIkeys () {
 
 function renderPage () {
     getAPIkeys();
-    displayQuizTitle(quiz_id);
-    displayQuiz(quiz_id);
+    displayFinalQuizTitle();
+    displayFinalQuiz(quiz_id);
 }
 
-function displayQuizTitle (quiz_id) {
-    var array = quiz_id.split("_");
-    var course_id = array[0];
-    var class_name = "Class " + array[1].replace("C","");
-    var chapter_name = "Chapter " + array[2].replace("q","").replace("Chapt","");
-    var html = `<h2>Quiz - ${course_id} - ${class_name} - ${chapter_name}</h2>`;
-    document.getElementById("quiz-title").innerHTML = html;
+function displayFinalQuizTitle () {
+    var course_id = class_id.split("_")[0];
+    var class_name = "Class " + class_id.split("_")[1].replace("C","");
+
+    document.getElementById("quiz-title").innerHTML = `${course_id} ${class_name} - Final Quiz`;
 }
 
-function displayQuizTimer (duration) {
+function displayFinalQuizTimer (duration) {
     var minutes = duration.split(":")[0];
     var seconds = duration.split(":")[1];
 
@@ -92,7 +90,7 @@ function displayQuizTimer (duration) {
 
 }
 
-function displayQuiz (quiz_id) {
+function displayFinalQuiz (quiz_id) {
 
     document.getElementById("quiz").innerHTML = "";
 
@@ -102,6 +100,7 @@ function displayQuiz (quiz_id) {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var result = JSON.parse(this.response);
+            console.log(result);
 
             if (result.code == 500) {
                 console.log("Quiz Questions Have Not Been Set By Your Trainer Yet.");
@@ -110,7 +109,7 @@ function displayQuiz (quiz_id) {
 
             } else if (result.code == 200) {
                 var quiz_duration = result.duration;
-                displayQuizTimer(quiz_duration);
+                displayFinalQuizTimer(quiz_duration);
 
                 question_list = result.question_records;
                 // console.log(question_list);
@@ -201,7 +200,7 @@ function submitQuiz () {
 
                 console.log(result);
                 if (result.message == "successfully") {
-                    displayQuizScore();
+                    displayFinalQuizScore();
                 } else {
                     alert("Quiz Submission is Unsuccessful.");
                 }
@@ -217,7 +216,7 @@ function submitQuiz () {
     }
 }
 
-function displayQuizScore () {
+function displayFinalQuizScore () {
 
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
@@ -272,9 +271,9 @@ function goBackTo (prev_page) {
     var current_location = current_location_arr[current_location_arr.length - 1];
     console.log(current_location);
 
-    if (prev_page == "chapter_contents" && current_location == "quiz_page.html") {
+    if (prev_page == "viewcourses" && current_location == "final_quiz.html") {
         console.log(prev_page);
-        window.location.replace("chapter_contents.html");
+        window.location.replace("enrolled_courses.html");
     } 
 }
 
