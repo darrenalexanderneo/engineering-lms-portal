@@ -17,7 +17,8 @@
 
     <title>Register for Classes</title>
 </head>
-<body style="background-color: #eee;" onload="renderPage();">
+<body style="background-color: #eee;" onload="renderPage();" class="mb-5">
+    
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
         <div class="my-3"> </div>
@@ -40,17 +41,12 @@
         <h4>BEM460 Class 3</h4>      -->
     </div>
 
-    <!-- quiz -->
-    <div id="quiz" class="container px-5 py-5 bg-white mx-auto"></div>
-
-    <br>
-
-
-
-
+    <div class="container alert alert-primary" role="alert">
+        This is a display of how the quiz will look like for learners.
+    </div>
     
-
-   
+    <!-- quiz -->
+    <div id="quiz" class="container px-5 pt-5 pb-1 bg-white mx-auto"></div>
     
 </body>
     <script src="../../static/js/main.js"></script>
@@ -73,6 +69,21 @@
             displayQuiz();
             displayTitle();
         }
+
+        $(function() {
+  
+            var $btn = $('#btnTop');
+            var $home = $('#topSection');
+            var startpoint = $home.scrollTop() + $home.height();
+            
+            $(window).on('scroll', function() {
+                if($(window).scrollTop() > startpoint) {
+                $btn.show();
+                } else {
+                $btn.hide();
+                }
+            });
+        });
 
         function displayTitle() {
             document.getElementById("quiz-list-title").innerHTML = "";
@@ -113,7 +124,6 @@
                             var question_type = qn.question_type; 
                             var qn_options = qn.option; 
                             var qn_answer = qn.answer; 
-                            console.log(qn_answer)
             
                             options_array = qn_options.split(","); //array of questions  
                             
@@ -122,12 +132,23 @@
                             <h6 class='float-end'>${question_mark} Marks</h6><br>`;
             
                             for (var option of options_array) {  // find out how to get selected value of radio buttons
-                                html_content +=  `<div class="form-check"> 
-                                <input class="form-check-input ms-3" type="radio" onclick="radioChecked('${question_id}','${option}')" name="${question_id}" id="${question_id}-${option}" required>
-                                <label class="form-check-label ms-3 fs-5" for="${question_id}-${option}">
-                                    ${option}
-                                </label>
-                                </div>`;
+                                if ( option.replace(/\s+/g, "") == qn_answer.replace(/\s+/g, "")) { // different whitespace (https://stackoverflow.com/questions/54195474/two-seemingly-equal-strings-not-equal-in-javascript)
+                                    html_content +=  `
+                                    <div class="alert alert-success" role="alert">
+                                        <input class="form-check-input ms-3" type="radio" checked>
+                                        <span class="form-check-label ms-3 fs-5">
+                                            ${option}
+                                        </span>
+                                    </div>`;
+                                } else {
+                                    html_content +=  `
+                                    <div class="alert alert-light" role="alert">
+                                        <input class="form-check-input ms-3" type="radio">
+                                        <span class="form-check-label ms-3 fs-5">
+                                            ${option}
+                                        </span>
+                                    </div>`;
+                                }
                             }
         
                         html_content += `<div class="invalid-feedback">Please attempt the question</div></div>`;
