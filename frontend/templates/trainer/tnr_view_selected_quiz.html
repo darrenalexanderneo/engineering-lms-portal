@@ -17,7 +17,7 @@
 
     <title>Register for Classes</title>
 </head>
-<body style="background-color: #eee;" onload="debug()">
+<body style="background-color: #eee;" onload="renderPage();">
     <!-- navigation bar -->
     <nav class="navbar navbar-dark bg-dark d-flex float-left">
         <div class="my-3"> </div>
@@ -35,13 +35,17 @@
     </div>
 
     <!-- title: quiz_id, quiz_type -->
-    <div class="container">
-        <h1>Chapter 1 Quiz</h1>
-        <h4>BEM460 Class 3</h4>
+    <div id="quiz-list-title" class="container mb-4">
+        <!-- <h1>Chapter 1 Quiz</h1> 
+        <h4>BEM460 Class 3</h4>      -->
     </div>
+
+    <!-- quiz -->
+    <div id="quiz" class="container px-5 py-5 bg-white mx-auto"></div>
+
     <br>
 
-    <div></div>
+
 
 
     
@@ -49,7 +53,6 @@
    
     
 </body>
-    <script src="../../static/js/get_api_keys.js"></script>
     <script src="../../static/js/main.js"></script>
 
     <script>
@@ -57,12 +60,92 @@
         const storage = window.localStorage;
 
         // storage
-        const quiz_id = storage.getItem("quiz_id"); 
+        const quiz_id = storage.getItem("quiz_id"); // BEM460_C3_Chapt1q
+        const quiz_id_list = quiz_id.split("_"); // ['BEM460', 'C3', 'Chapt1q']
         const quiz_type = storage.getItem("quiz_type"); 
 
-        function debug() {
-            console.log("storage: ", quiz_id, quiz_type)
+        function renderPage() {
+            getAPIkeys_TNR();
+        
+            console.log("===== localStorage.getItem() =====")
+            console.log(`quiz_id: ${quiz_id} || quiz_type: ${quiz_type}`)
+        
+            displayQuiz();
+            displayTitle();
         }
+
+        function displayTitle() {
+            document.getElementById("quiz-list-title").innerHTML = "";
+            console.log(quiz_id_list, quiz_id_list[1].slice(-1))
+            
+            // console.log(id_list);
+            
+            var html_content = `
+            <h2>Chapter ${quiz_id_list[2].slice(5, 6)}</h2> <!-- might not work for chapter above 10 e.g. Chapt10q-->
+            <h4>${quiz_id_list[0]} Class ${quiz_id_list[1].slice(-1)}</h4>
+            `;
+
+            document.getElementById("quiz-list-title").innerHTML = html_content;
+        }
+
+        function displayQuiz() {
+
+            document.getElementById("quiz").innerHTML = "";
+        
+            var html_content = "";
+        
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var result = JSON.parse(this.response);
+        
+                    if (result.code == 500) {
+                        console.log("Error 500: Unable to retrieve quiz questions.");
+                    } else if (result.code == 200) {
+                        var question_list = result.results.results;
+                        console.log(question_list);
+            
+                        for (qn of question_list) {
+                            // console.log(qn);
+                            var question = qn.question;
+                            var question_id = qn.question_id;
+                            var question_mark = qn.question_mark;
+                            var question_type = qn.question_type; 
+                            var qn_options = qn.option; 
+                            var qn_answer = qn.answer; 
+                            console.log(qn_answer)
+            
+                            options_array = qn_options.split(","); //array of questions  
+                            
+                            html_content += `<div id="${question_id}" class="mb-5 px-auto">
+                            <h5><b>${question_id}.  ${question}</b> (${question_type})</h5>
+                            <h6 class='float-end'>${question_mark} Marks</h6><br>`;
+            
+                            for (var option of options_array) {  // find out how to get selected value of radio buttons
+                                html_content +=  `<div class="form-check"> 
+                                <input class="form-check-input ms-3" type="radio" onclick="radioChecked('${question_id}','${option}')" name="${question_id}" id="${question_id}-${option}" required>
+                                <label class="form-check-label ms-3 fs-5" for="${question_id}-${option}">
+                                    ${option}
+                                </label>
+                                </div>`;
+                            }
+        
+                        html_content += `<div class="invalid-feedback">Please attempt the question</div></div>`;
+                    }
+                    
+                    document.getElementById("quiz").innerHTML = html_content;
+                    }
+                    
+                }
+            };
+        
+            var url = `${viewQuiz_TNR}${quiz_id}`;
+            console.log("url", url)
+            request.open("GET", url, true);
+            request.send();
+        }
+
+        
 
        
   

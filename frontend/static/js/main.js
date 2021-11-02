@@ -1,3 +1,8 @@
+/*** CHANGE ACCORDINGLY ***/
+const development = 'apikey_development.json';
+const production = 'apikey_production.json';
+
+
 /*** RETRIEVE API KEYS ***/
 function getAPIkeys_TNR() {  
     var request = new XMLHttpRequest();
@@ -15,7 +20,7 @@ function getAPIkeys_TNR() {
             // console.log(createQuiz_POST_TNR);
         }
     }
-    request.open("GET", "../../apikey.json", false);
+    request.open("GET", `../../${apikey_url}`, false);
     request.send();
 }
 

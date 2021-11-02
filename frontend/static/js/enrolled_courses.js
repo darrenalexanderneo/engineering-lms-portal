@@ -1,8 +1,8 @@
 //initialise localStorage
 const storage = window.localStorage;
 
-const learner_id = storage.getItem("learner_id");
-
+// const learner_id = storage.getItem("learner_id");
+const learner_id = 'LNR12';
 //initialise global variables to store api keys
 var getCourseProgress;
 var getAllChapters;
@@ -36,7 +36,7 @@ function getAPIkeys () {
 
         }
     }
-    request.open("GET", "../../apikey.json", false);
+    request.open("GET", "../../apikey_development.json", false);
     request.send();
 }
 
