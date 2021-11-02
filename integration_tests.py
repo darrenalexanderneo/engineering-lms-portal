@@ -25,6 +25,7 @@ class TestApp(flask_testing.TestCase):
         emp_1 = Employee(emp_id="EMP16", emp_name="Peter Parker")
         emp_2 = Employee(emp_id="EMP15", emp_name="Mark Lim")
         emp_3 = Employee(emp_id="EMP17", emp_name="Mary Rose Jane")
+        emp_7 = Employee(emp_id="EMP18", emp_name="mary jx")
 
         emp_4 = Employee(emp_id="EMP20", emp_name="Peter John")
         emp_5 = Employee(emp_id="EMP21", emp_name="Harry Larry")
@@ -33,6 +34,7 @@ class TestApp(flask_testing.TestCase):
         learner_1 = Learner(emp_id="EMP16", learner_id="LNR16")
         learner_2 = Learner(emp_id="EMP15", learner_id="LNR15")
         learner_3 = Learner(emp_id="EMP17", learner_id="LNR17")
+        learner_4 = Learner(emp_id="EMP18", learner_id="LNR18")
 
         trainer_1 = Trainer(emp_id="EMP20", trainer_id="TNR20")
         trainer_2 = Trainer(emp_id="EMP21", trainer_id="TNR21")
@@ -82,6 +84,9 @@ class TestApp(flask_testing.TestCase):
         db.session.add(emp_6)
         db.session.commit()
 
+        db.session.add(emp_7)
+        db.session.commit()
+
         db.session.add(learner_1)
         db.session.commit()
 
@@ -89,6 +94,8 @@ class TestApp(flask_testing.TestCase):
         db.session.commit()
 
         db.session.add(learner_3)
+        db.session.commit()
+        db.session.add(learner_4)
         db.session.commit()
 
         db.session.add(trainer_1)
@@ -120,6 +127,7 @@ class TestApp(flask_testing.TestCase):
 
         db.session.add(reg_2)
         db.session.commit()
+
 
         db.session.add(completion_record_1)
         db.session.commit()
@@ -211,28 +219,46 @@ class Test_LearnerByCourseId_Endpoint(TestApp):
 
 class Test_UpdateSlotAvailableForClass(TestApp):
     def test_update_slot_available_for_class_assign_pass(self):
-        data = { 
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR16"
-        }
+        result = Class_Run(
+            class_id="BEM460_C2", 
+            course_id="BEM460",
+             class_start_date="2021-05-30",
+              class_end_date="2021-11-30", 
+              reg_start_date="2021-02-07", 
+              reg_end_date="2021-12-30", 
+              slots_available=1
+            
+        )
 
         action = "Assign"
 
-        status = update_slot_available_for_class(data['class_id'], 'Assign')
+        status = result.compute_slot_available(action)
+        print("test_update_slot_available_for_class_assign_pass is " , status)
         self.assertEqual(status, 200)
 
     def test_update_slot_available_for_class_assign_fail(self):
-        data = {
-            "class_id":"BM460_C5",
-            "course_id": "BEM460",
-            "learner_id": "LNR14"
-        }
+        # data = {
+        #     "class_id":"BM460_C5",
+        #     "course_id": "BEM460",
+        #     "learner_id": "LNR14"
+        # }
+        result = Class_Run(
+            class_id="BEM460_C2", 
+            course_id="BEM460",
+             class_start_date="2021-05-30",
+              class_end_date="2021-11-30", 
+              reg_start_date="2021-02-07", 
+              reg_end_date="2021-12-30", 
+              slots_available=0
+            
+        )
         action = 'Assign'
-
+        print('test_update_slot_available_for_class_assign_fail' )
         # This will reduce the slots_available which will affect other test cases above (dependant, thus should change this.)
-        status = update_slot_available_for_class(data['class_id'], 'Assign')
-        self.assertEqual(status, 501)
+        # status = update_slot_available_for_class(data['class_id'], 'Assign')
+        status = result.compute_slot_available(action)
+        print('status is ', status)
+        self.assertEqual(status, 400)
 
 class Test_RemoveClassRunByLearner(TestApp):
     def test_remove_class_run_by_learner_id_success(self):
@@ -257,63 +283,74 @@ class Test_RemoveClassRunByLearner(TestApp):
 
 class Test_DeleteRegistration(TestApp):
     def test_delete_registration_success(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR17"
-        }   
-
-        status = delete_registration(data) 
+        reg_3 = Registration(class_id="BEM460_C1", course_id="BEM460", learner_id="LNR18", reg_date="2021-12-30")
+        db.session.add(reg_3)
+        db.session.commit()
+        status = reg_3.delete_registration_db() 
         self.assertEqual(status, 200)
 
     def test_delete_registration_failure(self):
-        data = {
-            "class_id":"BEM46SSS0_C4",
-            "course_id": "BEMSDS460",
-            "learner_id": "LNR1SD4"
-        }   
-        status = delete_registration(data) 
+        registration_record = Registration(
+            class_id ="BEM46SSS0_C4",
+            course_id = "BEMSDS460",
+            learner_id= "LNR1SD4"
+        ) 
+        status = registration_record.delete_registration_db() 
         self.assertEqual(status, 502)
 
 class Test_InsertClassRecord(TestApp):
     def test_insert_class_record_success(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR15"
-        }  
+        class_record = Class_Record(
+            class_id ="BEM460_C1",
+            course_id = "BEM460",
+            learner_id= "LNR15"
+        )
 
-        status = insert_class_record(data)
+        status = class_record.insert_class_record()
         self.assertEqual(status, 200)
 
     def test_insert_class_record_failure(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460"
-        }  
+        class_record = Class_Record(
+            class_id="BEM460_C1",
+            course_id= "BEM460"
+        )
 
-        status = insert_class_record(data)
-        self.assertEqual(status, 500)
+        status = class_record.insert_class_record()
+        self.assertEqual(status, 502)
 
 class Test_InsertRegistration(TestApp):
     def test_insert_registration_success(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR15"
-        }  
 
-        status = insert_registration(data)
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+
+
+        result = Registration(
+            class_id = "BEM460_C1",
+            course_id = "BEM460",
+            learner_id =  "LNR15",
+            reg_date = current_date
+
+
+        )
+        status = result.insert_registration()
         self.assertEqual(status, 200)
 
     def test_insert_registration_failure(self):
-        data = {
-            "class_id":"BEM460_C4",
-            "course_id": "BEM460",
-            "learner_id": "LNR14"
-        }  
 
-        status = insert_registration(data)
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d")
+
+
+        result = Registration(
+            class_id = "BEM460_C4",
+            course_id = "BEM460",
+            learner_id =  "LNR14",
+            reg_date = current_date
+
+
+        )
+        status = result.insert_registration()
         self.assertEqual(status, 500)
 
 class Test_AssignLearner_Endpoint(TestApp):
@@ -347,21 +384,21 @@ class Test_AssignLearner_Endpoint(TestApp):
 
 class Test_DeleteClassRecord(TestApp):
     def test_delete_class_record_pass(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR16"
-        }
-        status = delete_class_record(data)
+        class_record_1 = Class_Record(class_id="BEM460_C1", course_id="BEM460", learner_id="LNR18")
+        db.session.add(class_record_1)
+        db.session.commit()
+        status = class_record_1.delete_class_record()
         self.assertEqual(status, 200)
 
     def test_delete_class_record_fail(self):
-        data = {
-            "class_id":"BEM460_C1",
-            "course_id": "BEM460",
-            "learner_id": "LNR17"
-        }
-        status = delete_class_record(data)
+        data = Class_Record(
+            class_id="BEM460_C1",
+            course_id= "BEM460",
+            learner_id= "LNR17"
+        )
+
+        status = data.delete_class_record()
+        print("test_delete_class_record_fails", status)
         self.assertEqual(status, 502)
 
 class Test_WithdrawEnrolledLearner_Endpoint(TestApp):
@@ -388,13 +425,10 @@ class Test_WithdrawEnrolledLearner_Endpoint(TestApp):
         response = self.client.put(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
+        print("response is")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 500, 'message': 'learner cannot be found in class record'})
 
-        self.assertEqual(response.status_code, 500)
-
-    def test_assign_learner(self):
-        code= update_slot_available_for_class('BEM460_C2',"Assign")
-        print("test_assign_learner code should be 400 because full slot : ", code)
-        self.assertEqual(code, 400)
 
 class Test_RegistrationCourseList_Endpoint(TestApp):
     def test_registration_course_list(self):
@@ -518,8 +552,9 @@ class Test_Registration_Endpoint(TestApp):
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-
-        self.assertEqual(response.status_code, 500)
+        print("test_withdraw_learner_registration_fail")
+        print(response.json)
+        self.assertEqual(response.json, {'code': 500, 'message': 'learner cannot be found in class record'})
     
 
 ######### sprint 6
@@ -755,94 +790,68 @@ class Test_Trainer_Chapter_Endpoint(TestApp):
 class Test_Trainer_Question_Endpoint(TestApp):
     ## to let this work, need create object for chapter_quiz 
     def test_create_question_chapter_success(self):
-        request_body = {
-            "type" : "chapter_quiz",
-            "quiz_id": "BEM460_C2_Chapt1q",
-            "question_id" : ["Q1","Q2","Q3"],
-            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
-            "question_type" : ["MCQ","MCQ","T/F"],
-            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
-            "question_mark": ["2","2","2"],
-            "answer": ["13","Muzan","True"],
-            "total_marks" : 6,
-            "timing" : "50:00",
-            "num_of_questions":3
 
-        }
-        code = create_question(request_body)
-        print("test_create_question")
-        print(code)
+        question_record = Question(
+                quiz_id="BEM460_C2_Chapt1q",
+                question_id="Q1",
+                question="How many ggghashira are there in demon slayer?",
+                question_type="MCQ",
+                option="11,12,13,14",
+                question_mark="2",
+                answer="13")
+
+        code = question_record.create_question()
+        print("test_create_question is " , code)
         self.assertEqual(code,200)
 
     def test_create_question_final_success(self):
-        request_body = {
-            "type" : "final_quiz",
-            "quiz_id": "BEM460_C2_FinalQuizq",
-            "question_id" : ["Q1","Q2","Q3"],
-            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
-            "question_type" : ["MCQ","MCQ","T/F"],
-            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
-            "question_mark": ["2","2","2"],
-            "answer": ["13","Muzan","True"],
-            "total_marks" : 6,
-            "timing" : "50:00",
-            "num_of_questions":3
+        question_record = Question(
+                quiz_id="BEM460_C2_FinalQuizq",
+                question_id="Q1",
+                question="How many ggghashira are there in demon slayer?",
+                question_type="MCQ",
+                option="11,12,13,14",
+                question_mark="2",
+                answer="13")
 
-        }
-        code = create_question(request_body)
-        print("test_create_question")
-        print(code)
+        code = question_record.create_question()
+        print("test_create_question_final_success is " , code)
         self.assertEqual(code,200)
 
     def test_create_question_chapter_failure(self):
-        request_body = {
-            "type" : "chapter_quiz",
-            "quiz_id": "BEM460_C2_Chapt1q",
-            "question_id" : ["Q1","Q2",],
-            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
-            "question_type" : ["MCQ","MCQ"],
-            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
-            "question_mark": ["2","2","2"],
-            "answer": ["13","Muzan","True"],
-            "total_marks" : 6,
-            "timing" : "50:00",
-            "num_of_questions":3
 
-        }
-        ##question_mark have 2index instead of 3
-        code = create_question(request_body)
-        print("test_create_question")
-        print(code)
+        question_record = Question(
+                quiz_id="BEM460_C2_Chapt1q",
+                question_id="Q1",
+                question="How many ggghashira are there in demon slayer?",
+                question_mark="2",
+                answer="13")
+
+        code = question_record.create_question()
+        print("test_create_question_chapter_failure is " , code)
         self.assertEqual(code,500)
 
     def test_create_question_final_failure(self):
-        request_body = {
-            "type" : "final_quiz",
-            "quiz_id": "BEM460_C2_FinalQuizq",
-            "question_id" : ["Q1","Q2","Q3"],
-            "question": ["How many ggghashira are there in demon slayer?","who is the villian in DS" ,"Is Rengoku a flameeeee hashira?"],
-            "question_type" : ["MCQ","MCQ","T/F"],
-            "option": ["11,12,13,14","Reeengoku,Muzzzzan,Nbnbbezeko,Zezzzntisu","True,False"],
-            "question_mark": ["2","2","2"],
-            "answer": ["13","Muzan"],
-            "total_marks" : 6,
-            "timing" : "50:00",
-            "num_of_questions":3
+        question_record = Question(
+                quiz_id="BEM460_C2_FinalQuizq",
+                question_id="Q1",
+                question="How many ggghashira are there in demon slayer?",
+                question_mark="2",
+                answer="13")
 
-        }
-
-        ##answer only got 2 position instead of 3
-        code = create_question(request_body)
-        print("test_create_question")
-        print(code)
+        code = question_record.create_question()
+        print("test_create_question_final_failure is " , code)
         self.assertEqual(code,500)
-
     def test_insert_chapter_quiz_success(self):
-        quiz_id ="BEM460_C2_chapt2q"
-        total_marks = 2
-        chapter_id = "BEM460_C2_chapt2"
-        timing = "30:00"
-        code = insert_chapter_quiz(quiz_id,chapter_id,total_marks,timing)
+
+        result = Chapter_Quiz(
+            quiz_id ="BEM460_C2_chapt2q",
+            total_marks = 2,
+            chapter_id = "BEM460_C2_chapt2",
+            timing = "30:00"
+        )
+
+        code = result.insert_chapter_quiz()
         self.assertEqual(code, 200)
 
     # def test_insert_chapter_quiz_failure(self):
@@ -854,19 +863,29 @@ class Test_Trainer_Question_Endpoint(TestApp):
     #     self.assertEqual(code, 500)
 
     def test_insert_final_quiz_success(self):
-        quiz_id ="BEM460_C3_FinalQuizq"
-        total_marks = 2
-        course_id = "BEM460"
-        timing = "30:00"
-        code = insert_final_quiz(quiz_id,course_id,total_marks,timing)
+
+
+        result = Final_Quiz(
+            quiz_id ="BEM460_C3_FinalQuizq",
+            total_marks = 2,
+            course_id = "BEM460",
+            timing = "30:00"
+        )
+
+        code = result.insert_final_quiz()
         self.assertEqual(code, 200)
 
     def test_insert_final_quiz_failure(self):
-        quiz_id ="BEM460_C3_FinalQuizq"
-        total_marks = 2
-        course_id = ""
-        timing = "30:00"
-        code = insert_final_quiz(quiz_id,course_id,total_marks,timing)
+
+        result = Final_Quiz(
+            quiz_id ="BEM460_C3_FinalQuizq",
+            total_marks = 2,
+            course_id = "",
+            timing = "30:00"
+        )
+
+        code = result.insert_final_quiz()
+        print("test_insert_final_quiz_failure", code)
         self.assertEqual(code, 500)
 
 
