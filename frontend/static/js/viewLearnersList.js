@@ -111,7 +111,7 @@ function getAPIkeys () {
             withdrawLearner_POST_HR = apikeys.withdrawLearner_POST_HR;
         }
     }
-    var url = "../../apikey.json"; 
+    var url = "../../apikey_development.json"; 
     request.open("GET", url, false);
     request.send();
 }

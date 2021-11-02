@@ -18,6 +18,19 @@
     <title>Admin Portal - View Learners</title>
 </head>
 <body onload="renderPage();">
+    <!-- navigation bar -->
+    <nav class="navbar navbar-dark bg-dark d-flex float-left">
+        <div class="my-2">
+          <button class="btn btn-outline-light ms-5 active">Browse Courses</button>
+          <button class="btn btn-outline-light" onclick="location.href='view_reg_details.html'">View/Change Status</button>
+          <button onclick="location.href='enrolled_courses.html'" class="btn btn-outline-light">Enrolled Courses</button>
+        </div>
+        <div class="my-3 float-end">
+          <img src="../../static/img/download.jfif" class="rounded-circle me-2" width="45px" height="45px" alt="...">
+          <span class="text-white">Darren Neo</span>
+          <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+        </div>
+    </nav>
 
 
     <div class="container">

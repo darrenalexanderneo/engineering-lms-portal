@@ -7,7 +7,9 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
     <!-- Bootstrap Font Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
@@ -49,28 +51,122 @@
         </form>
     </div>
 
-    <!-- question list -->
-    <div id="qn-list"></div>
+    <!-- test
+    <form class="row g-3 needs-validation" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">First name</label>
+          <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Last name</label>
+          <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Username</label>
+          <div class="input-group has-validation">
+            <span class="input-group-text" id="inputGroupPrepend">@</span>
+            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+            <div class="invalid-feedback">
+              Please choose a username.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="validationCustom03" class="form-label">City</label>
+          <input type="text" class="form-control" id="validationCustom03" required>
+          <div class="invalid-feedback">
+            Please provide a valid city.
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="validationCustom04" class="form-label">State</label>
+          <select class="form-select" id="validationCustom04" required>
+            <option selected disabled value="">Choose...</option>
+            <option>...</option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a valid state.
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="validationCustom05" class="form-label">Zip</label>
+          <input type="text" class="form-control" id="validationCustom05" required>
+          <div class="invalid-feedback">
+            Please provide a valid zip.
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <input class="form-group-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-group-label" for="invalidCheck">
+              Agree to terms and conditions
+            </label>
+            <div class="invalid-feedback">
+              You must agree before submitting.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+      </form> -->
 
-    <!-- actions -->
-    <div class="container mt-4">
-        <button onclick="addAQn(); updateQuizSummary();" class="btn btn-outline-primary float-right px-4 py-2" style="border-radius: 2rem;">Add a Question</button>
-    </div>
+      <form class="row g-3 needs-validation" novalidate>
+       
+        <div class="col-md-4">
+          <div class="input-group has-validation">
+            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" placeholder="Enter a question" required>
+            <div class="invalid-feedback">
+              Please choose a username.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+      </form>
+    <!-- question list -->
+    <form id="quiz-form" class="needs-validation" novalidate>
+        <div id="qn-list">
+        
+        </div>
+
+         <!-- actions -->
+        <div class="container mt-4">
+            <button onclick="addAQn(); updateQuizSummary();" class="btn btn-outline-primary float-right px-4 py-2" type="button" style="border-radius: 2rem;">Add a Question</button>
+        </div>
+       
+        <div id="create-quiz-alert" class="container"></div>
+    
+        <div id="feedback-text" class="container">
+           <div class="row">
+                <div id="quiz-summary" class="col-6">
+                    <p>Total Marks: </p> 
+                    <p>Number of Questions: </p>
+                </div>
+                <div class="col-6">
+                    <button onclick='createQuiz();' type="submit" class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
+                </div>
+           </div>
+        </div>
+
+    </form>   
+    
     <br><br><br><br>
 
-    <div id="create-quiz-alert" class="container"></div>
 
-    <div id="feedback-text" class="container">
-       <div class="row">
-            <div id="quiz-summary" class="col-6">
-                <p>Total Marks: </p> 
-                <p>Number of Questions: </p>
-            </div>
-            <div class="col-6">
-                <button onclick='validateFields(); createQuiz();' class="btn btn-outline-success float-right px-4 py-2" style="border-radius: 2rem; bottom: 0;">Save & Create Quiz</button>
-            </div>
-       </div>
-    </div>   
+
+    
+    
+
+    
     
 </body>
     <script src="../../static/js/main.js"></script>
@@ -104,9 +200,31 @@
         'answer': [], // ["13", "True"]
         'total_marks': 0, // 6
         'timing': "00:00", // '50:00'
-        'num_of_questions': `${num_of_qns}` // 2
-    }
+        'num_of_questions': 0 // 2
+    };
 
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict'
+    
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+        console.log('==== undergoing validation =====');
+    
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+            console.log('***check form validity');
+            event.preventDefault()
+            if (!form.checkValidity()) {
+                event.stopPropagation()
+            }
+    
+            form.classList.add('was-validated')
+            }, false)
+        })
+    })();
 
 
     function validateFields() {
@@ -115,19 +233,7 @@
         let min_valid = document.getElementById("minute").value;
         console.log(hour_valid)
 
-        // check duration
-        /*
-        if (hour_valid == '' || min_valid == '') {
-            invalid_msg += "Please fill in duration.";
-            validation = false;
-        }
-        if (post_obj.total_marks == 0) {
-            invalid_msg += "Please fill the marks for each question.";
-            validation = false;
-        }
 
-        console.log(invalid_msg);
-        */
     }
 
     function renderCreateQuizPage() {
@@ -156,6 +262,7 @@
     function addAQn() {
 
         QID += 1;
+        post_obj.num_of_questions += 1;
         num_of_qns += 1;
         QID_LS.push(`q${QID}`);
 
@@ -181,21 +288,24 @@
         </div>
         
         <!-- input question -->
-        <div class="form-group">
-            <input type="text" class="form-control" id="q${QID}-qn" placeholder="Enter your question">
+        <div class="form-group has-validation">
+            <input type="text" class="form-control" id="q${QID}-qn" placeholder="Enter your question" required>
+            <div class="invalid-feedback">
+                Please enter your question.
+              </div>
         </div>`;
 
         html_option_ls = `
         <!-- options part -->
         <p>Options</p>
         <div id="q${QID}-options" class="container">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="q${QID}-options" id="true" value="True" checked>
-                <label class="form-check-label" for="true">True</label>
+            <div class="form-group">
+                <input class="form-group-input" type="radio" name="q${QID}-options" id="true" value="True" checked>
+                <label class="form-group-label" for="true">True</label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="q${QID}-options" id="false" value="False">
-                <label class="form-check-label" for="false">False</label>
+            <div class="form-group">
+                <input class="form-group-input" type="radio" name="q${QID}-options" id="false" value="False">
+                <label class="form-group-label" for="false">False</label>
             </div>
         </div>`;
 
@@ -217,7 +327,27 @@
         changeQnNumber();
     }
 
+    /*
+    <form class="row g-3 needs-validation" novalidate>
+       
+        <div class="col-md-4">
+          <div class="input-group has-validation">
+            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" placeholder="Enter a question" required>
+            <div class="invalid-feedback">
+              Please choose a username.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+      </form>
+
+    */
+
     function delAQn(BTN_ID) {
+        post_obj.num_of_questions -= 1;
         num_of_qns -= 1;
         var btn_id_ls = BTN_ID.split("-");
         var QID = btn_id_ls[0].slice(1);
@@ -244,13 +374,13 @@
 
         if(qn_type == 'tf-selected') {
             html_content = `
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="true" value="True" checked>
-                <label class="form-check-label" for="true">True</label>
+            <div class="form-group">
+                <input class="form-group-input" type="radio" name="${qn_id_ls[0]}-options" id="true" value="True" checked>
+                <label class="form-group-label" for="true">True</label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="${qn_id_ls[0]}-options" id="false" value="False">
-                <label class="form-check-label" for="false">False</label>
+            <div class="form-group">
+                <input class="form-group-input" type="radio" name="${qn_id_ls[0]}-options" id="false" value="False">
+                <label class="form-group-label" for="false">False</label>
             </div>
             `;
             document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3 d-none');
@@ -369,8 +499,12 @@
             </div><br>`;
         }
         */
+        const form = document.getElementById("quiz-form");
+        if (!form.checkValidity()) {
+            return
+        }
         
-            // create POST HTTP request
+        // create POST HTTP request
         var request = new XMLHttpRequest();
                 
         request.onreadystatechange = function () {
@@ -385,7 +519,6 @@
                 var chap_name = quiz_type == 'chapter_quiz' ? `Chapter ${quiz_id_list[2].slice(-2, -1)} Quiz` : 'Final Quiz'
                 html_content = `<br><div class="alert alert-success fade show" role="alert">
                                 You have successfully created ${chap_name} for ${quiz_id_list[0]} Class ${quiz_id_list[1].slice(1)}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div><br>`;
                 document.getElementById("create-quiz-alert").innerHTML = html_content;
                 //break
