@@ -543,14 +543,15 @@ def retrieve_all_courses():
                         #means allow to display 
                         total_slot_available = class_run.compute_total_slot_available(total_slot_available)
                         class_counter+=1
-                
-            value = {
-                "course_name": course_name,
-                "course_id":course_id,
-                "course_description":course_description,
-                "total_slot_available":total_slot_available,
-                "num_of_class": class_counter
-            }
+            if(class_counter !=0):
+            #dont show out!
+                value = {
+                    "course_name": course_name,
+                    "course_id":course_id,
+                    "course_description":course_description,
+                    "total_slot_available":total_slot_available,
+                    "num_of_class": class_counter
+                }
 
             array.append(value)
 
