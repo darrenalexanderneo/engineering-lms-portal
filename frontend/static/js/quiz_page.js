@@ -10,12 +10,12 @@ const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 var learners_Answers = {};
 var question_list = [];
+var course_id;
 
 //initialise global variables to store api keys
 var getQuizQuestions;
 var submitQuiz_POST;
 var getCompletedChapters;
-
 
 document.getElementById("learner-id").innerHTML = learner_id;
 
@@ -50,7 +50,7 @@ function renderPage () {
 
 function displayQuizTitle (quiz_id) {
     var array = quiz_id.split("_");
-    var course_id = array[0];
+    course_id = array[0];
     var class_name = "Class " + array[1].replace("C","");
     var chapter_name = "Chapter " + array[2].replace("q","").replace("Chapt","");
     var html = `<h2>Quiz - ${course_id} - ${class_name} - ${chapter_name}</h2>`;
@@ -257,13 +257,15 @@ function displayQuizScore () {
 }
 
 function redirect_to_EnrolledCourses() {
-    // storage.setItem("course_id",course_id);
-
-    // setTimeout(function () { 
-    //     const courseid = storage.getItem("course_id"); 
-    //     console.log("localStorage.getItem():" + courseid);
-    window.location.replace("enrolled_courses.html");  // redirect to enrolled_courses.html 
-    // }, 1000);
+    // var next_chapt_num = parseInt(chapter_id.split("_")[2].replace("Chapt","")) + 1;
+    // var next_chapt_id = `${class_id}_Chapt${next_chapt_num.toString}`;
+    // storage.setItem("next_chapt_id",next_chapt_id);
+    storage.setItem("course_id",course_id);
+    setTimeout(function () { 
+        const courseid = storage.getItem("course_id"); 
+        console.log("localStorage.getItem():" + courseid);
+        window.location.replace("enrolled_courses.html");  // redirect to enrolled_courses.html 
+    }, 1000);
 }
 
 function goBackTo (prev_page) {
