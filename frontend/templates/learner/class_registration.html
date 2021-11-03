@@ -19,16 +19,32 @@
 </head>
 <body style="background-color: #eee;">
     <!-- navigation bar -->
-    <nav class="navbar navbar-dark bg-dark d-flex float-left">
-        <div class="my-3">
-          <button onclick="goBackTo('viewcourses')" class="btn btn-outline-light ms-5 active">Browse Courses</button>
-          <button class="btn btn-outline-light" onclick="location.href='view_reg_details.html'">View/Change Status</button>
-          <button onclick="location.href='enrolled_courses.html'" class="btn btn-outline-light">Enrolled Courses</button>
-        </div>
-        <div class="my-3 float-end">
-            <img src="../../static/img/download.jfif" class="rounded-circle me-2" width="45px" height="45px" alt="...">
-            <span class="text-white">Darren Neo</span>
-            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark" style="background-color: #8a7c60fb;">
+        <div class="my-3 container-fluid">
+            <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href='view_reg_courses.html' class="nav-link active" aria-current="page">Browse Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href='view_reg_details.html'>View/Change Status</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"  href='enrolled_courses.html'>Enrolled Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href='completed_courses.html' class="nav-link">Completed</a>
+                    </li>
+                </ul> 
+            </div>
+            <div class="">
+                <button onclick="logout()" class="btn btn-outline-light float-end">Logout</button>
+                <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
+                <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+            </div>
         </div>
     </nav>
     <br><br>

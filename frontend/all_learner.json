@@ -1,0 +1,35 @@
+{
+    "course_id": "BEM460",
+    "results": [
+        {
+            "learner_id": "LNR1",
+            "learner_name": "Diablo",
+            "is_taken": 1
+        },
+        {
+            "learner_id": "LNR2",
+            "learner_name": "Great Rimuru",
+            "is_taken": 0
+        },
+        {
+            "learner_id": "LNR3",
+            "learner_name": "Benimuru",
+            "is_taken": 1
+        },
+        {
+            "learner_id": "LNR4",
+            "learner_name": "Shion",
+            "is_taken": 1
+        },
+        {
+            "learner_id": "LNR5",
+            "learner_name": "Shuna",
+            "is_taken": 1
+        },
+        {
+            "learner_id": "LNR6",
+            "learner_name": "Ribbit Ribbit Frog",
+            "is_taken": 0
+        }
+    ]
+}

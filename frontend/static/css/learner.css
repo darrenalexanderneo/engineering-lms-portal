@@ -21,9 +21,9 @@ button.btn.btn-outline-light.active {
     border-radius: 10px
 }
 
-span {
+/* span.text-white {
     margin-bottom: 30px;
-}
+} */
 
 img.card-img-top {
     height: 100px;
@@ -43,4 +43,8 @@ svg:hover {
     overflow: hidden;
     height: 100vh;
 }
+
+
+/* scroll to top */
+
 

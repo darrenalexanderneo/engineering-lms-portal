@@ -5,6 +5,8 @@ const learner_id = storage.getItem("learner_id");
 const course_id = storage.getItem("course_id");
 const chapter_id = storage.getItem("chapter_id");
 
+document.getElementById("learner-id").innerHTML = learner_id;
+
 // $(window).on('scroll', function() {
 //     if($(window).scrollTop() >= $('body').offset().top + $('body').outerHeight() - window.innerHeight) {
 //     //   alert('Bottom');
@@ -13,8 +15,14 @@ const chapter_id = storage.getItem("chapter_id");
 // });
 
 function renderPage() {
+    chapterTitle();
     getPDFlink(course_id, chapter_id);
     loadQuizButton(chapter_id);
+}
+
+function chapterTitle () {
+    const chapter_name = "Chapter " + (chapter_id.split("_")[2]).replace("Chapt","");
+    document.getElementById("chapter-title").innerHTML = `${chapter_name} - Readings`;
 }
 
 function renderPDFinAdobe (pdfUrl, adobeAPI) {
@@ -84,7 +92,7 @@ var obj = document.getElementById("pdf_doc");
 // }
 
 function loadQuizButton (chapter_id) {
-    document.getElementById("take-quiz-button").innerHTML = `<br><br><button class="btn btn-outline-success btn-lg text-center mx-auto" onclick="redirect_to_QuizPage('${chapter_id}')">Take Quiz</button><br><br><br>`;
+    document.getElementById("take-quiz-button").innerHTML = `<br><br><button class="btn btn-outline-primary btn-lg text-center mx-auto" onclick="redirect_to_QuizPage('${chapter_id}')">Take Quiz</button><br><br><br>`;
 }
 
 // stores quiz_id to localStorage for retrieval before redirecting to quiz_page.html
@@ -113,7 +121,7 @@ function goBackTo (prev_page) {
 }
 
 function logout () {
-    storage.removeItem("learner_id");
+    storage.clear();
 
     window.location.replace("./login.html");
 }

@@ -20,6 +20,9 @@ var getEnrollmentStatus;
 var register_POST;
 var withdraw_POST;
 
+document.getElementById("learner-id").innerHTML = learner_id;
+
+
 // to retrieve api keys without exposing
 function getAPIkeys () {  
     var request = new XMLHttpRequest();
@@ -265,7 +268,7 @@ function goBackTo (prev_page) {
 }
 
 function logout () {
-    storage.removeItem("learner_id");
-
+    storage.clear();
+    
     window.location.replace("./login.html");
 }
