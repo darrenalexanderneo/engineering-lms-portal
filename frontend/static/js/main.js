@@ -57,3 +57,9 @@ function backToPrevPage(given_page) {
     window.location.replace(`${given_page}.html`);
     // storage.clear();
 }
+
+function logOut() {
+    storage.clear();
+
+    window.location.replace("../login.html");
+}

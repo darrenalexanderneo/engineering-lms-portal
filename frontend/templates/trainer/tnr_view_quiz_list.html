@@ -19,11 +19,24 @@
 </head>
 <body style="background-color: #eee;" onload="renderViewQuizListPage()" class="mb-5">
     <!-- navigation bar -->
-    <nav class="navbar navbar-dark bg-dark d-flex float-left">
-        <div class="my-3"> </div>
-        <div class="my-3 float-end">
-            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
+    <div class="my-3 container-fluid">
+        <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href='tnr_homepage.html' class="nav-link">Home</a>
+                </li>
+            </ul> 
         </div>
+        <div class="">
+            <button onclick="logOut()" class="btn btn-outline-light float-end">Logout</button>
+            <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
+            <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+        </div>
+    </div>
     </nav>
     <br><br>
 
@@ -142,6 +155,12 @@
             storage.setItem("quiz_id", quiz_id);
             storage.setItem("quiz_type", quiz_type);
             redirectToPage(page);
+        }
+
+        function logOut() {
+            storage.clear();
+        
+            window.location.replace("../login.html");
         }
 
 
