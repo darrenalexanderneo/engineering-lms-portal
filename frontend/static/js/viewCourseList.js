@@ -1,42 +1,12 @@
-// var course_id;
-
-// api keys
-var getCourseList_HR;
-var getCourseDetails_HR;
-var getLearnerList_HR;
-var assignLearner_POST_HR;
-var withdrawLearner_POST_HR;
-
 const storage = window.localStorage;
 
-function getAPIkeys () {
-
-    var request = new XMLHttpRequest();
-
-    request.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            var apikeys = JSON.parse(this.response);
-
-            getCourseList_HR = apikeys.getCourseList_HR;
-            getCourseDetails_HR = apikeys.getCourseDetails_HR;
-            getLearnerList_HR = apikeys.getLearnerList_HR;
-            assignLearner_POST_HR = apikeys.assignLearner_POST_HR;
-            withdrawLearner_POST_HR = apikeys.withdrawLearner_POST_HR;
-
-        }
-
-
-    }
-    url = "../../apikey.json"; 
-    request.open("GET", url, false);
-    request.send();
+function renderPage () {
+    getAPIkeys_HR();
+    getAllCourses();
 }
 
+
 function getAllCourses() { 
-
-    getAPIkeys();
-
     document.getElementById("course_list").innerHTML = "";
     var request = new XMLHttpRequest();
 
@@ -50,15 +20,11 @@ function getAllCourses() {
             for (var i = 0; i < course_ls.length; i++) {
 
                 // declare variables
-
                 var course_name = course_ls[i].course_name;
                 var course_id = course_ls[i].course_id;
                 var num_of_classes = course_ls[i].num_of_class;
                 var total_slot_avail = course_ls[i].total_slot_available;
-        
-                console.log(course_name);
-                console.log(course_id);
-        
+                // console.log(course_id, course_name);
         
                 // input row details
                 record += `<tr onclick="redirect_to_LearnersListPage('${course_id}')" id="${course_id}"><a href="#">
@@ -93,6 +59,7 @@ function redirect_to_LearnersListPage(course_id) {
         if (course_selected == course_id) {
             location.href = "viewLearnersList.html";
         }
-    }, 2000);
+    }, 700);
     
 }
+
