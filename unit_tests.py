@@ -158,6 +158,27 @@ class TestFinal_Quiz_Result(unittest.TestCase):
         chapter_quiz_result.update_mark_existing_final_quiz_result(learner_marks)
         self.assertEqual(chapter_quiz_result.marks,learner_marks)
 
+class TestFinal_quiz(unittest.TestCase):
+    def test_final_check_pass_failure(self):
+        learner_marks = 20
+        result = Final_Quiz(
+             quiz_id = "BEM460_C1_FinalQuizq",
+             course_id = "LNR16",
+             total_marks = "30"
+        )
+        is_pass = result.final_check_pass(learner_marks)
+        self.assertEqual(is_pass,0)
+
+    def test_final_check_pass_success(self):
+        learner_marks = 29
+        result = Final_Quiz(
+             quiz_id = "BEM460_C1_FinalQuizq",
+             course_id = "LNR16",
+             total_marks = "30"
+        )
+        is_pass = result.final_check_pass(learner_marks)
+        self.assertEqual(is_pass,1)
+
 class TestChapter_Quiz(unittest.TestCase):
     def test_check_pass_pass(self):
         chapter_quiz_1 = Chapter_Quiz(
@@ -165,7 +186,7 @@ class TestChapter_Quiz(unittest.TestCase):
             chapter_id="BEM460_C1_Chapt1",
             total_marks = "10"
         )
-        result = chapter_quiz_1.check_pass(5)
+        result = chapter_quiz_1.check_pass(9)
         self.assertEqual(result,1)
     
     def test_check_pass_fail(self):
@@ -214,7 +235,6 @@ class TestChapter(unittest.TestCase):
             "chapter_id" : "BEM460_C1_Chapt1"
             })
     
-
 
 if __name__ == "__main__":
     unittest.main()

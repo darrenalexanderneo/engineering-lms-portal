@@ -375,7 +375,7 @@ class Chapter_Quiz(Quiz):
     def check_pass(self,learner_marks):
         is_pass = 1
         percentage = (int(learner_marks) / int(self.total_marks)) * 100
-        if(percentage >= 50):
+        if(percentage >= 85):
             return is_pass
         is_pass = 0
         return is_pass
@@ -386,6 +386,15 @@ class Final_Quiz(Quiz):
     quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
     course_id = db.Column(db.String(10), db.ForeignKey("course.course_id"),primary_key=True, nullable=False)
     total_marks = db.Column(db.String(10), nullable=False)
+
+    def final_check_pass(self,learner_marks):
+        is_pass = 1
+        percentage = (int(learner_marks) / int(self.total_marks)) * 100
+        if(percentage >= 85):
+            return is_pass
+        is_pass = 0
+        return is_pass
+
     def json(self):
         final_quiz_info = {
             'quiz_id': self.quiz_id,
@@ -695,8 +704,13 @@ def assign_to_course():
         learner_id = data["learner_id"]
         #delete based on emp_id and course_id from front end, assuming this 2 can be a composite key
         registration = Registration.query.filter_by(class_id=class_id,course_id = course_id,learner_id = learner_id).first()
-        delete_code = registration.delete_registration_db()
-
+        
+        #####NEED
+        if(registration !=None):
+            delete_code = registration.delete_registration_db()
+        else:
+            #is preassign dont need to even delete 
+            delete_code = 200
         #remove the rest if found in class_run
         remove_class_run = remove_class_run_by_learner_id(data)
 
@@ -1321,10 +1335,10 @@ def submit_quiz():
             #if fail but exist ignore ,  if fail but not exist(insert) ,if pass check insert or update. 
 
             final_quiz = Final_Quiz.query.filter_by(quiz_id = data['quiz_id']).first()
-            total_marks = final_quiz.total_marks
-            percentage = (int(learner_marks)/ int(total_marks)) * 100
-            #pass finals
-            if(percentage >= 50):
+
+            is_pass = final_quiz.final_check_pass(learner_marks)
+
+            if(is_pass == 1):
 
                 course_id = data['quiz_id'].split("_")
                 course_id = course_id[0]
