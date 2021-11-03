@@ -1,8 +1,8 @@
 //initialise localStorage
 const storage = window.localStorage;
 
-// const learner_id = storage.getItem("learner_id");
-const learner_id = 'LNR12';
+const learner_id = storage.getItem("learner_id");
+// const learner_id = 'LNR12';
 //initialise global variables to store api keys
 var getCourseProgress;
 var getAllChapters;
@@ -123,10 +123,12 @@ function displayAllChapters (class_id) {
                     
                     //invoke function to check if chapter is completed or not
                     var status_html = ``;
-                    num_completedChapters += checkforCompletedChapters(class_id, chapter_id);
+                    var completedChapt = checkforCompletedChapters(class_id, chapter_id);
+                    num_completedChapters += completedChapt;
+                    console.log(completedChapt);
                     console.log(num_completedChapters);
 
-                    if (num_completedChapters > 0) {
+                    if (completedChapt > 0) {
                         // chapter is completed
                         console.log(`${chapter_id} IS COMPLETED!`);
                         status_html = `<button onclick="redirect_to_chapterContents('${course_id}','${chapter_id}','${class_id}')" class="btn btn-outline-primary rounded-pill">View</button>
