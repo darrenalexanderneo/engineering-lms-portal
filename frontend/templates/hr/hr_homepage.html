@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+
+
+
+    <title>HR Homepage</title>
+</head>
+<body style="background-color: #eee;" onload="renderPage()">
+     <!-- navigation bar -->
+     <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
+        <div class="my-3 container-fluid">
+            <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href='tnr_homepage.html' class="nav-link">Home</a>
+                    </li>
+                </ul> 
+            </div>
+            <div class="">
+                <button onclick="logOut()" class="btn btn-outline-light float-end">Logout</button>
+                <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
+                <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+            </div>
+        </div>
+    </nav>
+    <br>
+    <br>
+
+    <!-- title -->
+    <div class="container ">
+        <h1>Courses</h1>
+    </div>
+    <br>
+
+    <div class="container" >
+        <div class="row" id="cards">
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">EM206 Engineering Management</h5>
+                      <h6 class="card-title">Class 1, 4 quizzes</h6>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button> 
+                    </div>
+               </div>
+            </div>
+            
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">${course_id} ${course_name}</h5>
+                      <p class="card-text">${class_num}, ${quiz_num}</p>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button>
+                    </div>
+               </div>
+            </div>
+            
+        </div>
+
+        
+    </div>
+    
+</body>
+    <script src="../../static/js/main.js"></script> 
+
+    <script>
+        //initialise localStorage
+        const storage = window.localStorage;
+
+        //hardcoded learner_id because learner login is not implemented yet
+        function renderPage() {
+            getAPIkeys_HR();
+
+            getCourseCards();
+            // showClassesforRegistration(course_id, learner_id);
+        
+        }
+
+        function getCourseCards() {        
+            document.getElementById("cards").innerHTML = "";
+        
+            var html_content = "";
+        
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.response);
+                    var course_list = response.data.courses;
+                    console.log(course_list);
+        
+        
+                    for (course of course_list) {
+                        var course_name = course.course_name;
+                        var course_desc = course.course_description;
+                        var course_id = course.course_id;
+                        var num_of_class = course.num_of_class;
+                        var total_slot_available = course.total_slot_available;
+                        // console.log(course_desc)
+
+                        if (num_of_class == 0) {
+                            var slots_content = `
+                            no slots left
+                            `;
+                        } else {
+                            var slots_content = `
+                            ${total_slot_available} out of ${50*num_of_class} slots left
+                            `;
+                        }
+                        
+                        html_content += 
+                        `<div class="col-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                  <h5 class="card-title">${course_id} ${course_name}</h5>
+                                  <p class="card-text">
+                                    Number of Classes: \t ${num_of_class} <br>
+                                    Number of Slots: \t ${total_slot_available}
+                                  </p>
+                                  <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')"  class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                </div>
+                           </div>
+                        </div>`;
+                    }
+                    
+                    document.getElementById("cards").innerHTML = html_content;
+                }
+            };
+        
+            var url = getCourseList_HR;
+            request.open("GET", url, true);
+            request.send();
+        }
+        
+
+        function redirectToNextPage(page, course_details) {
+            // ${course_id}_${course_name}_${num_of_class}_${total_slot_available}
+            storage.setItem("course_details", course_details);
+            console.log(course_details)
+            redirectToPage(page);
+            
+        }
+
+        function logOut() {
+            storage.clear();
+            window.location.replace("../login.html");
+        }
+
+        
+  
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>
