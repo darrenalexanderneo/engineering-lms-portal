@@ -22,7 +22,6 @@ document.getElementById("learner-id").innerHTML = learner_id;
 
 $('#submit').modal({ show: false});
 
-
 // to retrieve api keys without exposing
 function getAPIkeys () {  
     var request = new XMLHttpRequest();

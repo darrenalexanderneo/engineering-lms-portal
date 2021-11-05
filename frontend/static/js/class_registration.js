@@ -87,7 +87,7 @@ function viewCourseDetails (course_id) {
                     prereq_content += `<li>${course}: Prerequisite Course Name</li>`;
                 }
             }
-
+            
             document.getElementById("course_name").innerHTML = course_name;
             document.getElementById("course_desc").innerHTML = course_description;
             document.getElementById("prereq_courses").innerHTML = prereq_content;
