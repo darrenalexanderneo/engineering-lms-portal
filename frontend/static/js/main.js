@@ -2,7 +2,7 @@ const development = 'apikey_development.json';
 const production = 'apikey.json';
 
 /*** CHANGE ACCORDINGLY ***/
-const apikey_url = development;
+const apikey_url = production;
 
 /*** RETRIEVE API KEYS ***/
 function getAPIkeys_TNR() {  
