@@ -4,8 +4,10 @@ const storage = window.localStorage;
 const learner_id = storage.getItem("learner_id");
 const course_id = storage.getItem("course_id");
 const chapter_id = storage.getItem("chapter_id");
+const viewOnly = storage.getItem("view-only");
 
 document.getElementById("learner-id").innerHTML = learner_id;
+
 
 // $(window).on('scroll', function() {
 //     if($(window).scrollTop() >= $('body').offset().top + $('body').outerHeight() - window.innerHeight) {
@@ -92,7 +94,13 @@ var obj = document.getElementById("pdf_doc");
 // }
 
 function loadQuizButton (chapter_id) {
-    document.getElementById("take-quiz-button").innerHTML = `<br><br><button class="btn btn-outline-primary btn-lg text-center mx-auto" onclick="redirect_to_QuizPage('${chapter_id}')">Take Quiz</button><br><br><br>`;
+    console.log(viewOnly);
+    if (viewOnly == "true") {
+        console.log(`view-only = true`);
+        document.getElementById("take-quiz-button");
+    } else {
+        document.getElementById("take-quiz-button").innerHTML = `<br><br><button class="btn btn-outline-primary btn-lg text-center mx-auto" onclick="redirect_to_QuizPage('${chapter_id}')">Take Quiz</button><br><br><br>`;
+    }
 }
 
 // stores quiz_id to localStorage for retrieval before redirecting to quiz_page.html

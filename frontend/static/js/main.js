@@ -2,7 +2,7 @@ const development = 'apikey_development.json';
 const production = 'apikey.json';
 
 /*** CHANGE ACCORDINGLY ***/
-const apikey_url = production;
+const apikey_url = development;
 
 /*** RETRIEVE API KEYS ***/
 function getAPIkeys_TNR() {  
@@ -15,7 +15,7 @@ function getAPIkeys_TNR() {
             viewQuiz_TNR = api_keys.viewQuiz_TNR;
             createQuiz_POST_TNR = api_keys.createQuiz_POST_TNR;
 
-            // console.log(getCourseList_TNR);
+            console.log(getCourseList_TNR);
             // console.log(getCourseDetails_TNR);
             // console.log(viewQuiz_TNR);
             // console.log(createQuiz_POST_TNR);
@@ -36,7 +36,7 @@ function getAPIkeys_HR() {
             assignLearner_POST_HR = api_keys.assignLearner_POST_HR;
             withdrawLearner_POST_HR = api_keys.withdrawLearner_POST_HR;
 
-            // console.log(getCourseList_TNR);
+            console.log(getCourseList_HR);
             // console.log(getCourseDetails_TNR);
             // console.log(viewQuiz_TNR);
             // console.log(createQuiz_POST_TNR);
@@ -56,4 +56,10 @@ function redirectToPage(given_page) {
 function backToPrevPage(given_page) {
     window.location.replace(`${given_page}.html`);
     // storage.clear();
+}
+
+function logOut() {
+    storage.clear();
+
+    window.location.replace("../login.html");
 }
