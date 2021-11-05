@@ -1000,6 +1000,25 @@ class Test_date_enroll_course_Endpoint(TestApp):
         print(response.json)
         self.assertEqual(response.json,{'code': 200, 'is_commence': 0})
 
+class Test_is_completed_course_Endpoint(TestApp):
+    def test_is_completed_course_true(self):
+        course_id = "BEM460"
+        learner_id = "LNR15"
+        endpoint = "check_completion_course/" + course_id + "/" + learner_id
+        response = self.client.get(endpoint)
+        print("test_is_completed_course_true")
+        print(response.json)
+        self.assertEqual(response.json,{'code': 200, 'is_completed': 1})
+
+    def test_is_completed_course_false(self):
+        course_id = "BEM460"
+        learner_id = "LNR16"
+        endpoint = "check_completion_course/" + course_id + "/" + learner_id
+        response = self.client.get(endpoint)
+        print("test_is_completed_course_false")
+        print(response.json)
+        self.assertEqual(response.json,{'code': 200, 'is_completed': 0})
+
 ###### put AC onto the methods to refer
 
 

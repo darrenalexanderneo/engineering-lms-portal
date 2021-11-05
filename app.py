@@ -1824,7 +1824,7 @@ def view_quiz(quiz_id):
         })
         
 
-
+####implemented on 6 nov
 
 @app.route("/display_course_material_date/<string:class_id>")
 def display_course_material_date(class_id):
@@ -1844,6 +1844,25 @@ def display_course_material_date(class_id):
             'is_commence': 0
             
         })  
+
+@app.route("/check_completion_course/<string:course_id>/<string:learner_id>")
+def check_completion_course(course_id,learner_id):
+
+    completion_record_info = Completion_Record.query.filter_by(course_id  = course_id,learner_id=learner_id).first()
+    if(completion_record_info == None):
+        return jsonify(
+            {
+                'code': 200,
+                'is_completed': 0
+                
+            })
+    return jsonify(
+        {
+            'code': 200,
+            'is_completed': 1
+            
+        })
+
 
 
 if __name__ == '__main__':
