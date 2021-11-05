@@ -87,7 +87,7 @@ function viewCourseDetails (course_id) {
                     prereq_content += `<li>${course}: Prerequisite Course Name</li>`;
                 }
             }
-
+            
             document.getElementById("course_name").innerHTML = course_name;
             document.getElementById("course_desc").innerHTML = course_description;
             document.getElementById("prereq_courses").innerHTML = prereq_content;
@@ -168,7 +168,7 @@ function showClassesforRegistration (course_id, learner_id) {
                         <div class="col-3 d-flex flex-column" >
                             <span class="d-flex text-center" style="justify-content: flex-end;">${num_of_slots} out of 50 taken</span>`;
 
-                    if (is_registered == 0) {
+                    if (is_registered == 0 && num_of_slots < 50) {
                         html_content +=`<button onclick="register('${class_id}','${course_id}','${learner_id}', '${class_num}')" class="btn btn-outline-primary text-center align-self-end" style="margin-top:auto">Register</button>`;  
                     }  
                     else { //disable button
