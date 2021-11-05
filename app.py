@@ -144,6 +144,13 @@ class Class_Run(db.Model):
     # Just slots available is enough, don't need class_size.
     slots_available = db.Column(db.Integer, nullable=False)
 
+    def check_commence_of_course(self):
+        now = datetime.now()
+        ## double check
+        dt_string = now.strftime("%Y-%m-%d")
+        if(self.class_start_date <= dt_string <= self.class_end_date):
+            return True
+        return False
 
     def check_available_end_date(self):
         now = datetime.now()
@@ -157,8 +164,14 @@ class Class_Run(db.Model):
         now = datetime.now()
         ## double check
         dt_string = now.strftime("%Y-%m-%d")
+        print(self.class_id)
+        print(self)
+        print("date checker")
+        print(dt_string)
         if(self.reg_start_date <= dt_string <= self.reg_end_date):
+            print("is true allow")
             return True
+        print("is false")
         return False
     
     def compute_total_slot_available(self,total_slot_available):
@@ -987,7 +1000,14 @@ def register():
         data = request.get_json()
         #retrieve the slot available, if 0 cannot aply
         class_info = Class_Run.query.filter_by(class_id=data['class_id'], course_id = data['course_id']).first()
-
+        if(not class_info.check_available_date()):
+            return jsonify(
+            {
+                "code": 201,
+                "message": "The course is not available yet."
+            }
+            ), 200 
+        
         if(class_info.slots_available == 0):
             return jsonify(
             {
@@ -1199,7 +1219,7 @@ def auto_compute_grade(data):
         index = question_id.index(question_list[i].question_id)
         learner_marks += question_list[i].compute_marks(answer_array[index])
 
-
+    print(learner_marks)
     return learner_marks
 
 
@@ -1396,7 +1416,7 @@ def retrieve_progress_learner_id(class_id,learner_id):
     total_length = len(Chapter_quiz_list) + len(final_quiz_list)
     print("total length" , total_length)
 
-    learner_chapter_completion_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(class_id)).filter_by(learner_id = learner_id, completion = 1).all()
+    learner_chapter_completion_list = Chapter_Learner.query.filter(Chapter_Learner.chapter_id.contains(class_id)).filter_by(learner_id = learner_id).all()
 
     array = class_id.split("_")
     print(array[0])
@@ -1803,6 +1823,27 @@ def view_quiz(quiz_id):
             
         })
         
+
+
+
+@app.route("/display_course_material_date/<string:class_id>")
+def display_course_material_date(class_id):
+
+    class_run_info = Class_Run.query.filter_by(class_id  = class_id).first()
+    is_commence = class_run_info.check_commence_of_course()
+    if(is_commence):
+        return jsonify(
+            {
+                'code': 200,
+                'is_commence': 1
+                
+            })
+    return jsonify(
+        {
+            'code': 200,
+            'is_commence': 0
+            
+        })  
 
 
 if __name__ == '__main__':
