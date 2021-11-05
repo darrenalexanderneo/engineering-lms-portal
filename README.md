@@ -16,6 +16,13 @@ Our LMS targets 3 different users and allows user to do the below actions.
 some paragraph
 
 ### B. Trainer
+| Title                | User Story                                                          |
+| -----------          | -----------                                                            |
+| Create Ungraded Quiz | As a Trainer, I want to be able to set the format of each question for each quiz, so that I can choose the settings best suited for each individual question. online. Consist of both engineers and senior engineers.                                                 |
+| Create Final Quiz    | As a Learner, I want to be able to take the final quiz for a course, so that I can successfully complete the course.                                                    |
+| Auto Grade Quiz      | As a trainer, I want each quiz to be auto-graded, so that I save time from cross-checking through every question.                                                     |
+
+
 Log into your account through the [Login Page](http://localhost/is212-spm-team4/frontend/templates/learner/login.html). Please use TNR1, TNR? and TNR? for testing purposes.
 <p align="center">
   <img src="frontend\static\img\markdown\login_page.png" width="700"/>
