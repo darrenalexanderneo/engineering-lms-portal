@@ -12,15 +12,25 @@ var learners_Answers = {};
 var question_list = [];
 var course_id;
 
+
+
 //initialise global variables to store api keys
 var getQuizQuestions;
 var submitQuiz_POST;
 var getCompletedChapters;
 
+// document.addEventListener("load", function () {
+//     console.log(class_id);
+//     // console.log("hi");
+// })
+
 document.getElementById("learner-id").innerHTML = learner_id;
 
 
 $('#submit').modal({ show: false});
+
+// console.log(class_id);
+
 
 // to retrieve api keys without exposing
 function getAPIkeys () {  
@@ -32,9 +42,9 @@ function getAPIkeys () {
             submitQuiz_POST = api_keys.submitQuiz_POST;
             getCompletedChapters = api_keys.getCompletedChapters;
 
-            console.log(getQuizQuestions);
-            console.log(submitQuiz_POST);
-            console.log(getCompletedChapters);
+            // console.log(getQuizQuestions);
+            // console.log(submitQuiz_POST);
+            // console.log(getCompletedChapters);
         }
     }
     request.open("GET", "../../apikey.json", false);
@@ -42,6 +52,7 @@ function getAPIkeys () {
 }
 
 function renderPage () {
+    console.log(class_id);
     getAPIkeys();
     displayQuizTitle(quiz_id);
     displayQuiz(quiz_id);
@@ -217,14 +228,17 @@ function submitQuiz () {
 }
 
 function displayQuizScore () {
-
+    console.log(class_id);
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var results = JSON.parse(this.response).results;
+            console.log(results);
             var quiz_score;
             for (var chapter of results) {
+                console.log(chapter);
                 if (chapter.chapter_id == chapter_id) {
+                    console.log(chapter_id);
                     quiz_score = chapter.completion  // 0 or 1
                 }
             }
@@ -251,7 +265,9 @@ function displayQuizScore () {
             $('#submit').modal('show');
         }
     }
+
     request.open("GET", `${getCompletedChapters}${class_id}/${learner_id}`, true);
+    console.log(`${getCompletedChapters}${class_id}/${learner_id}`);
     request.send();
 }
 
