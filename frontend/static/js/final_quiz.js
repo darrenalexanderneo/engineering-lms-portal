@@ -10,11 +10,12 @@ const resultsContainer = document.getElementById('results');
 const submitButton = document.getElementById('submit');
 var learners_Answers = {};
 var question_list = [];
+var course_id;
 
 //initialise global variables to store api keys
 var getQuizQuestions;
 var submitQuiz_POST;
-var getCompletedChapters;
+var getFinalQuizScore;
 
 
 document.getElementById("learner-id").innerHTML = learner_id;
@@ -31,11 +32,7 @@ function getAPIkeys () {
             var api_keys = JSON.parse(this.response);
             getQuizQuestions = api_keys.getQuizQuestions;
             submitQuiz_POST = api_keys.submitQuiz_POST;
-            getCompletedChapters = api_keys.getCompletedChapters;
-
-            console.log(getQuizQuestions);
-            console.log(submitQuiz_POST);
-            console.log(getCompletedChapters);
+            getFinalQuizScore = api_keys.getFinalQuizScore
         }
     }
     request.open("GET", "../../apikey.json", false);
@@ -49,7 +46,7 @@ function renderPage () {
 }
 
 function displayFinalQuizTitle () {
-    var course_id = class_id.split("_")[0];
+     course_id = class_id.split("_")[0];
     var class_name = "Class " + class_id.split("_")[1].replace("C","");
 
     document.getElementById("quiz-title").innerHTML = `${course_id} ${class_name} - Final Quiz`;
@@ -91,6 +88,8 @@ function displayFinalQuizTimer (duration) {
 }
 
 function displayFinalQuiz (quiz_id) {
+
+    // console.log(quiz_id);
 
     document.getElementById("quiz").innerHTML = "";
 
@@ -147,6 +146,7 @@ function displayFinalQuiz (quiz_id) {
     };
 
     var url = `${getQuizQuestions}${quiz_id}`;
+    console.log(url);
     request.open("GET", url, true);
     request.send();
 }
@@ -187,7 +187,7 @@ function submitQuiz () {
         answers_obj["learner_id"] = learner_id;
         answers_obj["question"] = questions_str;
         answers_obj["answer"] = answers_str;
-        answers_obj["type"] = "chapter_quiz";
+        answers_obj["type"] = "final_quiz";
 
         answers_json = JSON.stringify(answers_obj);
 
@@ -199,7 +199,7 @@ function submitQuiz () {
                 var result = JSON.parse(this.response);
 
                 console.log(result);
-                if (result.message == "successfully") {
+                if (result.code == 200) {
                     displayFinalQuizScore();
                 } else {
                     alert("Quiz Submission is Unsuccessful.");
@@ -221,27 +221,38 @@ function displayFinalQuizScore () {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            var results = JSON.parse(this.response).results;
-            var quiz_score;
-            for (var chapter of results) {
-                if (chapter.chapter_id == chapter_id) {
-                    quiz_score = chapter.completion  // 0 or 1
-                }
-            }
+            var results = JSON.parse(this.response).data;
+            var quiz_score = (parseInt(results.marks) / parseInt(results.total_marks)) * 100;
+
             console.log(quiz_score);
 
 
             var message = "";
             var buttons = "";
 
-            if (quiz_score == 0) {
-                message = "You failed the quiz. You may retake it or move on to the next chapter.";
-                buttons = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='quiz_page.html'">Retake Quiz</button>
-                    <button type="button" class="btn btn-primary" onclick="redirect_to_EnrolledCourses()">Next Chapter</button>`;
+            if (quiz_score < 50) {
+                message = "You failed the quiz. You have to retake it until you pass in order to complete this course.";
+                buttons = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='final_quiz.html'">Retake Quiz</button>`;
 
             } else {
-                message  = "You passed the quiz! You may now move on to the next chapter.";
-                buttons = `<button type="button" class="btn btn-primary" onclick="redirect_to_EnrolledCourses()">Next Chapter</button>`;
+                var current_date = new Date().toDateString();
+                console.log(current_date);
+                message  = `You passed the quiz! Congratulations, you have been awarded a completion certificate for ${course_id}!
+                <div style="width:100%; height:100%; padding:20px; text-align:center; border: 10px solid #787878">
+                <div style="width:98%; height:98%; padding:20px; text-align:center; border: 5px solid #787878" class="mx-auto">
+                    <span style="font-size:16px; font-weight:bold">Certificate of Completion</span>
+                    <br><br>
+                    <span style="font-size:8px"><i>This is to certify that</i></span>
+                    <br><br>
+                    <span style="font-size:12px"><b>${learner_id}</b></span><br/><br/>
+                    <span style="font-size:8px"><i>has completed the course</i></span> <br/><br/>
+                    <span style="font-size:12px">${course_id}</span> <br/><br/>
+                    <span style="font-size:10px">with score of <b>${quiz_score}%</b></span> <br/><br/><br/><br/>
+                    <span style="font-size:12px"><i>dated</i></span><br>
+                    <span style="font-size:12px">${current_date}</span>
+                </div>
+                </div>`;
+                buttons = `<button type="button" class="btn btn-primary" onclick="redirect_to_BrowseCourses()">Browse More Courses</button>`;
             }
 
 
@@ -251,17 +262,17 @@ function displayFinalQuizScore () {
             $('#submit').modal('show');
         }
     }
-    request.open("GET", `${getCompletedChapters}${class_id}/${learner_id}`, true);
+    request.open("GET", `${getFinalQuizScore}${quiz_id}/${learner_id}`, true);
     request.send();
 }
 
-function redirect_to_EnrolledCourses() {
+function redirect_to_BrowseCourses() {
     // storage.setItem("course_id",course_id);
 
     // setTimeout(function () { 
     //     const courseid = storage.getItem("course_id"); 
     //     console.log("localStorage.getItem():" + courseid);
-    window.location.replace("enrolled_courses.html");  // redirect to enrolled_courses.html 
+    window.location.replace("view_reg_courses.html");  // redirect to enrolled_courses.html 
     // }, 1000);
 }
 

@@ -15,9 +15,9 @@
 
 
 
-    <title>Register for Classes</title>
+    <title>HR Homepage</title>
 </head>
-<body style="background-color: #eee;" onload="renderCourseDetailsPage()">
+<body style="background-color: #eee;" onload="renderPage()">
      <!-- navigation bar -->
      <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
         <div class="my-3 container-fluid">
@@ -43,7 +43,7 @@
 
     <!-- title -->
     <div class="container ">
-        <h1>Classes</h1>
+        <h1>Courses</h1>
     </div>
     <br>
 
@@ -82,21 +82,15 @@
         const storage = window.localStorage;
 
         //hardcoded learner_id because learner login is not implemented yet
-        // const trn_id = "TNR1";
-        const trn_id = storage.getItem("trainer_id");
+        function renderPage() {
+            getAPIkeys_HR();
 
-        function renderCourseDetailsPage() {
-            getAPIkeys_TNR();
-        
-            // course_id = storage.getItem("course_id"); 
-            console.log(trn_id);
-        
-            getCourseCards(trn_id);
+            getCourseCards();
             // showClassesforRegistration(course_id, learner_id);
         
         }
 
-        function getCourseCards(trn_id) {        
+        function getCourseCards() {        
             document.getElementById("cards").innerHTML = "";
         
             var html_content = "";
@@ -104,26 +98,39 @@
             var request = new XMLHttpRequest();
             request.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    var course_list = JSON.parse(this.response).results;
+                    var response = JSON.parse(this.response);
+                    var course_list = response.data.courses;
                     console.log(course_list);
         
         
                     for (course of course_list) {
-                        console.log(course);
-                        var course_id = course.class_id.slice(0, -3);
-                        var class_id = course.class_id;
-                        var class_name = course.class_id.slice(-2, -1) + "lass " + course.class_id.slice(-1);
                         var course_name = course.course_name;
-                        var chap_num = course.num_of_chapter;
-                        console.log(course_id, class_name, chap_num) 
+                        var course_desc = course.course_description;
+                        var course_id = course.course_id;
+                        var num_of_class = course.num_of_class;
+                        var total_slot_available = course.total_slot_available;
+                        // console.log(course_desc)
+
+                        if (num_of_class == 0) {
+                            var slots_content = `
+                            no slots left
+                            `;
+                        } else {
+                            var slots_content = `
+                            ${total_slot_available} out of ${50*num_of_class} slots left
+                            `;
+                        }
                         
                         html_content += 
                         `<div class="col-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                   <h5 class="card-title">${course_id} ${course_name}</h5>
-                                  <p class="card-text">${class_name}, ${chap_num} Quizzes</p>
-                                  <button onclick="redirectToViewQuizList('tnr_view_quiz_list', '${class_id}', '${course_name}')" class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                  <p class="card-text">
+                                    Number of Classes: \t ${num_of_class} <br>
+                                    Number of Slots: \t ${total_slot_available}
+                                  </p>
+                                  <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')"  class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
                                 </div>
                            </div>
                         </div>`;
@@ -133,16 +140,18 @@
                 }
             };
         
-            var url = getCourseList_TNR + trn_id;
+            var url = getCourseList_HR;
             request.open("GET", url, true);
             request.send();
         }
+        
 
-
-        function redirectToViewQuizList(page, class_id, course_name) {
-            storage.setItem("class_id", class_id);
-            storage.setItem("course_name", course_name);
+        function redirectToNextPage(page, course_details) {
+            // ${course_id}_${course_name}_${num_of_class}_${total_slot_available}
+            storage.setItem("course_details", course_details);
+            console.log(course_details)
             redirectToPage(page);
+            
         }
 
         function logOut() {

@@ -4,22 +4,6 @@ const storage = window.localStorage;
 const course_id = storage.getItem('course_id');
 console.log('course selected: ' + course_id);
 
-// initialise api keys
-var getCourseList_HR;
-var getCourseDetails_HR;
-var getLearnerList_HR;
-var assignLearner_POST_HR;
-var withdrawLearner_POST_HR;
-
-// var course_json = [];
-// var class_json = [];
-// var learners_json = [];
-// var course_ls = [];
-// var class_ls = [];
-// var learner_ls = [];
-
-// var alert_msg = '';
-
 var class_filter = 'all';
 var learner_type = 'preassign';
 // var curr_num_of_learners = 0;
@@ -50,28 +34,6 @@ const learnerTypeDict = {
 
 var learner_ls;
 
-
-function getAPIkeys () {
-
-    var request = new XMLHttpRequest();
-
-    request.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            var apikeys = JSON.parse(this.response);
-
-            getCourseList_HR = apikeys.getCourseList_HR;
-            getCourseDetails_HR = apikeys.getCourseDetails_HR;
-            getLearnerList_HR = apikeys.getLearnerList_HR;
-            assignLearner_POST_HR = apikeys.assignLearner_POST_HR;
-            withdrawLearner_POST_HR = apikeys.withdrawLearner_POST_HR;
-        }
-    }
-    var url = "../../apikey.json"; 
-    request.open("GET", url, false);
-    request.send();
-}
-
 function generateLearnerTypeDict () {
     var request = new XMLHttpRequest();
 
@@ -93,7 +55,7 @@ function generateLearnerTypeDict () {
 }
 
 function renderLearnersListPage () {
-    getAPIkeys();
+    getAPIkeys_HR();
     generateLearnerTypeDict();
 
     getCourseDetails(course_id);
@@ -126,7 +88,6 @@ function getCourseDetails(course_id) {
                     // console.log(course_name);
                 }
             }
-            // console.log(course_name);
 
             document.getElementById("course_title").innerHTML = `${course_id} - ${course_name}`;
             document.getElementById("course_description").innerHTML = `${course_desc}`;
@@ -143,7 +104,7 @@ function getClasses () {
 
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
+            // console.log(this.response);
             var class_ls = JSON.parse(this.response)[`${course_id}`];
             console.log(class_ls);
 
@@ -191,7 +152,7 @@ function changeTabActive(curr_tab) {
 function displayLearnersOfClass(class_id) {
     class_filter = class_id; // update filter
     var type_id = learnerTypeDict[`${learner_type}`]['id'];
-    console.log(type_id);
+    // console.log(type_id);
     var curr_class_type_list = learner_ls[`${type_id}`]; // type_id == 'enrolled_learners'
 
     console.log(`=== displayLearnersOfClass called ===`);
@@ -212,7 +173,6 @@ function displayLearnersOfClass(class_id) {
 
 
 function displayLearnersByType(curr_learner_type) { 
-    console.log(learner_ls);
     learner_type = curr_learner_type; // update filter
     var type_id = learnerTypeDict[`${curr_learner_type}`]['id'];
     // console.log('type_id', type_id)

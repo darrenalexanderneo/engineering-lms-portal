@@ -21,12 +21,25 @@
 </head>
 <body style="background-color: #eee;" onload="renderCreateQuizPage()">
     <!-- navigation bar -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="my-3"> </div>
-        <div class="my-3 float-end">
-            <button onclick="logout()" class="btn btn-outline-light me-5">Logout</button>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
+        <div class="my-3 container-fluid">
+            <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href='tnr_homepage.html' class="nav-link">Home</a>
+                    </li>
+                </ul> 
+            </div>
+            <div class="">
+                <button onclick="logOut()" class="btn btn-outline-light float-end">Logout</button>
+                <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
+                <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+            </div>
         </div>
-    </nav>
+    </nav> 
     <br>
 
     <!-- back to prev page -->
@@ -35,36 +48,37 @@
             <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
           </svg></div>
     </div>
-
-    <!-- title -->
-    <div class="container mb-4">
+     <!-- title -->
+     <div class="container mb-4">
         <div id="quiz-title"></div>
         <form class="needs-validation" novalidate>
-            <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label" style="font-size: 20px;">Duration: </label>
-                <input type="number" class="form-control col-sm-2" id="hour" placeholder="HH" class="valid-feedback">
-                <input type="number" class="form-control col-sm-2" id="minute" placeholder="MM" class="valid-feedback">
-                <div class="invalid-feedback">
-                    Please choose a username.
-                </div>
+            
             </div>
         </form>
     </div>
+   
 
     <!-- question list -->
-    <form id="quiz-form" class="needs-validation" novalidate>
+    <form id="quiz-form" class="container needs-validation" novalidate>
+        <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label" style="font-size: 20px;">Duration: </label>
+            <input type="number" class="form-control col-sm-2 mr-2" id="hour" min="0" max="23" placeholder="HH" required> 
+            <input type="number" class="form-control col-sm-2" id="minute" min="0" max="59" placeholder="MM" required>
+        </div>
+
         <div id="qn-list">
         
         </div>
 
          <!-- actions -->
-        <div class="container mt-4">
+        <div class="container my-4">
             <button onclick="addAQn(); updateQuizSummary();" class="btn btn-outline-primary float-right px-4 py-2" type="button" style="border-radius: 2rem;">Add a Question</button>
         </div>
-       
-        <br><br><br><br>
-    
-        <div id="feedback-text" class="container">
+        <br><br><br>
+
+        <div id="create-quiz-alert"></div>
+        <br>
+        <div id="feedback-text">
            <div class="row">
                 <div id="quiz-summary" class="col-6">
                     <p>Total Marks: </p> 
@@ -78,13 +92,33 @@
 
     </form>   
 
-    <div id="create-quiz-alert" class="container"></div>
+     <!-- Modal -->
+     <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitLabel">Create Quiz</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to create the quiz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="$('#submit').modal('hide');">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="postQuizRequest()">Okay</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    
     
     <br><br><br><br>
     
     
 </body>
     <script src="../../static/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
 
     <script>
     //initialise localStorage
@@ -133,6 +167,12 @@
             console.log('***check form validity');
             event.preventDefault()
             if (!form.checkValidity()) {
+                var html_content = `
+                <div class="container alert alert-danger" role="alert">
+                    Please fill in all the fields in red.
+                </div>
+                `;
+                document.getElementById('create-quiz-alert').innerHTML = html_content;
                 event.stopPropagation()
             }
     
@@ -140,16 +180,6 @@
             }, false)
         })
     })();
-
-
-    function validateFields() {
-        
-        let hour_valid = document.getElementById("hour").value;
-        let min_valid = document.getElementById("minute").value;
-        console.log(hour_valid)
-
-
-    }
 
     function renderCreateQuizPage() {
         getAPIkeys_TNR();
@@ -198,16 +228,15 @@
                 <input type="number" onchange="changeNumOfOptions(this.id)" id="q${QID}-mcq-num-input" min="2" max="6" class="form-control" placeholder="# of Options" value="2">
             </div>
             <div class="form-group col-md-3" style="margin-right: 0;">
-                <input type="number" onchange="updateQuizSummary()" class="form-control" id="q${QID}-marks" placeholder="Marks">
+                <input type="number" onchange="updateQuizSummary()" class="form-control" id="q${QID}-marks" min=1 placeholder="Marks" required>
+                
             </div>
         </div>
         
         <!-- input question -->
         <div class="form-group has-validation">
             <input type="text" class="form-control" id="q${QID}-qn" placeholder="Enter your question" required>
-            <div class="invalid-feedback">
-                Please enter your question.
-              </div>
+            
         </div>`;
 
         html_option_ls = `
@@ -289,15 +318,15 @@
                     <input type="radio" id='${qn_id_ls[0]}-mcq-options[1]-radio' name="${qn_id_ls[0]}-mcq-options-radio"  placeholder="Input text" checked>
                     </div>
                 </div>
-                <input type="text" id='${qn_id_ls[0]}-mcq-options[1]' name="${qn_id_ls[0]}-mcq-options[1]" class="form-control" placeholder="Input text">
+                <input type="text" id='${qn_id_ls[0]}-mcq-options[1]' name="${qn_id_ls[0]}-mcq-options[1]" class="form-control" placeholder="Input text" required> 
             </div>
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                    <input type="radio" id='${qn_id_ls[0]}-mcq-options[2]-radio' name="${qn_id_ls[0]}-mcq-options-radio" aria-label="Radio button for following text input">
+                    <input type="radio" id='${qn_id_ls[0]}-mcq-options[2]-radio' name="${qn_id_ls[0]}-mcq-options-radio" aria-label="Radio button for following text input" required>
                     </div>
                 </div>
-                <input type="text" id='${qn_id_ls[0]}-mcq-options[2]' name="${qn_id_ls[0]}-mcq-options[2]" class="form-control" placeholder="Input text">
+                <input type="text" id='${qn_id_ls[0]}-mcq-options[2]' name="${qn_id_ls[0]}-mcq-options[2]" class="form-control" placeholder="Input text" required>
             </div>
             `;
             document.getElementById(`${qn_num}-mcq-num`).setAttribute('class', 'form-group col-md-3');
@@ -314,16 +343,31 @@
         html_content = "";
 
         for (let i = 1; i <= option_num; i++) { // need change qn_id
-            html_content +=  `
-            <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                    <input type="radio" id='${qn_id}-mcq-options[${i}]-radio' name="${qn_id}-mcq-options-radio" aria-label="Radio button for following text input">
+            if (i == 1) {
+                html_content +=  `
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" id='${qn_id}-mcq-options[${i}]-radio' name="${qn_id}-mcq-options-radio" aria-label="Radio button for following text input" checked>
+                        </div>
                     </div>
+                    <input type="text" id='${qn_id}-mcq-options[${i}]' name="${qn_id}-mcq-options[${i}]" class="form-control" placeholder="Input text" required>
                 </div>
-                <input type="text" id='${qn_id}-mcq-options[${i}]' name="${qn_id}-mcq-options[${i}]" class="form-control" placeholder="Input text">
-            </div>
-            `;
+                `;
+            }
+            else {
+                html_content +=  `
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" id='${qn_id}-mcq-options[${i}]-radio' name="${qn_id}-mcq-options-radio" aria-label="Radio button for following text input">
+                        </div>
+                    </div>
+                    <input type="text" id='${qn_id}-mcq-options[${i}]' name="${qn_id}-mcq-options[${i}]" class="form-control" placeholder="Input text" required>
+                </div>
+                `;
+            }
+            
         }
 
         // console.log(html_content)
@@ -374,6 +418,31 @@
 
     // POST REQUEST
     function createQuiz() {
+        // reset 
+        document.getElementById('create-quiz-alert').innerHTML = ``;
+        
+        // scenario 1: no qns are created
+        if (post_obj.num_of_questions == 0) {
+            console.log("no qns", post_obj.num_of_questions);
+            var html_content = `
+            <div class="container alert alert-danger" role="alert">
+                Please create at least 1 question.
+            </div>
+            `;
+            document.getElementById('create-quiz-alert').innerHTML = html_content;
+            return
+        }
+
+        // scenario 2: form have empty fields
+        const form = document.getElementById("quiz-form");
+        if (!form.checkValidity()) {
+            return
+        }
+
+        $('#submit').modal('show');        
+    }
+
+    function postQuizRequest() {
         post_obj = getFinalQunInput();
         var json_string = JSON.stringify(post_obj); // stringify json object into a string
 
@@ -381,18 +450,13 @@
         console.log(post_obj);
         console.log('validation', validation, invalid_msg);
 
-        const form = document.getElementById("quiz-form");
-        if (!form.checkValidity()) {
-            return
-        }
-        
         // create POST HTTP request
         var request = new XMLHttpRequest();
-                
+
         request.onreadystatechange = function () {
 
-        var message = "";
-        var html_content = "";
+            var message = "";
+            var html_content = "";
 
             if (this.readyState == 4 && this.status == 200) {
 
@@ -416,11 +480,17 @@
         var url = createQuiz_POST_TNR;
         request.open("POST", url, true);
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(json_string);        
+        request.send(json_string);
+
+        // redirect to quiz list after submission
+    
+        setTimeout(function () { 
+            window.location.replace(`tnr_view_quiz_list.html`);
+        }, 700);
+        
     }
 
     function getFinalQunInput() {
-
         // timing: HH:MM
         hours = document.getElementById(`hour`).value;
         minutes = document.getElementById(`minute`).value;
@@ -428,7 +498,6 @@
         if (minutes < 10) {minutes = "0"+minutes;}
         post_obj.timing = `${hours}:${minutes}`;
         // console.log('post_obj.timing', post_obj.timing)
-
 
         // true, false  
         for (i = 0; i < QID_LS.length; i++) {
@@ -477,6 +546,11 @@
         return post_obj
     }
 
+    function logOut() {
+        storage.clear();
+        window.location.replace("../login.html");
+    }
+
 
     // HELPER FUNCTION
     function removeItemFromArray(array, n) {
@@ -504,5 +578,6 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    
 </body>
 </html>
