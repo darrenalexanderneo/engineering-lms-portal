@@ -45,6 +45,13 @@
     <br>
     <br>
 
+    <!-- redirect to previous page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('hr_view_course_details')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
     <!-- title: class_id, class_type -->
     <div class="container mb-4" id="class-title">
         <h2>------ Class -</h2>
@@ -74,7 +81,7 @@
         <form id="preassign-form" class="container needs-validation" novalidate>
             <div class="form-group row mb-4">
                 <span class="mr-3" style="font-size: 30px;" >LNR</span>
-                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="0" max="15" placeholder="Learner ID" required> 
+                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="1" max="18" placeholder="Learner ID" required> 
                 <button type="submit" onclick="preassignLearner();" class="btn btn-sm btn-success">Preassign</button>
             </div>
             
@@ -130,18 +137,18 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
+     <!-- Modal -->
+     <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="submitLabel">Preassign Learner</h5>
+                <h5 class="modal-title" id="submitLabel">Create Quiz</h5>
             </div>
             <div class="modal-body">
-                Are you sure?
+                Are you sure you want to create the quiz?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="$('#submit').modal('hide');">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="postUpdateRequest('assign')">Okay</button>
+                <button type="button" class="btn btn-primary" onclick="$('#submit').modal('hide');">GOT IT</button>
             </div>
             </div>
         </div>
@@ -273,17 +280,6 @@
             document.getElementById(`${curr_tab}-table`).setAttribute('class', 'container');
         }
 
-        function preassignLearner(){
-            // scenario 2: form have empty fields
-            const form = document.getElementById("preassign-form");
-            if (!form.checkValidity()) {
-                return
-            }
-
-            document.getElementById('preassign-alert').innerHTML = "";
-            $('#submit').modal('show');
-        }
-
         function displayLearners(curr_lnr_type) {
             var html_content = ``;
             var btn_text = learnerTypeDict[`${curr_lnr_type}`]['button_text'];
@@ -308,7 +304,7 @@
                                 <tr>
                                     <td class="text-center align-middle">${lnr.emp_id}</td>
                                     <td class="text-center align-middle">${lnr.name}</td>
-                                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="updateLearners('${func_type}', '${lnr.learner_id}', '${lnr.class_id}', '${curr_lnr_type}'); " id="${lnr.emp_id}">${btn_text}</p></td>
+                                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="updateLearners('${func_type}', '${lnr.learner_id}', '${lnr.name}','${lnr.class_id}', '${curr_lnr_type}'); " id="${lnr.emp_id}">${btn_text}</p></td>
                                 </tr>`;
                             }
                             
@@ -326,7 +322,7 @@
             request.send();
         }
 
-        function updateLearners(update_type, lnr_id, class_id, curr_lnr_type){
+        function updateLearners(update_type, lnr_id, lnr_name, class_id, curr_lnr_type){
 
             console.log(`update info: ${update_type}, ${lnr_id}. ${class_id}, ${class_id_list[0]}`);
 
@@ -343,11 +339,16 @@
                 if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
                     console.log("NICE")
 
+                    $('#submit').modal('show');
+                    var modal_body =document.getElementsByClassName("modal-body")[0];
+                    modal_html = `You have successfully ${update_type} ${lnr_name} (${lnr_id})`;
+                    modal_body.innerHTML = modal_html;
+
                     setTimeout(function () { 
                         generateLearnerTypeDict();
                         console.log('class_id_list', class_id_list);
                         displayLearners(curr_lnr_type);
-                    }, 50);
+                    }, 88);
         
                    
                     
@@ -377,8 +378,14 @@
             
         }
 
-        function postUpdateRequest(update_type) {
-            var url = update_type == "assign" ? assignLearner_POST_HR : withdrawLearner_POST_HR;
+        function preassignLearner(update_type) {
+            const form = document.getElementById("preassign-form");
+            if (!form.checkValidity()) {
+                return
+            }
+            
+            document.getElementById('preassign-alert').innerHTML = "";
+            var url = assignLearner_POST_HR;
             // create POST HTTP request
             var request = new XMLHttpRequest();
 
@@ -387,20 +394,34 @@
                 var message = "";
                 var html_content = "";
 
-                if (this.readyState == 4 && this.status == 200) {
+                if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 
                     message = JSON.parse(this.response).message;
-                    // console.log(message);
-                    var modal_title = document.getElementsByClassName("modal-title")[0];
+                    $('#submit').modal('show');
                     var modal_body =document.getElementsByClassName("modal-body")[0];
-                    modal_title = "";
-                    modal_body = "You have successfully preassigned the learner";
-                    //break
+                    modal_html = `You have successfully pre-assigned LNR${document.getElementById(`preassign-id`).value}`;
+                    modal_body.innerHTML = modal_html;
+
+                    setTimeout(function () { 
+                        generateLearnerTypeDict();
+                        console.log('class_id_list', class_id_list);
+                    }, 88);
+
+                    setTimeout(function () { 
+                        getTitle('class-title');
+                    }, 100);
                 } 
-                else {
+                else if (this.readyState == 4 && (this.status == 405 || this.status == 400 || this.status == 500)) {
                     // console.log(message);
                     console.log("code: 500 - code is not 200 or 201")
-                    //break
+                    $('#submit').modal('show');
+                    var modal_body =document.getElementsByClassName("modal-body")[0];
+                    modal_html = `The preassignment of LNR${document.getElementById(`preassign-id`).value} was not successful. This might be because learner has
+                                    (1) taken the prerequisite course, 
+                                    (2) registered for the course,
+                                    (3) currently enrolled into the course.`;
+                    modal_body.innerHTML = modal_html;
+
                 }
             
             }

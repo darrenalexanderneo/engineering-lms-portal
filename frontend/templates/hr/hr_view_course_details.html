@@ -41,6 +41,13 @@
     <br>
     <br>
 
+    <!-- redirect to previous page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('hr_homepage')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
     <!-- title: class_id, class_type -->
     <div class="container mb-4">
         <h2 id="course-title"></h2>
@@ -136,13 +143,20 @@
                     var class_ls = JSON.parse(this.response)[`${course_details_list[0]}`];
                     console.log(class_ls);
 
+                    if (class_ls.length == 0) {
+                        html_content += `
+                        <div class="container alert alert-danger" role="alert">
+                            There are currently no classes for ES222 in this run.
+                        </div>
+                        `;
+                    }
+
                     for (var each_class of class_ls) { 
                         var class_id = each_class.class_id;
                         var class_id_list = class_id.split('_');
                         console.log(class_id)
                         html_content += 
                         `
-
                         <a href="#" class="list-group-item py-4 list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                               <h4 class="mb-1">Class ${class_id_list[1].slice(-1)}</h4>
