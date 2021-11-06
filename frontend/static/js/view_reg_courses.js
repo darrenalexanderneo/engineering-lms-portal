@@ -108,5 +108,5 @@ function redirect_to_classRegistration(course_id) {
 function logout () {
     storage.clear();
 
-    window.location.replace("./login.html");
+    window.location.replace("../login.html");
 }

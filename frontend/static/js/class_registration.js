@@ -270,5 +270,5 @@ function goBackTo (prev_page) {
 function logout () {
     storage.clear();
     
-    window.location.replace("./login.html");
+    window.location.replace("../login.html");
 }
