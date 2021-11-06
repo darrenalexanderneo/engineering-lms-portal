@@ -481,8 +481,14 @@ class Chapter_Quiz_Result(db.Model):
 
     def update_mark_existing_chapter_quiz_result(self, learner_marks):
         print("inside " , learner_marks)
-        self.marks = learner_marks
-    
+        try:
+            self.marks = learner_marks
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error", e)
+            return 500
+
     def insert_chapter_quiz_result(self):
         try:
             db.session.add(self)
@@ -501,7 +507,15 @@ class Final_Quiz_Result(db.Model):
     marks = db.Column(db.String(10), nullable=False)
     def update_mark_existing_final_quiz_result(self, learner_marks):
         print("inside " , learner_marks)
-        self.marks = learner_marks
+        try:
+            self.marks = learner_marks
+            db.session.commit()
+            return 200
+        except Exception as e:
+            print("error", e)
+            return 500       
+        
+
 
     def insert_final_quiz_result(self):
         try:
@@ -1248,9 +1262,9 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
             else:
                 #update instead
                 print("come here ")
-                record.update_mark_existing_chapter_quiz_result(learner_marks)
-                db.session.commit()
-                return 200
+                code = record.update_mark_existing_chapter_quiz_result(learner_marks)
+                #db.session.commit()
+                return code
         else:
             if(record == None):
                 #def __init__(self,emp_id,course_id,class_id,completed):
@@ -1266,9 +1280,9 @@ def insert_update_into_quiz_result_db(data,learner_marks,record):
             else:
                 #update instead
                 print("come here ")
-                record.update_mark_existing_final_quiz_result(learner_marks)
-                db.session.commit()
-                return 200
+                code = record.update_mark_existing_final_quiz_result(learner_marks)
+                #db.session.commit()
+                return code
             
     except Exception as e:
         print(e)
