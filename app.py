@@ -538,9 +538,9 @@ def retrieve_course_class(course_id):
     # course = Course.query.filter_by(course_id = course_id).first()
     # course_name = course.course_name
     class_run_list = Class_Run.query.filter_by(course_id = course_id).all()
-
+    class_run_array = []
     if(len(class_run_list)):
-        class_run_array = []
+        
         for class_run in class_run_list:
             is_registration = class_run.check_available_end_date()
             if is_registration:
