@@ -7,9 +7,13 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
     <!-- Bootstrap Font Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
 
     <link rel="stylesheet" href="../../static/css/learner.css">
 
@@ -17,7 +21,7 @@
 
     <title>HR Homepage</title>
 </head>
-<body style="background-color: #eee;" onload="renderPage()">
+<body style="background-color: #eee;" onload="renderPage(); showPreassignInput();">
      <!-- navigation bar -->
      <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
         <div class="my-3 container-fluid">
@@ -43,31 +47,60 @@
 
     <!-- title: class_id, class_type -->
     <div class="container mb-4">
-        <h2 id="course-title"></h2>
-        <p>
-            <strong>Course Description</strong> <br>
-            <span id="course-description"></span>
-        </p>
+        <h2 id="class-title"></h2>
     </div>
 
-    <!-- class list -->
-    <div id="class-list" class="container">
-        <!-- <li class="list-group-item d-flex py-3 align-items-center">
-            <div class="ms-2 me-auto"><h5 class="">Chapter 1</h5></div>
-            <button class="btn btn-outline-primary rounded-pill" style="margin-right: 1rem">View class</button> 
-            <button class="btn btn-outline-secondary rounded-pill" disabled>Create class</button>
-        </li>
-        <li class="list-group-item d-flex py-3 align-items-center">
-            <div class="ms-2 me-auto"><h5 class="">Chapter 3</h5></div>
-            <button class="btn btn-outline-secondary rounded-pill" style="margin-right: 1rem" disabled>View class</button> 
-            <button class="btn btn-outline-primary rounded-pill">Create class</button>
-        </li> -->
+    
+    <!-- learners type filter -->
+    <div class="container mb-5">
+        <ul class="pagination">
+            <li class="page-item active" id="preassign">
+                <a class="page-link px-4" href='#' onclick="changeTabActive('preassign'); showPreassignInput();">PREASSIGN LEARNERS</a>
+            </li>
+            <li class="page-item " id="assign">
+                <a class="page-link px-4" href='#' onclick="changeTabActive('assign');" aria-current="assign">ASSIGN LEARNERS</a>
+            </li>
+        </ul>
     </div>
 
-    <div id="class-list" class="container">
+    <!-- preassign -->
+    <div class="container" id="preassign-table">
+        <p>Please input the ID of the learner whom you want to preassign.</p>
 
+        <form class="container needs-validation" novalidate>
+            <div class="form-group row mb-4">
+                <span class="mr-3" style="font-size: 30px;" >LNR</span>
+                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="0" max="15" placeholder="Learner ID" required> 
+                <button type="submit" class="btn btn-sm btn-success">Preassign</button>
+            </div>
+            
+            
+        </form>
+    </div>
 
-        
+    <!-- assign -->
+    <div class="container d-none" id="assign-table">
+        <table class="table table-borderless">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">Name</th>
+                <!-- <th scope="col" class="text-center" id="app_dt">Application Date/Time</th>  -->
+                <th scope="col" class="text-center" id="app_dt">Class</th> 
+                <th scope="col" class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="assign-list">
+                <tr>
+
+                    <td class="text-center align-middle">${emp_id}</td>
+                    <td class="text-center align-middle">${emp_name}</td>
+                    <td class="text-center align-middle">${class_id}</td>
+                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="updateLearners('${func_type}', '${emp_id}', '${class_id}')" id="${emp_id}">${learnerTypeDict[`${learner_type}`]['button_text']}</p></td>
+
+                </tr>
+            </tbody>
+        </table>
     </div>
     
 </body>
@@ -78,19 +111,46 @@
         const storage = window.localStorage;
 
          // storage
-         const course_details = storage.getItem("course_details"); // ${course_id}_${course_name}_${num_of_class}_${total_slot_available}
-         const course_details_list = course_details.split("_");
+         const class_id = storage.getItem("class_id"); // BEM460_C3
+         const class_id_list = class_id.split("_");
         //hardcoded learner_id because learner login is not implemented yet
         function renderPage() {
             getAPIkeys_HR();
+            console.log('class_id_list', class_id_list);
+            getTitle('class-title');
+            //displayCourseDetails();
+            //displayClassList();
+        }
 
-            displayCourseDetails();
-            displayClassList();
+        function getTitle(div_id) {
+            document.getElementById(div_id).innerHTML = "";
+           
+            var html_content = `
+            <h2>${class_id_list[0]} Class ${class_id_list[1].slice(-1)}</h2>           
+            `;
+    
+            document.getElementById(div_id).innerHTML = html_content;
+        }
+
+        function changeTabActive(curr_tab) { 
+            var tab_list = ['preassign', 'assign'];
+        
+            for(var i = 0; i < tab_list.length; i++) {
+                // console.log(tab_list[i]);
+                document.getElementById(`${tab_list[i]}`).setAttribute('class', 'page-item');
+                document.getElementById(`${tab_list[i]}-table`).setAttribute('class', 'container d-none');
+        
+            }
+            // console.log(`selected tab: ${curr_tab}`);
+            document.getElementById(`${curr_tab}`).setAttribute('class', 'page-item active');
+            document.getElementById(`${curr_tab}-table`).setAttribute('class', 'container');
+        }
+
+        function showPreassignInput(){
+
         }
 
         function displayCourseDetails() {
-            // console.log("course_ls: ", course_ls);
-            // console.log("class_ls: ", class_ls);
             var request = new XMLHttpRequest();
         
             request.onreadystatechange = function () {
@@ -139,7 +199,7 @@
                     for (var each_class of class_ls) { 
                         var class_id = each_class.class_id;
                         var class_id_list = class_id.split('_');
-                        console.log(class_id)
+                        console.log(each_class)
                         html_content += 
                         `
 

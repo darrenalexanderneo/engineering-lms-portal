@@ -2,7 +2,7 @@ const development = 'apikey_development.json';
 const production = 'apikey.json';
 
 /*** CHANGE ACCORDINGLY ***/
-const apikey_url = production;
+const apikey_url = development;
 
 /*** RETRIEVE API KEYS ***/
 function getAPIkeys_TNR() {  
@@ -62,4 +62,14 @@ function logOut() {
     storage.clear();
 
     window.location.replace("../login.html");
+}
+
+/*** GET DATE ***/
+function getDate(curr_date) {
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    curr_date = yyyy + '-' + mm + '-' + dd;
+    return curr_date;
 }

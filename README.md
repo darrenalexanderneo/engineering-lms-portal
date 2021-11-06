@@ -9,6 +9,7 @@
 ## Assumption
 - Trainer cannot create quiz after the class start date
 - Trainer can only create chapter 2 if chapter 1 is already created
+- Preassignment will be done manually, normally before the registration date [Piazza @136](https://piazza.com/class/kqq5xowd6cj3ov?cid=136)
 
 <br><br><br>
 
