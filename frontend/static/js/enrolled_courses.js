@@ -43,7 +43,7 @@ function getAPIkeys () {
 
         }
     }
-    request.open("GET", "../../apikey_local.json", false);
+    request.open("GET", "../../apikey.json", false);
     request.send();
 }
 
