@@ -203,7 +203,8 @@ class Class_Run(db.Model):
             'class_start_date': self.class_start_date,
             'class_end_date': self.class_end_date,
             'reg_start_date': self.reg_start_date,
-            'reg_end_date': self.reg_end_date
+            'reg_end_date': self.reg_end_date,
+            'slots_available' : self.slots_available
         }
         return class_run_info
 

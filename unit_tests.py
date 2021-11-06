@@ -111,7 +111,8 @@ class TestClassRun(unittest.TestCase):
             'class_start_date': "2021-05-30",
             'class_end_date': "2021-11-30",
             'reg_start_date': "2021-02-07",
-            'reg_end_date': "2021-04-30"
+            'reg_end_date': "2021-04-30",
+            'slots_available' : 50
         })
 
 

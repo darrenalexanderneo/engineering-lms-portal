@@ -199,7 +199,7 @@ class Test_Enrollment_Endpoint(TestApp):
         response = self.client.get(endpoint)
         print('test_retrieve_course_class')
         print(response.json)
-        self.assertEqual(response.json,{'BEM460': [{'class_end_date': '2021-11-30', 'class_id': 'BEM460_C1', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07'}, {'class_end_date': '2021-11-30', 'class_id': 'BEM460_C2', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07'}, {'class_end_date': '2022-11-30', 'class_id': 'BEM460_C4', 'class_start_date': '2022-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-12-07'}], 'code': 200})
+        self.assertEqual(response.json,{'BEM460': [{'class_end_date': '2021-11-30', 'class_id': 'BEM460_C1', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07', 'slots_available': 50}, {'class_end_date': '2021-11-30', 'class_id': 'BEM460_C2', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07', 'slots_available': 0}, {'class_end_date': '2022-11-30', 'class_id': 'BEM460_C4', 'class_start_date': '2022-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-12-07', 'slots_available': 10}], 'code': 200})
 
 class TestCourseInfo(TestApp):
     def test_retrieve_all_courses(self):
