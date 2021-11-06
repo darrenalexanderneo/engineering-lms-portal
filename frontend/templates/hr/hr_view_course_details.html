@@ -41,6 +41,13 @@
     <br>
     <br>
 
+    <!-- redirect to previous page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('hr_homepage')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
     <!-- title: class_id, class_type -->
     <div class="container mb-4">
         <h2 id="course-title"></h2>
@@ -64,29 +71,8 @@
         </li> -->
     </div>
 
-    <div class="container" >
-        <div class="row" id="cards">
-            <div class="col-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">EM206 Engineering Management</h5>
-                      <h6 class="card-title">Class 1, 4 classzes</h6>
-                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button> 
-                    </div>
-               </div>
-            </div>
-            
-            <div class="col-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">${course_id} ${course_name}</h5>
-                      <p class="card-text">${class_num}, ${class_num}</p>
-                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Course</button>
-                    </div>
-               </div>
-            </div>
-            
-        </div>
+    <div id="class-list" class="container">
+
 
         
     </div>
@@ -148,6 +134,7 @@
         function displayClassList() {
             // console.log("course_ls: ", course_ls);
             // console.log("class_ls: ", class_ls);
+            var html_content = ``;
             var request = new XMLHttpRequest();
         
             request.onreadystatechange = function () {
@@ -156,16 +143,35 @@
                     var class_ls = JSON.parse(this.response)[`${course_details_list[0]}`];
                     console.log(class_ls);
 
+                    if (class_ls.length == 0) {
+                        html_content += `
+                        <div class="container alert alert-danger" role="alert">
+                            There are currently no classes for ES222 in this run.
+                        </div>
+                        `;
+                    }
+
                     for (var each_class of class_ls) { 
-                        console.log(each_class)
+                        var class_id = each_class.class_id;
+                        var class_id_list = class_id.split('_');
+                        console.log(class_id)
                         html_content += 
-                        `</li>
-                        <li class="list-group-item d-flex py-3 align-items-center">
-                            <div class="ms-2 me-auto"><h5 class="">${each_class}</h5></div>
+                        `
+                        <a href="#" class="list-group-item py-4 list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h4 class="mb-1">Class ${class_id_list[1].slice(-1)}</h4>
+                              <small class="mb-1"><button onclick="redirectToNextPage('hr_view_learners', '${class_id}')" class="btn btn-sm btn-outline-primary rounded-pill">View Class</button></small>
+                            </div>
+                            <p class="mb-1">
+                                Registration Period: ${each_class.reg_start_date} to ${each_class.reg_end_date}
+                            </p>
+                            
+                          </a>
+                        
                         `;
                     }
         
-                    document.getElementById("class-list").innerHTML = `${course_desc}`;
+                    document.getElementById("class-list").innerHTML = html_content;
                 }
         
             }
@@ -230,10 +236,9 @@
         }
 
 
-        function redirectToNextPage(page, course_arr) {
-            // ${course_id}_${course_name}_${num_of_class}_${total_slot_available}
-            storage.setItem("course_arr: ", course_arr);
-            console.log(course_arr)
+        function redirectToNextPage(page, class_id) {
+            storage.setItem("class_id: ", class_id);
+            console.log(class_id)
             redirectToPage(page);
         }
 

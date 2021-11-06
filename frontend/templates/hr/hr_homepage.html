@@ -43,11 +43,58 @@
 
     <!-- title -->
     <div class="container ">
-        <h1>Courses</h1>
+        <h1>All Courses</h1>
     </div>
     <br>
+    <!-- <div class="container" >
+        <h3 id="BEM460-title">BEM460 Engineering Management</h3>
+        <div class="row mb-4" id="BEM460-cards">
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">BEM460 Class 1</h5>
+                      <h6 class="card-title">
+                          Number of Classes: 2 <br>
+                          Number of Slots: 69
+                      </h6>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Class</button> 
+                    </div>
+               </div>
+            </div>
+        </div>
+        <h3 id="EM206-title">EM206 Engineering Management</h3>
+        <div class="row" id="EM206-cards">
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">BEM460 Class 1</h5>
+                      <h6 class="card-title">
+                          Number of Classes: 2 <br>
+                          Number of Slots: 69
+                      </h6>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Class</button> 
+                    </div>
+               </div>
+            </div>
+            <div class="col-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">BEM460 Class 4</h5>
+                      <h6 class="card-title">
+                          Number of Classes: 2 <br>
+                          Number of Slots: 69
+                      </h6>
+                      <button class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem">View Class</button> 
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div> -->
 
-    <div class="container" >
+    
+
+
+    <div class="container" id="overall">
         <div class="row" id="cards">
             <div class="col-6 mb-4">
                 <div class="card h-100">
@@ -80,16 +127,24 @@
     <script>
         //initialise localStorage
         const storage = window.localStorage;
+        var today = new Date();
+
+        const class_details_dict = {
+        };
 
         //hardcoded learner_id because learner login is not implemented yet
         function renderPage() {
             getAPIkeys_HR();
-
+            // getCourseList();
+            // today = getDate(today);
+            // console.log(today);
             getCourseCards();
             // showClassesforRegistration(course_id, learner_id);
         
         }
 
+    
+        
         function getCourseCards() {        
             document.getElementById("cards").innerHTML = "";
         
@@ -112,28 +167,34 @@
                         // console.log(course_desc)
 
                         if (num_of_class == 0) {
-                            var slots_content = `
-                            no slots left
-                            `;
+                            html_content += 
+                            `<div class="col-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                    <h5 class="card-title">${course_id} ${course_name}</h5>
+                                    <p class="card-text">
+                                        <!--- Number of Classes: \t ${num_of_class} <br> --->
+                                    </p>
+                                    <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')"  class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                    </div>
+                            </div>
+                            </div>`;
                         } else {
-                            var slots_content = `
-                            ${total_slot_available} out of ${50*num_of_class} slots left
-                            `;
+                            html_content += 
+                            `<div class="col-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                    <h5 class="card-title">${course_id} ${course_name}</h5>
+                                    <p class="card-text">
+                                        <!--- Number of Classes: \t ${num_of_class} <br> --->
+                                    </p>
+                                    <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')"  class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                    </div>
+                            </div>
+                            </div>`;
                         }
                         
-                        html_content += 
-                        `<div class="col-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                  <h5 class="card-title">${course_id} ${course_name}</h5>
-                                  <p class="card-text">
-                                    Number of Classes: \t ${num_of_class} <br>
-                                    Number of Slots: \t ${total_slot_available}
-                                  </p>
-                                  <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')"  class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
-                                </div>
-                           </div>
-                        </div>`;
+                        
                     }
                     
                     document.getElementById("cards").innerHTML = html_content;
@@ -144,6 +205,17 @@
             request.open("GET", url, true);
             request.send();
         }
+        
+        
+
+        function redirectPage(page, course_details) {
+            // ${course_id}_${course_name}_${num_of_class}_${total_slot_available}
+            storage.setItem("course_details", course_details);
+            console.log(course_details)
+            redirectToPage(page);
+            
+        }
+
         
 
         function redirectToNextPage(page, course_details) {

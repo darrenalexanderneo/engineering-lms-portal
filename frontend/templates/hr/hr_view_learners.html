@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
+    <link rel="stylesheet" href="../../static/css/learner.css">
+
+
+
+    <title>HR Homepage</title>
+</head>
+<body style="background-color: #eee;" onload="renderPage();">
+     <!-- navigation bar -->
+     <nav class="navbar navbar-expand-lg navbar navbar-dark px-5" style="background-color: #8a7c60fb;">
+        <div class="my-3 container-fluid">
+            <button class="navbar-toggler" style="border: none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href='tnr_homepage.html' class="nav-link">Home</a>
+                    </li>
+                </ul> 
+            </div>
+            <div class="">
+                <button onclick="logOut()" class="btn btn-outline-light float-end">Logout</button>
+                <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
+                <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+            </div>
+        </div>
+    </nav>
+    <br>
+    <br>
+
+    <!-- redirect to previous page -->
+    <div class="container mb-4">
+        <div><svg xmlns="http://www.w3.org/2000/svg" onclick="backToPrevPage('hr_view_course_details')" width="45" height="45" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+          </svg></div>
+    </div>
+
+    <!-- title: class_id, class_type -->
+    <div class="container mb-4" id="class-title">
+        <h2>------ Class -</h2>
+        <h6>Number of Slots: ${slots_left} out of ${total_slots} left</h6>
+    </div>
+
+    
+    <!-- learners type filter -->
+    <div class="container mb-5">
+        <ul class="pagination">
+            <li class="page-item active" id="preassign">
+                <a class="page-link px-4" href='#' onclick="changeTabActive('preassign');">PREASSIGN LEARNERS</a>
+            </li>
+            <li class="page-item " id="registered">
+                <a class="page-link px-4" href='#' onclick="changeTabActive('registered'); displayLearners('registered');">REGISTERED LEARNERS</a>
+            </li>
+            <li class="page-item " id="enrolled">
+                <a class="page-link px-4" href='#' onclick="changeTabActive('enrolled'); displayLearners('enrolled');">ENROLLED LEARNERS</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- preassign -->
+    <div class="container" id="preassign-table">
+        <p>Please input the ID of the learner whom you want to preassign.</p>
+
+        <form id="preassign-form" class="container needs-validation" novalidate>
+            <div class="form-group row mb-4">
+                <span class="mr-3" style="font-size: 30px;" >LNR</span>
+                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="1" max="18" placeholder="Learner ID" required> 
+                <button type="submit" onclick="preassignLearner();" class="btn btn-sm btn-success">Preassign</button>
+            </div>
+            
+            
+        </form>
+    </div>
+    <div id="preassign-alert"></div>
+
+    <!-- assign -->
+    <div class="container d-none" id="registered-table">
+        <table class="table table-borderless">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">Name</th>
+                <!-- <th scope="col" class="text-center" id="app_dt">Application Date/Time</th>  -->
+                <th scope="col" class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="registered-list">
+                <tr>
+
+                    <td class="text-center align-middle">${emp_id}</td>
+                    <td class="text-center align-middle">${emp_name}</td>
+                    <td class="text-center align-middle">${class_id}</td>
+                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="generateLearnerTypeDict(); updateLearners('${func_type}', '${emp_id}', '${class_id}')" id="${emp_id}">${learnerTypeDict[`${learner_type}`]['button_text']}</p></td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container d-none" id="enrolled-table">
+        <table class="table table-borderless">
+            <thead class="table-light"> 
+              <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">Name</th>
+                <!-- <th scope="col" class="text-center" id="app_dt">Application Date/Time</th>  -->
+                <th scope="col" class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="enrolled-list">
+                <tr>
+
+                    <td class="text-center align-middle">${emp_id}</td>
+                    <td class="text-center align-middle">${emp_name}</td>
+                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="generateLearnerTypeDict(); updateLearners('${func_type}', '${emp_id}', '${class_id}')" id="${emp_id}">${learnerTypeDict[`${learner_type}`]['button_text']}</p></td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+     <!-- Modal -->
+     <div class="modal fade" id="submit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitLabel">Create Quiz</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to create the quiz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="$('#submit').modal('hide');">GOT IT</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+    <script src="../../static/js/main.js"></script> 
+
+    <script>
+        //initialise localStorage
+        const storage = window.localStorage;
+
+         // storage
+         const class_id = storage.getItem("class_id"); // BEM460_C3
+         const class_id_list = class_id.split("_");
+
+         const learnerTypeDict = {
+            "preassign": { 
+                'num_of_learners': 0,
+                'button_text': "Assign",
+                'elem_class': "btn-success btn rounded-pill align-middle my-auto",
+                'id': "preassign_learners",
+                'func': 'assign'
+            },
+            "registered": { 
+                'num_of_learners': 0,
+                'button_text': "Approve",
+                'elem_class': "btn-success btn rounded-pill align-middle my-auto",
+                'id': "registered_learners",
+                'func': 'assign'
+            },
+            "enrolled": { 
+                'num_of_learners': 0,
+                'button_text': "Withdraw",
+                'elem_class': "btn-danger btn rounded-pill align-middle my-auto",
+                'id': "enrolled_learners",
+                'func': 'withdraw'
+            }
+        }
+        
+        function renderPage() {
+            getAPIkeys_HR();
+            generateLearnerTypeDict();
+            console.log('class_id_list', class_id_list);
+            
+            setTimeout(function () { 
+                getTitle('class-title');
+            }, 80);
+            //displayCourseDetails();
+            //displayClassList();
+        }
+
+        // validation
+        (function() {
+            'use strict'
+        
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+            console.log('==== undergoing validation =====');
+        
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                console.log('***check form validity');
+                event.preventDefault()
+                if (!form.checkValidity()) {
+                    var html_content = `
+                    <div class="container alert alert-danger" role="alert">
+                        Please input a valid learner ID.
+                    </div>
+                    `;
+                    document.getElementById('preassign-alert').innerHTML = html_content;
+                    event.stopPropagation()
+                }
+        
+                form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+
+        function generateLearnerTypeDict () {
+            var request = new XMLHttpRequest();
+        
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+        
+                    learner_ls = JSON.parse(this.response)[`${class_id_list[0]}`];
+                    console.log(learner_ls);
+        
+                    learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
+                    learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
+                    learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
+                    curr_num_of_learners = learner_ls.preassign_learners.length;
+                }
+                
+            }
+            var url = `${getLearnerList_HR}${class_id_list[0]}`; 
+            request.open("GET", url, false);
+            request.send();
+        }
+
+        
+        function getTitle(div_id) {
+            var slots_left = 50 - learnerTypeDict.enrolled.num_of_learners;
+            console.log("number of enrolled: ", learnerTypeDict.enrolled.num_of_learners)
+            document.getElementById(div_id).innerHTML = "";
+           
+            var html_content = `
+            <h2>${class_id_list[0]} Class ${class_id_list[1].slice(-1)}</h2>
+            <h6>Number of Slots: ${slots_left} out of 50 slots left</h6>           
+            `;
+    
+            document.getElementById(div_id).innerHTML = html_content;
+        }
+
+        function changeTabActive(curr_tab) { 
+            var tab_list = ['preassign', 'registered', 'enrolled'];
+        
+            for(var i = 0; i < tab_list.length; i++) {
+                //console.log(tab_list[i]);
+                
+                document.getElementById(`${tab_list[i]}`).setAttribute('class', 'page-item');
+                document.getElementById(`${tab_list[i]}-table`).setAttribute('class', 'container d-none');
+        
+            }
+            // console.log(`selected tab: ${curr_tab}`);
+            document.getElementById(`${curr_tab}`).setAttribute('class', 'page-item active');
+            document.getElementById(`${curr_tab}-table`).setAttribute('class', 'container');
+        }
+
+        function displayLearners(curr_lnr_type) {
+            var html_content = ``;
+            var btn_text = learnerTypeDict[`${curr_lnr_type}`]['button_text'];
+            var btn_class = learnerTypeDict[`${curr_lnr_type}`]['elem_class'];
+            var func_type = learnerTypeDict[`${curr_lnr_type}`]['func'];
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    learner_ls = JSON.parse(this.response)[`${class_id_list[0]}`][`${curr_lnr_type}_learners`];
+                    console.log("learner_ls: ", learner_ls);
+
+                    // check if 0
+                    if (learner_ls.length == 0) {
+                        html_content = `There are currently no preassigned learners in all classes`;
+                    } else {
+                        for (lnr of learner_ls) {
+
+                            if (lnr.class_id == class_id) {
+                                html_content += `
+                                <tr>
+                                    <td class="text-center align-middle">${lnr.emp_id}</td>
+                                    <td class="text-center align-middle">${lnr.name}</td>
+                                    <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="updateLearners('${func_type}', '${lnr.learner_id}', '${lnr.name}','${lnr.class_id}', '${curr_lnr_type}'); " id="${lnr.emp_id}">${btn_text}</p></td>
+                                </tr>`;
+                            }
+                            
+                        }
+                    }
+
+                    // update table with data
+                    document.getElementById(`${curr_lnr_type}-list`).innerHTML = html_content;
+
+              
+                }
+            }
+            var url = `${getLearnerList_HR}${class_id_list[0]}`; 
+            request.open("GET", url, false);
+            request.send();
+        }
+
+        function updateLearners(update_type, lnr_id, lnr_name, class_id, curr_lnr_type){
+
+            console.log(`update info: ${update_type}, ${lnr_id}. ${class_id}, ${class_id_list[0]}`);
+
+            var url = update_type == "assign" ? assignLearner_POST_HR : withdrawLearner_POST_HR;
+            var method = update_type == "assign" ? 'POST' : 'PUT';
+            console.log(url, method);
+
+            var request = new XMLHttpRequest();
+
+            request.withCredentials = false;
+            // request.crossDomain = true;
+        
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
+                    console.log("NICE")
+
+                    $('#submit').modal('show');
+                    var modal_body =document.getElementsByClassName("modal-body")[0];
+                    modal_html = `You have successfully ${update_type} ${lnr_name} (${lnr_id})`;
+                    modal_body.innerHTML = modal_html;
+
+                    setTimeout(function () { 
+                        generateLearnerTypeDict();
+                        console.log('class_id_list', class_id_list);
+                        displayLearners(curr_lnr_type);
+                    }, 88);
+        
+                   
+                    
+                    setTimeout(function () { 
+                        getTitle('class-title');
+                    }, 100);
+                } 
+                else if (this.readyState == 4 && this.status == 500) {
+                    console.log('BAD')
+                }
+                
+            }
+            
+            var data = JSON.stringify({ 'learner_id': lnr_id, 
+                                        'course_id': class_id_list[0],
+                                        'class_id': class_id
+            });
+        
+            console.log(data);
+            request.open(method, url, true); //, "/json-handler"
+            request.setRequestHeader("Content-Type", "application/json");
+            request.send(data); // to do  
+
+
+            
+
+            
+        }
+
+        function preassignLearner(update_type) {
+            const form = document.getElementById("preassign-form");
+            if (!form.checkValidity()) {
+                return
+            }
+            
+            document.getElementById('preassign-alert').innerHTML = "";
+            var url = assignLearner_POST_HR;
+            // create POST HTTP request
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+
+                var message = "";
+                var html_content = "";
+
+                if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
+
+                    message = JSON.parse(this.response).message;
+                    $('#submit').modal('show');
+                    var modal_body =document.getElementsByClassName("modal-body")[0];
+                    modal_html = `You have successfully pre-assigned LNR${document.getElementById(`preassign-id`).value}`;
+                    modal_body.innerHTML = modal_html;
+
+                    setTimeout(function () { 
+                        generateLearnerTypeDict();
+                        console.log('class_id_list', class_id_list);
+                    }, 88);
+
+                    setTimeout(function () { 
+                        getTitle('class-title');
+                    }, 100);
+                } 
+                else if (this.readyState == 4 && (this.status == 405 || this.status == 400 || this.status == 500)) {
+                    // console.log(message);
+                    console.log("code: 500 - code is not 200 or 201")
+                    $('#submit').modal('show');
+                    var modal_body =document.getElementsByClassName("modal-body")[0];
+                    modal_html = `The preassignment of LNR${document.getElementById(`preassign-id`).value} was not successful. This might be because learner has
+                                    (1) taken the prerequisite course, 
+                                    (2) registered for the course,
+                                    (3) currently enrolled into the course.`;
+                    modal_body.innerHTML = modal_html;
+
+                }
+            
+            }
+
+            var data = JSON.stringify({ 'learner_id': `LNR${document.getElementById(`preassign-id`).value}`, 
+                                        'course_id': class_id_list[0],
+                                        'class_id': class_id
+            });
+
+
+            console.log("data: ", data);
+            request.open("POST", url, true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.send(data);
+
+            // redirect to quiz list after submission
+        
+            /*setTimeout(function () { 
+                window.location.replace(`tnr_view_quiz_list.html`);
+            }, 700);*/
+
+        }
+
+        function displayCourseDetails() {
+            var request = new XMLHttpRequest();
+        
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    var course_details = JSON.parse(this.response).data.courses;
+                    console.log(course_details);
+        
+                    var course_name;
+                    var course_desc;
+        
+                    for (var eachCourse of course_details) { 
+                        // console.log(course_id);
+                        // console.log(eachCourse.course_id);
+        
+                        if (course_details_list[0] == eachCourse.course_id) { 
+        
+                            course_name = eachCourse.course_name;
+                            course_desc = eachCourse.course_description;
+                            // console.log(course_name);
+                        }
+                    }
+        
+                    document.getElementById("course-title").innerHTML = `${course_details_list[0]} ${course_name}`;
+                    document.getElementById("course-description").innerHTML = `${course_desc}`;
+                }
+        
+            }
+            var url = `${getCourseList_HR}`; 
+            request.open("GET", url, true);
+            request.send();
+        }
+
+        function displayClassList() {
+            // console.log("course_ls: ", course_ls);
+            // console.log("class_ls: ", class_ls);
+            var html_content = ``;
+            var request = new XMLHttpRequest();
+        
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    var class_ls = JSON.parse(this.response)[`${course_details_list[0]}`];
+                    console.log(class_ls);
+
+                    for (var each_class of class_ls) { 
+                        var class_id = each_class.class_id;
+                        var class_id_list = class_id.split('_');
+                        console.log(each_class)
+                        html_content += 
+                        `
+
+                        <a href="#" class="list-group-item py-4 list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h4 class="mb-1">Class ${class_id_list[1].slice(-1)}</h4>
+                              <small class="mb-1"><button onclick="redirectToNextPage('hr_view_learners', '${class_id}')" class="btn btn-sm btn-outline-primary rounded-pill">View Class</button></small>
+                            </div>
+                            <p class="mb-1">
+                                Registration Period: ${each_class.reg_start_date} to ${each_class.reg_end_date}
+                            </p>
+                            
+                          </a>
+                        
+                        `;
+                    }
+        
+                    document.getElementById("class-list").innerHTML = html_content;
+                }
+        
+            }
+            var url = `${getCourseDetails_HR}${course_details_list[0]}`; 
+            request.open("GET", url, true);
+            request.send();
+        }
+
+        
+
+        function getCourseCards() {        
+            document.getElementById("cards").innerHTML = "";
+        
+            var html_content = "";
+        
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.response);
+                    var course_list = response.data.courses;
+                    console.log(course_list);
+        
+        
+                    for (course of course_list) {
+                        var course_name = course.course_name;
+                        var course_id = course.course_id;
+                        var num_of_class = course.num_of_class;
+                        var total_slot_available = course.total_slot_available;
+
+                        if (num_of_class == 0) {
+                            var slots_content = `
+                            no slots left
+                            `;
+                        } else {
+                            var slots_content = `
+                            ${total_slot_available} out of ${50*num_of_class} slots left
+                            `;
+                        }
+                        
+                        html_content += 
+                        `<div class="col-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                  <h5 class="card-title">${course_id} ${course_name}</h5>
+                                  <p class="card-text">
+                                    Number of Classes: \t ${num_of_class} <br>
+                                    Number of Slots: \t ${total_slot_available}
+                                  </p>
+                                  <button onclick="redirectToNextPage('hr_view_course_details', '${course_id}_${course_name}_${num_of_class}_${total_slot_available}')" class="btn btn-outline-primary rounded-pill" style="margin-bottom: 1rem" >View Course</button>
+                                </div>
+                           </div>
+                        </div>`;
+                    }
+                    
+                    document.getElementById("cards").innerHTML = html_content;
+                }
+            };
+        
+            var url = getCourseList_HR;
+            request.open("GET", url, true);
+            request.send();
+        }
+
+
+        function redirectToNextPage(page, class_id) {
+            storage.setItem("class_id: ", class_id);
+            console.log(class_id)
+            redirectToPage(page);
+        }
+
+        function logOut() {
+            storage.clear();
+            window.location.replace("../login.html");
+        }
+
+        
+  
+    </script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+</body>
+</html>
