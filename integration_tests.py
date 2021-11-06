@@ -188,6 +188,9 @@ class TestApp(flask_testing.TestCase):
         db.drop_all()
 
 
+"""
+Teoh Jiaxing led this testing
+"""
 class Test_Enrollment_Endpoint(TestApp):
     def test_retrieve_course_class(self):
         course_id = "BEM460"
@@ -266,6 +269,10 @@ class Test_UpdateSlotAvailableForClass(TestApp):
         # print('status is ', status)
         self.assertEqual(status, 400)
 
+
+"""
+Veronica Teng led this testing
+"""
 class Test_RemoveClassRunByLearner(TestApp):
     def test_remove_class_run_by_learner_id_success(self):
         data = {
@@ -361,6 +368,9 @@ class Test_InsertRegistration(TestApp):
         status = result.insert_registration()
         self.assertEqual(status, 500)
 
+"""
+Neo Yong Yi, Darren led this testing
+"""
 class Test_AssignLearner_Endpoint(TestApp):
     def test_assign_to_course_success(self):
         request_body = {
@@ -584,6 +594,9 @@ class Test_Registration_Endpoint(TestApp):
 
 ######### sprint 6
 
+"""
+Lewanna Erh led this testing
+"""
 class Test_Question_Endpoint(TestApp):
     def test_retrieve_question_by_course_class_chapter_code_200(self):
 
@@ -698,6 +711,9 @@ class Test_insert_update_final_quiz_db(TestApp):
         self.assertEqual(code, 200)
 
 
+"""
+Auyong Tingting led this testing
+"""
 class test_submit_quiz(TestApp):
     def test_submit_quiz(self):
         request_body = {

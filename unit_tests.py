@@ -4,6 +4,9 @@ from datetime import datetime
 from app import *
 
 
+"""
+Auyong Tingting led this testing
+"""
 class TestEmployee(unittest.TestCase):
     def test_json(self):
         emp1 = Employee(emp_id="EMP6", emp_name="Tom Poskitt")
@@ -45,6 +48,9 @@ class TestCourse(unittest.TestCase):
             'prerequisite': 0
             })
 
+"""
+Teoh Jiaxing led this testing
+"""
 class TestClassRun(unittest.TestCase):
 
     def test_check_available_end_date_true(self):
@@ -135,6 +141,9 @@ class TestQuestion(unittest.TestCase):
         self.assertEqual(marks, 0)
 
 
+"""
+Neo Yong Yi, Darren led this testing
+"""
 class TestChapter_Quiz_Result(unittest.TestCase):
     def test_update_mark_existing_chapter_quiz_result(self):
         learner_marks = 5
@@ -158,6 +167,10 @@ class TestFinal_Quiz_Result(unittest.TestCase):
         chapter_quiz_result.update_mark_existing_final_quiz_result(learner_marks)
         self.assertEqual(chapter_quiz_result.marks,learner_marks)
 
+
+"""
+Lewanna Erh led this testing
+"""
 class TestFinal_quiz(unittest.TestCase):
     def test_final_check_pass_failure(self):
         learner_marks = 20
@@ -198,6 +211,9 @@ class TestChapter_Quiz(unittest.TestCase):
         result = chapter_quiz_1.check_pass(4)
         self.assertEqual(result,0)
 
+"""
+Veronica Teng led this testing
+"""
 class TestChapter_Learner(unittest.TestCase):
     def test_json_completion_test_case_1(self):
         chapter_learner_1 = Chapter_Learner(chapter_id="BEM460_C1_Chapt1", learner_id="LNR17",
