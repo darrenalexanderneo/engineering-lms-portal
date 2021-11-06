@@ -710,10 +710,6 @@ class Test_insert_update_final_quiz_db(TestApp):
         code = insert_update_into_quiz_result_db(data,learner_marks,record)
         self.assertEqual(code, 200)
 
-
-"""
-Auyong Tingting led this testing
-"""
 class test_submit_quiz(TestApp):
     def test_submit_quiz(self):
         request_body = {
@@ -755,6 +751,10 @@ class test_progress_learner(TestApp):
         # print(result.json)
         self.assertEqual(result.json , {'code': 200, 'progress_percentage': 0.0})
 
+
+"""
+Auyong Tingting led this testing
+"""
 class Test_retrieve_chapter_details_for_learner(TestApp):
     def test_retrieve_chapter(self):
         # print("COME IN")
