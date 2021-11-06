@@ -4,7 +4,7 @@ const storage = window.localStorage;
 const learner_id = storage.getItem("learner_id");
 const course_id = storage.getItem("course_id");
 const chapter_id = storage.getItem("chapter_id");
-const viewOnly = storage.getItem("view-only");
+const viewOnly = storage.getItem("view_only");
 
 document.getElementById("learner-id").innerHTML = learner_id;
 
@@ -49,12 +49,15 @@ function getPDFlink (course_id, chapter_id) {
     request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var pdf_database = JSON.parse(this.response);
+            console.log(pdf_database);
+            console.log(course_id);
+            console.log(chapter_id);
             var pdfUrl = pdf_database[`${course_id}`][`${chapter_id}`];
 
             // ---- if using adobe pdf viewer ----
             // var adobeAPI = pdf_database.adobe_api;
             // document.addEventListener("adobe_dc_view_sdk.ready", renderPDFinAdobe(pdfUrl, adobeAPI));
-
+            console.log(pdfUrl);
             renderPDF(pdfUrl);
         }
     }
@@ -131,5 +134,5 @@ function goBackTo (prev_page) {
 function logout () {
     storage.clear();
 
-    window.location.replace("./login.html");
+    window.location.replace("../login.html");
 }
