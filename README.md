@@ -38,21 +38,21 @@ Our LMS targets 3 different users and allows user to do the below actions.
 2. View a course.
     - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
 3. View a class.
-    - CLick on "View Class" button
+    - Click on "View Class" button
 4. Please click on the following tabs based on your decided action.
 
     A. Preassign Learner
     - Click on "PREASSIGN LEARNERS" tab
-    - Press "Preassign" without any inputs. A unsuccessful alert will pop up
-    - Input "18" as the Learner ID. A success alert will pop up
+    - Press "Preassign" without any inputs. An unsuccessful alert will pop up
+    - Input "18" as the Learner ID. A success alert will pop up.
 
     B. Assign Learner
     - Click on "REGISTERED LEARNERS" tab
-    - Press "Approve" for any learner. The number of slots will be updated and the learner will appear under "ENROLLED LEARNERS" tab
+    - Press "Approve" for any learner. The number of slots left will be updated and the learner will appear under "ENROLLED LEARNERS" tab
 
     C. Withdraw Learner
     - Click on "ENROLLED LEARNERS" tab
-    - Press "Approve" for any learner. The number of slots will be updated
+    - Press "Approve" for any learner. The number of slots left will be updated and learner will no longer be enrolled in the course
 
 <br><br><br>
 
@@ -77,7 +77,7 @@ Our LMS targets 3 different users and allows user to do the below actions.
 
 <br><br><br>
 
-### B. Learner
+## 3. Learner
 | Title                | User Story                                                                                  |
 | -----------          | -----------                                                                                 |
 | Take Final Quiz for Course                              | insert                                                   |
