@@ -284,7 +284,7 @@ function goBackTo (prev_page) {
     var current_location = current_location_arr[current_location_arr.length - 1];
     console.log(current_location);
 
-    if (prev_page == "viewcourses" && current_location == "final_quiz.html") {
+    if (prev_page == "viewEnrolledCourses" && current_location == "final_quiz.html") {
         console.log(prev_page);
         window.location.replace("enrolled_courses.html");
     } 

@@ -172,7 +172,7 @@ function showClassesforRegistration (course_id, learner_id) {
                         html_content +=`<button onclick="register('${class_id}','${course_id}','${learner_id}', '${class_num}')" class="btn btn-outline-primary text-center align-self-end" style="margin-top:auto">Register</button>`;  
                     }  
                     else { //disable button
-                        html_content +=`<button class="btn btn-outline-primary text-center align-self-end" disabled style="margin-top:auto">Registered</button>`;
+                        html_content +=`<button class="btn btn-outline-secondary text-center align-self-end" disabled style="margin-top:auto">Registered</button>`;
                     }    
 
                     html_content += `</div></div>`;
