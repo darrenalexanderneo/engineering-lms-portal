@@ -17,40 +17,79 @@
 
 <br>
 
-## User Journey
+## Targeted Users
 Our LMS targets 3 different users and allows user to do the below actions.
 | Employee Type       | Description                                                            |
 | -----------         | -----------                                                            |
 | Trainer             | Able to create assessments. Consist of senior engineer.                |
 | Learner             | Able to enroll themselves into eligible courses and attend the classes online. Consist of both engineers and senior engineers.                                        |
 | Human Resource      | Able to assign engineers to created classes.                           |
+
+
 <br><br><br>
 
-### A. Trainer
-| Title                | User Story                                                          |
-| -----------          | -----------                                                            |
-| Create Ungraded Quiz | As a Trainer, I want to be able to set the format of each question for each quiz, so that I can choose the settings best suited for each individual question. online. Consist of both engineers and senior engineers.                                                 |
-| Create Final Quiz    | As a Learner, I want to be able to take the final quiz for a course, so that I can successfully complete the course.                                                    |
-| Auto Grade Quiz      | As a trainer, I want each quiz to be auto-graded, so that I save time from cross-checking through every question.                                                     |
+## 1. Human Resource (HR)
+<p align="center">
+  <img src="frontend\static\img\markdown/hr_sitemap.png" width="700"/> <br>
+  <i>HR's Sitemap</i>
+</p>
 <br>
 
-Log into your account through the [Login Page](http://localhost/is212-spm-team4/frontend/templates/learner/login.html). Please use TNR1, TNR? and TNR? for testing purposes.
-<p align="center">
-  <img src="frontend\static\img\markdown\login_page.png" width="700"/>
-</p>
+### Steps
+1. Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+    - Click on "Log in as HR"
+2. View a course.
+    - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
+3. View a class.
+    - Click on "View Class" button
+4. Please click on the following tabs based on your decided action.
 
-Choose any of the courses listed.
-<p align="center">
-  <img src="frontend\static\img\markdown\tnr_homepage.png" width="700"/>
-</p>
+    A. Preassign Learner
+    - Click on "PREASSIGN LEARNERS" tab
+    - Press "Preassign" without any inputs. An unsuccessful alert will pop up
+    - Input "18" as the Learner ID. A success alert will pop up.
 
-You will be able to create quizzes for your classes. Once the quiz is created, you can view the quizzes you have created. You can no longer modify the quiz once it is created. The pages will look like the below.
-View Quiz            |  Create Quiz
-:-------------------------:|:-------------------------:
-![](frontend\static\img\markdown\tnr_view_quiz.png)  |  ![](frontend\static\img\markdown\tnr_create_quiz.png)
+    B. Assign Learner
+    - Click on "REGISTERED LEARNERS" tab
+    - Press "Approve" for any learner. The number of slots left will be updated and the learner will appear under "ENROLLED LEARNERS" tab
+
+    C. Withdraw Learner
+    - Click on "ENROLLED LEARNERS" tab
+    - Press "Approve" for any learner. The number of slots left will be updated and learner will no longer be enrolled in the course
+
 <br><br><br>
 
-### B. Learner
+## 2. Trainer
+<p align="center">
+  <img src="frontend\static\img\markdown/tnr_sitemap.png" width="700"/> <br>
+  <i>Trainer's Sitemap</i>
+</p>
+<br>
+
+### Steps
+1. Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+    - Trainer ID: TNR4 <br><br>
+2. Your homepage displays the classes that you are currently teaching. You can either view or create a quiz.
+3. Please click on the following classes based on your decided action.
+
+   A. View Quiz
+   - Click on EM140 Class 1
+   - Click on "View Quiz" button. You will see the questions created for the selected chapter
+  
+
+    B. Create Quiz
+    - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
+    - Click on the "Create Quiz" button
+    - You are able to do the following when creating a quiz:
+      - Modify the duration of the quiz
+      - Modify the number of questions: Click on "Add a Question" or "Delete" button
+      - Modify the question type
+      - Modify the number of options for MCQ questions
+      - Modify the marks for each question
+
+<br><br><br>
+
+## 3. Learner
 | Title                | User Story                                                                                  |
 | -----------          | -----------                                                                                 |
 |Engineers can view all courses                             | As an engineer, I would want to view all available courses with descriptions, so I can decide which are the courses I am interested in.                                                  |
@@ -148,13 +187,3 @@ Once you finish the quiz, scroll down all the way and click on the <b>Submit Qui
 
 <br><br><br>
 <br><br><br>
-
-### C. Human Resource
-| Title                | User Story                                                                                                    |
-| -----------          | -----------                                                                                                   |
-| Assign Learners | As a HR, I want to be able to enroll and withdraw the trainers to classes based on their availability so that the trainers can start preparing their course materials.                                                                                   |
-| Preassign Learners   | As a HR, I want to be able to preassign learners into prerequisite courses so that I can prioritise their enrollments into the course.                                                                                                           |
-<br>
-
-Log into your account through the [Login Page](http://localhost/is212-spm-team4/frontend/templates/learner/login.html). 
-Please use
