@@ -52,7 +52,7 @@ function displayFinalQuizTitle () {
     document.getElementById("quiz-title").innerHTML = `${course_id} ${class_name} - Final Quiz`;
 }
 
-function displayQuizTimer (duration) {
+function displayFinalQuizTimer (duration) {
     var hour = parseInt(duration.split(":")[0]);
     var minute = parseInt(duration.split(":")[1]);
     var second = parseInt(duration.split(":")[2]);
@@ -232,7 +232,7 @@ function displayFinalQuizScore () {
             var message = "";
             var buttons = "";
 
-            if (quiz_score < 50) {
+            if (quiz_score < 85) {
                 message = "You failed the quiz. You have to retake it until you pass in order to complete this course.";
                 buttons = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='final_quiz.html'">Retake Quiz</button>`;
 

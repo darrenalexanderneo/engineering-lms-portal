@@ -1,6 +1,8 @@
 //initialise localStorage
 const storage = window.localStorage;
 
+var quiz_score;
+
 const learner_id = storage.getItem("learner_id");
 const continued_course_id = storage.getItem("course_id");
 // const learner_id = 'LNR12';
@@ -118,23 +120,6 @@ function checkCourseCompletion (class_id) {
     return completed;  // pass = 1, fail or no attempt = 0
 }
 
-var quiz_score;
-function getFinalQuizResults (final_quiz_id) {
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var results = JSON.parse(this.response).data;
-            console.log(results);
-            quiz_score = (parseInt(results.marks) / parseInt(results.total_marks)) * 100;
-
-            console.log(quiz_score);
-        }
-    }
-    request.open("GET", `${getFinalQuizScore}${final_quiz_id}/${learner_id}`, true);
-    request.send();
-
-    return quiz_score;
-}
 
 var commenced;
 function getCourseCommencementDates (class_id) {
@@ -186,21 +171,19 @@ function displayAllChapters (class_id) {
             console.log("COURSE IS COMPLETED");
 
             var current_date = new Date().toDateString();
-    
-            var quiz_score = getFinalQuizResults(final_quiz_id);
-    
+
             document.getElementById("chapter-list").innerHTML = `<br><br><h4 class='text-center fw-bold'>You have already completed this course!</h4>
             <br><br>
             <div style="width:100%; height:100%; padding:20px; text-align:center; border: 10px solid #787878">
             <div style="width:98%; height:98%; padding:20px; text-align:center; border: 5px solid #787878" class="mx-auto">
                 <span style="font-size:50px; font-weight:bold">Certificate of Completion</span>
-                <br><br>
+                <br><br><br><br>
                 <span style="font-size:25px"><i>This is to certify that</i></span>
                 <br><br>
                 <span style="font-size:30px"><b>${learner_id}</b></span><br/><br/>
                 <span style="font-size:25px"><i>has completed the course</i></span> <br/><br/>
                 <span style="font-size:30px">${course_id}</span> <br/><br/>
-                <span style="font-size:20px">with score of <b>${quiz_score}%</b></span> <br/><br/><br/><br/>
+                <br/><br/>
                 <span style="font-size:30px"><i>dated</i></span><br>
                 <span style="font-size:30px">${current_date}</span>
             </div>
