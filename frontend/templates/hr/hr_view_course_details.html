@@ -27,14 +27,14 @@
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a href='tnr_homepage.html' class="nav-link">Home</a>
+                        <a href='hr_homepage.html' class="nav-link">Home</a>
                     </li>
                 </ul> 
             </div>
             <div class="">
                 <button onclick="logOut()" class="btn btn-outline-light float-end">Logout</button>
-                <span class="text-white fs-5 ms-3 mt-1 float-end" id="learner-id"></span>
-                <img src="../../static/img/download.jfif" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
+                <span class="text-white fs-5 ms-3 mt-1 float-end">HR1</span>
+                <img src="../../static/img/dp_female.png" class="rounded-circle float-end ms-3" width="45px" height="45px" alt="...">
             </div>
         </div>
     </nav>
@@ -146,7 +146,7 @@
                     if (class_ls.length == 0) {
                         html_content += `
                         <div class="container alert alert-danger" role="alert">
-                            There are currently no classes for ES222 in this run.
+                            Currently, there are no classes for ${course_details_list[0]} ${course_details_list[1]} before registration start date.
                         </div>
                         `;
                     }
@@ -237,7 +237,7 @@
 
 
         function redirectToNextPage(page, class_id) {
-            storage.setItem("class_id: ", class_id);
+            storage.setItem("class_id", class_id);
             console.log(class_id)
             redirectToPage(page);
         }
