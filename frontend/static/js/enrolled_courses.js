@@ -400,7 +400,6 @@ function redirect_to_chapterContents(course_id,chapter_id, class_id, view_only) 
 }
 
 function redirect_to_QuizPage (quiz_id, course_id,chapter_id, class_id) {
-    alert(class_id);
     storage.setItem("quiz_id", quiz_id);
     storage.setItem("chapter_id",chapter_id);
     storage.setItem("course_id",course_id);
@@ -418,10 +417,9 @@ function redirect_to_QuizPage (quiz_id, course_id,chapter_id, class_id) {
 
         var classID = storage.getItem("class_id"); 
         console.log("localStorage.getItem():" + classID);
-        alert(classID);
 
         window.location.replace("quiz_page.html");  // redirect to quiz_page.html 
-    }, 8000);
+    }, 1000);
 }
 
 function redirect_to_FinalQuiz(final_quiz_id,course_id,chapter_id, class_id) {
