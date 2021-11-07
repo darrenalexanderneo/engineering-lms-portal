@@ -232,17 +232,22 @@
 
         function generateLearnerTypeDict () {
             var request = new XMLHttpRequest();
-        
+            var enrolled_num = 0;
             request.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
         
                     learner_ls = JSON.parse(this.response)[`${class_id_list[0]}`];
                     console.log(learner_ls);
-        
+
+                    for (lnr of learner_ls.enrolled_learners) {
+                        if (lnr.class_id == class_id) {
+                            enrolled_num += 1;
+                        }
+                    }
+                    
                     learnerTypeDict['preassign']['num_of_learners'] = learner_ls.preassign_learners.length;
                     learnerTypeDict['registered']['num_of_learners'] = learner_ls.registered_learners.length;
-                    learnerTypeDict['enrolled']['num_of_learners'] = learner_ls.enrolled_learners.length;
-                    curr_num_of_learners = learner_ls.preassign_learners.length;
+                    learnerTypeDict['enrolled']['num_of_learners'] = enrolled_num;
                 }
                 
             }
