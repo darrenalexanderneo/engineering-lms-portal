@@ -70,8 +70,21 @@ Our LMS targets 3 different users and allows user to do the below actions.
     - Trainer ID: TNR4 <br><br>
 2. Your homepage displays the classes that you are currently teaching. You can either view or create a quiz.
 3. Please click on the following classes based on your decided action.
-   - View Quiz: EM140 Basic Engineering Management > View Quiz
-   - Create Quiz: BEM460 Basic Engineering Management > Create Quiz
+
+   A. View Quiz
+   - Click on EM140 Class 1
+   - Click on "View Quiz" button. You will see the questions created for the selected chapter
+  
+
+    B. Create Quiz
+    - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
+    - Click on the "Create Quiz" button
+    - You are able to do the following when creating a quiz:
+      - Modify the duration of the quiz
+      - Modify the number of questions: Click on "Add a Question" or "Delete" button
+      - Modify the question type
+      - Modify the number of options for MCQ questions
+      - Modify the marks for each question
 
 <br><br><br>
 
