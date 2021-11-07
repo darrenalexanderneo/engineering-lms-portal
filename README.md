@@ -23,7 +23,9 @@ Our LMS targets 3 different users and allows user to do the below actions.
 | Trainer             | Able to create assessments. Consist of senior engineer.                |
 | Learner             | Able to enroll themselves into eligible courses and attend the classes online. Consist of both engineers and senior engineers.                                        |
 | Human Resource      | Able to assign engineers to created classes.                           |
-<br><br>
+
+
+<br><br><br>
 
 ## 1. Human Resource (HR)
 <p align="center">
@@ -70,7 +72,7 @@ Our LMS targets 3 different users and allows user to do the below actions.
 3. Please click on the following classes based on your decided action.
    - View Quiz: EM140 Basic Engineering Management > View Quiz
    - Create Quiz: BEM460 Basic Engineering Management > Create Quiz
-   
+
 <br><br><br>
 
 ## 3. Learner
