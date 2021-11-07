@@ -28,7 +28,7 @@ Our LMS targets 3 different users and allows user to do the below actions.
 ## 1. Human Resource (HR)
 <p align="center">
   <img src="frontend\static\img\markdown/hr_sitemap.png" width="700"/>
-  <span><i>HR's Sitemap</i></span>
+  <i>HR's Sitemap</i>
 </p>
 <br>
 
@@ -59,7 +59,7 @@ Our LMS targets 3 different users and allows user to do the below actions.
 ## 2. Trainer
 <p align="center">
   <img src="frontend\static\img\markdown/tnr_sitemap.png" width="700"/>
-  <span><i>Trainer's Sitemap</i></span>
+  <i>Trainer's Sitemap</i>
 </p>
 <br>
 
