@@ -63,8 +63,6 @@ Our LMS targets 3 different users and allows user to do the below actions.
 </p>
 <br>
 
-
-
 ### Steps
 1. Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
     - Trainer ID: TNR4 <br><br>
@@ -72,9 +70,7 @@ Our LMS targets 3 different users and allows user to do the below actions.
 3. Please click on the following classes based on your decided action.
    - View Quiz: EM140 Basic Engineering Management > View Quiz
    - Create Quiz: BEM460 Basic Engineering Management > Create Quiz
-
-
-
+   
 <br><br><br>
 
 ## 3. Learner
