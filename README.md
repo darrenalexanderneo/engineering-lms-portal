@@ -65,14 +65,14 @@ Our LMS targets 3 different users and allows user to do the below actions.
 
     A. Preassign Learner
 
-    **Successful Attempt**
+    <p style="color:green"><strong>**Successful Attempt</strong></p>
     - Click on "PREASSIGN LEARNERS" tab
     - Press "Preassign" without any inputs. An unsuccessful alert will pop up
     - Input "18" as the Learner ID
       - A success alert will pop up
       - The learner will appear under "ENROLLED LEARNERS" tab
-      
-    **Unsuccessful Attempt**
+
+    <p style="color:red"><strong>**Unsuccessful Attempt</strong></p>
     - Press "Preassign" again with 18 as the Learner ID
       - An unsuccessful alert will pop up
     
