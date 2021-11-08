@@ -13,6 +13,18 @@
 3. Paste "dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms" ,database for our main application data
 4. Paste "testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb" ,database use for integration testing.
 
+## IF YOU WISH to connect to your own local database 
+1. Do ensure that the following are installed on your device. 
+  - wamp
+  - mysql/workbench (Ensure your sql port is 8888)
+2. Ensure wamp is switched on and mysql is working fine 
+3. Download spm_lms_finaldb.sql file 
+4. Run requirements.txt
+5. Import spm_lms_finaldb.sql file into mysql 
+6. Create .env and paste the following inside the file 
+  - xx
+  - xx
+7. Proceed to backend folder to change dburl to ___ and run app.py
 
 ## Assumption
 - Trainer cannot create quiz after the class start date
