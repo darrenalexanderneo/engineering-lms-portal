@@ -2,39 +2,31 @@
 <Summarize what your software does in the introductory paragraph>
 
 ## Getting Started
-<!-- <Include a detailed spin-up process with instructions for installing any software the application is dependent on (such as wkhtmlopdf, PostgreSQL, XQuartz). Give instructions on running the app. Finally, include information about subdomains in the app (e.g., api.myapp.dev), other tools configuration (e.g. Stripe, Amazon), and test data info. This way you will let the developer start working with on your project faster.> -->
-1. Go to our [Website](https://spm-lms-team4.s3.amazonaws.com/templates/login.html)
-2. Follow the instructions in the <b>User Journey</b> below
-<br><br>
+Please follow these steps only if you want to review the code on your localhost.
 
-## ONLY IF: want to review from our local database, to establish connection to local database: 
-1. Create a .env file in same directory as README
-2. Import spm_lms_finaldb.sql file into local database 
-3. Paste "dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms" ,database for our main application data
-4. Paste "testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb" ,database use for integration testing.
+### Prerequisites 
+Please ensure that you have the following installed on your machine.
+- Python 3
+- Visual Studio Code
+- WAMP Server
+- MySQL
+- Google Chrome Extension Installed with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf/related?hl=en)
 
-## IF YOU WISH to connect to your own local database 
-1. Do ensure that the following are installed on your device. 
-  - wamp
-  - mysql/workbench (Ensure your sql port is 8888)
-2. Ensure wamp is switched on and mysql is working fine 
-3. Download spm_lms_finaldb.sql file 
-4. Run requirements.txt
-5. Import spm_lms_finaldb.sql file into mysql 
-6. Create .env and paste the following inside the file 
-  - xx
-  - xx
-7. Proceed to backend folder to change dburl to ___ and run app.py
+### Launch & Download
+Please ensure that the following are executed
+- WAMP Server and MySQL is running
+- Default port of MySQL is 8888
 
-## Assumption
-- Trainer cannot create quiz after the class start date
-- Trainer can only create chapter 2 if chapter 1 is already created
-- Pre-assignment will be done manually, normally before the registration date [Piazza @136](https://piazza.com/class/kqq5xowd6cj3ov?cid=136)
-- Trainers are assigned before the registration date.
-- Trainers can to upload the course material before the registration start date.
-- All classes have total registration slots of 50
+After which, please download **spm_lms_finaldb.sql** file.
+- Create a **.env file** and paste the following code inside the file
+  ```
+  dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lm # database for our main application data
+  testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb # database use for integration testing
+  ```
 
-<br>
+Proceed to backend folder and run app.py.
+
+<br><br><br>
 
 ## Targeted Users
 Our LMS targets 3 different users and allows user to do the below actions.
@@ -118,7 +110,7 @@ C. Withdraw Learner
 
 ### Steps
 #### Step 1:Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
-    - Trainer ID: TNR4 
+  - Trainer ID: TNR4 
 <br>
 
 #### Step 2: View a Class
@@ -256,4 +248,11 @@ Once you finish the quiz, scroll down all the way and click on the <b>Submit Qui
 </p>
 
 <br><br><br>
-<br><br><br>
+
+## Assumptions
+- Trainer cannot create quiz after the class start date
+- Trainer can only create chapter 2 if chapter 1 is already created
+- Pre-assignment will be done manually, normally before the registration date [Piazza @136](https://piazza.com/class/kqq5xowd6cj3ov?cid=136)
+- Trainers are assigned before the registration date.
+- Trainers can to upload the course material before the registration start date.
+- All classes have total registration slots of 50
