@@ -197,16 +197,14 @@ class Test_Enrollment_Endpoint(TestApp):
         endpoint = "enroll_course_details/" + course_id
 
         response = self.client.get(endpoint)
-        print('test_retrieve_course_class')
-        print(response.json)
+
         self.assertEqual(response.json,{'BEM460': [{'class_end_date': '2021-11-30', 'class_id': 'BEM460_C1', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07', 'slots_available': 50}, {'class_end_date': '2021-11-30', 'class_id': 'BEM460_C2', 'class_start_date': '2021-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-02-07', 'slots_available': 0}, {'class_end_date': '2022-11-30', 'class_id': 'BEM460_C4', 'class_start_date': '2022-05-30', 'course_id': 'BEM460', 'reg_end_date': '2021-12-30', 'reg_start_date': '2021-12-07', 'slots_available': 10}], 'code': 200})
 
 class TestCourseInfo(TestApp):
     def test_retrieve_all_courses(self):
         endpoint = "/enrollment_course_list" 
         response = self.client.get(endpoint)
-        print('test_retrieve_all_courses')
-        print(response.json)
+
 
         self.assertEqual(response.json,{'code': 200, 'data': {'courses': [{'course_description': 'Learning the basic concepts of engineering. In addition, real life concepts will be introduced as well.', 'course_id': 'BEM460', 'course_name': 'Basic Engineering Management', 'num_of_class': 3, 'total_slot_available': 60}, {'course_description': 'Develop and build analog electronics circuits. You will build multiple circuits from sound buzzers to bionics where we actually control a servo motor by reading signals from your muscles', 'course_id': 'EE200', 'course_name': 'Electricity & Electronics', 'num_of_class': 1, 'total_slot_available': 50}]}})
     
@@ -242,7 +240,7 @@ class Test_UpdateSlotAvailableForClass(TestApp):
         action = "Assign"
 
         status = result.compute_slot_available(action)
-        # print("test_update_slot_available_for_class_assign_pass is " , status)
+
         self.assertEqual(status, 200)
 
     def test_update_slot_available_for_class_assign_fail(self):
@@ -262,11 +260,11 @@ class Test_UpdateSlotAvailableForClass(TestApp):
             
         )
         action = 'Assign'
-        # print('test_update_slot_available_for_class_assign_fail' )
+
         # This will reduce the slots_available which will affect other test cases above (dependant, thus should change this.)
         # status = update_slot_available_for_class(data['class_id'], 'Assign')
         status = result.compute_slot_available(action)
-        # print('status is ', status)
+
         self.assertEqual(status, 400)
 
 
@@ -416,7 +414,7 @@ class Test_DeleteClassRecord(TestApp):
         )
 
         status = data.delete_class_record()
-        # print("test_delete_class_record_fails", status)
+
         self.assertEqual(status, 502)
 
 class Test_WithdrawEnrolledLearner_Endpoint(TestApp):
@@ -443,8 +441,7 @@ class Test_WithdrawEnrolledLearner_Endpoint(TestApp):
         response = self.client.put(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        # print("response is")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 500, 'message': 'learner cannot be found in class record'})
 
 
@@ -483,7 +480,7 @@ class Test_EnrollmentByCourseIDAndLearnerID(TestApp):
 
 class Test_Registration_Endpoint(TestApp):
     def test_register_slots_filled(self):
-        print("test_register_slots_filled")
+
         endpoint = "register"
         request_body = {
             "class_id": "BEM460_C2",
@@ -494,8 +491,7 @@ class Test_Registration_Endpoint(TestApp):
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        print('test_register_slots_filled message')
-        print(response.json)
+
         self.assertEqual(response.json['message'], f"{request_body['class_id']} is currently full.")
 
     def test_insertion_issue(self):
@@ -523,13 +519,12 @@ class Test_Registration_Endpoint(TestApp):
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        # print("test_insertion_issue_date")
-        # print(response.json)
+
         self.assertEqual(response.json['message'], 'The course is not available yet.')
     
     def test_register_success(self):
         endpoint = "register"
-        print('test_register_success')
+
         request_body = {
             "class_id": "BEM460_C1",
             "course_id": "BEM460",
@@ -587,12 +582,11 @@ class Test_Registration_Endpoint(TestApp):
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        # print("test_withdraw_learner_registration_fail")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 500, 'message': 'learner cannot be found in class record'})
     
 
-######### sprint 6
+
 
 """
 Lewanna Erh led this testing
@@ -613,12 +607,12 @@ class Test_Question_Endpoint(TestApp):
         endpoint = "retrieve_question/" + quiz_id
 
         response = self.client.get(endpoint)
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 500, 'message': 'question not found'})
 
 class Test_auto_compute_quiz_Endpoint(TestApp):
     def test_compute_quiz_wrong(self):
-        # print('test compute quiz')
+
         data = {
                 "type" : "chapter_quiz",
                 "quiz_id" : "BEM460_C1_Chapt1q",
@@ -627,11 +621,11 @@ class Test_auto_compute_quiz_Endpoint(TestApp):
                 "answer": "M" 
                 }
         marks = auto_compute_grade(data)
-        # print(marks)
+
         self.assertEqual(marks, 0)
 
     def test_compute_quiz_wrong(self):
-        # print('test compute quiz')
+
         data = {
                 "type" : "chapter_quiz",
                 "quiz_id" : "BEM460_C1_Chapt1q",
@@ -640,7 +634,7 @@ class Test_auto_compute_quiz_Endpoint(TestApp):
                 "answer": "S" 
                 }
         marks = auto_compute_grade(data)
-        # print(marks)
+
         self.assertEqual(marks, 2)
 
 class Test_insert_update_chapter_quiz_db(TestApp):
@@ -748,7 +742,7 @@ class test_progress_learner(TestApp):
         class_id = "BEM460_C1"
         learner_id = "LNR16"
         result = retrieve_progress_learner_id(class_id,learner_id)
-        # print(result.json)
+ 
         self.assertEqual(result.json , {'code': 200, 'progress_percentage': 0.0})
 
 
@@ -757,12 +751,11 @@ Auyong Tingting led this testing
 """
 class Test_retrieve_chapter_details_for_learner(TestApp):
     def test_retrieve_chapter(self):
-        # print("COME IN")
-        # print('HERHERHEHHER')
+
         course_id = "BEM460_C1"
         endpoint = "retrieve_chapter/" + course_id
         response = self.client.get(endpoint)
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'course_id': 'BEM460'}, {'chapter_id': 'BEM460_C1_Chapt2', 'course_id': 'BEM460'}, {'chapter_id': 'BEM460_C1_Chapt3', 'course_id': 'BEM460'}]})
     
     def test_retrieve_chapter_learner_by_learner_id(self):
@@ -770,7 +763,7 @@ class Test_retrieve_chapter_details_for_learner(TestApp):
         learner_id = "LNR17"
         endpoint = "retrieve_chapter_learner_by_learner_id/" + course_id + "/" + learner_id + "/"
         response = self.client.get(endpoint)
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'completion': 1, 'learner_id': 'LNR17'}]})
 
     def test_is_complete_all_chapters(self):
@@ -778,8 +771,7 @@ class Test_retrieve_chapter_details_for_learner(TestApp):
         learner_id = "LNR17"
         endpoint = "is_complete_all_chapters/" + course_class_id + "/" + learner_id + "/"
         response = self.client.get(endpoint)
-        # print("test_is_complete_all_chapters")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 200, 'number_of_completion': '1/3', 'results': 0})
 
     def test_is_complete_all_chapters_empty(self):
@@ -787,8 +779,7 @@ class Test_retrieve_chapter_details_for_learner(TestApp):
         learner_id = "LNR17"
         endpoint = "is_complete_all_chapters/" + course_class_id + "/" + learner_id + "/"
         response = self.client.get(endpoint)
-        # print("test_is_complete_all_chapters")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 404, 'number_of_completion': 0, 'results': 'no results found'})
 
 class Test_Trainer_Chapter_Endpoint(TestApp):
@@ -808,23 +799,20 @@ class Test_Trainer_Chapter_Endpoint(TestApp):
     def test_retrieve_chapter_detail(self):
         class_id = "BEM460_C1"
         array_list = retrieve_chapter_detail(class_id)
-        # print("test_retrieve_chapter_detail")
-        # print(array_list)
+
         self.assertEqual(array_list, [{'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt1', 'chapter_name': 'Chapter 1', 'is_created': 1, 'quiz_id': 'BEM460_C1_Chapt1q'}, {'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt2', 'chapter_name': 'Chapter 2', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt2q'}, {'type': 'chapter_quiz', 'chapter_id': 'BEM460_C1_Chapt3', 'chapter_name': 'Chapter 3', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt3q'}])
     
     def test_retrieve_quiz_chapter_detail(self):
         class_id = "BEM460_C1"
         array_list = retrieve_quiz_chapter_detail(class_id)
-        # print("test_retrieve_quiz_chapter_detail")
-        # print(array_list)
+
         self.assertEqual(array_list,[{'type': 'final_quiz', 'chapter_name': 'Finals', 'is_created': 1, 'quiz_id': 'BEM460_C1_finalQuizq'}])
 
     def test_retrieve_course_details_by_class_id(self):
         class_id = "BEM460_C1"
         endpoint = "retrieve_course_details_by_class_id/" + class_id +"/"
         response = self.client.get(endpoint)
-        # print("test_retrieve_course_details_by_class_id")
-        # print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'results': [{'chapter_id': 'BEM460_C1_Chapt1', 'chapter_name': 'Chapter 1', 'is_created': 1, 'quiz_id': 'BEM460_C1_Chapt1q', 'type': 'chapter_quiz'}, {'chapter_id': 'BEM460_C1_Chapt2', 'chapter_name': 'Chapter 2', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt2q', 'type': 'chapter_quiz'}, {'chapter_id': 'BEM460_C1_Chapt3', 'chapter_name': 'Chapter 3', 'is_created': 0, 'quiz_id': 'BEM460_C1_Chapt3q', 'type': 'chapter_quiz'}, {'chapter_name': 'Finals', 'is_created': 1, 'quiz_id': 'BEM460_C1_finalQuizq', 'type': 'final_quiz'}]})
 
 
@@ -842,7 +830,7 @@ class Test_Trainer_Question_Endpoint(TestApp):
                 answer="13")
 
         code = question_record.create_question()
-        # print("test_create_question is " , code)
+
         self.assertEqual(code,200)
 
     def test_create_question_final_success(self):
@@ -856,7 +844,7 @@ class Test_Trainer_Question_Endpoint(TestApp):
                 answer="13")
 
         code = question_record.create_question()
-        # print("test_create_question_final_success is " , code)
+  
         self.assertEqual(code,200)
 
     def test_create_question_chapter_failure(self):
@@ -869,7 +857,7 @@ class Test_Trainer_Question_Endpoint(TestApp):
                 answer="13")
 
         code = question_record.create_question()
-        # print("test_create_question_chapter_failure is " , code)
+
         self.assertEqual(code,500)
 
     def test_create_question_final_failure(self):
@@ -881,7 +869,7 @@ class Test_Trainer_Question_Endpoint(TestApp):
                 answer="13")
 
         code = question_record.create_question()
-        # print("test_create_question_final_failure is " , code)
+
         self.assertEqual(code,500)
     def test_insert_chapter_quiz_success(self):
 
@@ -926,7 +914,7 @@ class Test_Trainer_Question_Endpoint(TestApp):
         )
 
         code = result.insert_final_quiz()
-        # print("test_insert_final_quiz_failure", code)
+
         self.assertEqual(code, 500)
 
 
@@ -945,12 +933,11 @@ class Test_Trainer_Question_Endpoint(TestApp):
             "num_of_questions":3
             }
         endpoint = "create_quiz"
-        # print("go into create quiz")
+
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        # print("output")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 200, 'results': 'Successfully create the quiz'})
 
 
@@ -969,12 +956,11 @@ class Test_Trainer_Question_Endpoint(TestApp):
             "num_of_questions":3
             }
         endpoint = "create_quiz"
-        # print("go into create quiz")
+       
         response = self.client.post(endpoint,
         data=json.dumps(request_body),
         content_type="application/json")
-        # print("output")
-        # print(response.json)
+
         self.assertEqual(response.json, {'code': 201, 'results': 'Final Quiz have already been created. You are not allow to have multiple entry'})
 
 class Test_Trainer_View_Quiz_Endpoint(TestApp):
@@ -983,8 +969,7 @@ class Test_Trainer_View_Quiz_Endpoint(TestApp):
         endpoint = "view_quiz/" + quiz_id + "/"
 
         response = self.client.get(endpoint)
-        # print("test_view_quiz")
-        # print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'results': {'quiz_id': 'BEM460_C1_Chapt1q', 'results': [{'answer': 'S', 'option': 'S,P,M,A', 'question': 'What SPM means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_Chapt1q'}], 'timing': '10:00', 'total_marks': '2'}})
 
     def test_view_final_quiz(self):
@@ -992,8 +977,7 @@ class Test_Trainer_View_Quiz_Endpoint(TestApp):
         endpoint = "view_quiz/" + quiz_id + "/"
 
         response = self.client.get(endpoint)
-        # print("test_view_quiz")
-        # print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'results': {'quiz_id': 'BEM460_C1_finalQuizq', 'results': [{'answer': 'L', 'option': 'V,A,L,O', 'question': 'What final es means', 'question_id': 'Q1', 'question_mark': '2', 'question_type': 'MCQ', 'quiz_id': 'BEM460_C1_finalQuizq'}], 'timing': '30:00', 'total_marks': '2'}})
 
 
@@ -1003,8 +987,7 @@ class Test_date_enroll_course_Endpoint(TestApp):
         class_id = "BEM460_C1"
         endpoint = "display_course_material_date/" + class_id
         response = self.client.get(endpoint)
-        print("test_date_enroll_course_available")
-        print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'is_commence': 1})
 
     def test_date_enroll_course_not_available(self):
@@ -1012,8 +995,7 @@ class Test_date_enroll_course_Endpoint(TestApp):
         class_id = "BEM460_C4"
         endpoint = "display_course_material_date/" + class_id
         response = self.client.get(endpoint)
-        print("test_date_enroll_course_not_available")
-        print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'is_commence': 0})
 
 class Test_is_completed_course_Endpoint(TestApp):
@@ -1022,8 +1004,7 @@ class Test_is_completed_course_Endpoint(TestApp):
         learner_id = "LNR15"
         endpoint = "check_completion_course/" + course_id + "/" + learner_id
         response = self.client.get(endpoint)
-        print("test_is_completed_course_true")
-        print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'is_completed': 1})
 
     def test_is_completed_course_false(self):
@@ -1031,8 +1012,7 @@ class Test_is_completed_course_Endpoint(TestApp):
         learner_id = "LNR16"
         endpoint = "check_completion_course/" + course_id + "/" + learner_id
         response = self.client.get(endpoint)
-        print("test_is_completed_course_false")
-        print(response.json)
+
         self.assertEqual(response.json,{'code': 200, 'is_completed': 0})
 
 ###### put AC onto the methods to refer

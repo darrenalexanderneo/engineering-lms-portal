@@ -7,6 +7,14 @@
 2. Follow the instructions in the <b>User Journey</b> below
 <br><br>
 
+## ONLY IF: want to review from our local database, to establish connection to local database: 
+1. Create a .env file in same directory as README
+2. Paste "dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms" ,database for our main application data
+3. Paste "testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb" ,database use for integration testing.
+
+
+
+
 ## Assumption
 - Trainer cannot create quiz after the class start date
 - Trainer can only create chapter 2 if chapter 1 is already created
