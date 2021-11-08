@@ -54,21 +54,29 @@ Our LMS targets 3 different users and allows user to do the below actions.
 </p>
 <br>
 
+| Title                | User Story                                                                                                    |
+| -----------          | -----------                                                                                                   |
+| Assign Learners | As a HR, I want to be able to enroll and withdraw the trainers to classes based on their availability so that the trainers can start preparing their course materials.                                                                                   |
+| Preassign Learners   | As a HR, I want to be able to preassign learners into prerequisite courses so that I can prioritise their enrollments into the course.                                                                                                           |
+
 ### Steps
 #### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Click on "Log in as HR"
+<br>
 
-#### Step 2:View a course.
+#### Step 2: View a course.
   - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
+<br>
 
-#### Step 3:View a class.
+#### Step 3: View a class.
   - Click on "View Class" button
+<br>
 
 #### Step 4: Please click on the following tabs based on your decided action.
 
 A. Preassign Learner
 
-  <span style="text-decoration:underline">Successful Attempt</span>
+  **Successful Attempt**
   - Click on "PREASSIGN LEARNERS" tab
   - Press "Preassign" without any inputs. An unsuccessful alert will pop up
   - Input "18" as the Learner ID
@@ -76,9 +84,10 @@ A. Preassign Learner
     - The number of slots left will be updated
     - The learner will appear under "ENROLLED LEARNERS" tab
 
-  <span style="text-decoration:underline">Unsuccessful Attempt</span>
+  **Unsuccessful Attempt**
   - Press "Preassign" again with 18 as the Learner ID
     - An unsuccessful alert will pop up
+<br>
 
 B. Assign Learner
 - Click on "REGISTERED LEARNERS" tab
@@ -101,22 +110,28 @@ C. Withdraw Learner
 </p>
 <br>
 
+| Title                | User Story                                                          |
+| -----------          | -----------                                                            |
+| Create Ungraded Quiz | As a Trainer, I want to be able to set the format of each question for each quiz, so that I can choose the settings best suited for each individual question. online. Consist of both engineers and senior engineers.                                                 |
+| Create Final Quiz    | As a Learner, I want to be able to take the final quiz for a course, so that I can successfully complete the course.                                                    |
+| Auto Grade Quiz      | As a trainer, I want each quiz to be auto-graded, so that I save time from cross-checking through every question.                                                     |
+
 ### Steps
 #### Step 1:Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
-
-    - Trainer ID: TNR4 <br><br>
+    - Trainer ID: TNR4 
+<br>
 
 #### Step 2: View a Class
 - Click on the "View Class" button for BEM460 or EM140 (classes that you are currently teaching)
+<br>
 
-#### Step 3:<br>
-Please click on the following classes based on your decided action.
+#### Step 3: Please click on the following classes based on your decided action.
 
 A. View Quiz
   - Click on EM140 Engineering Management Class 1
   - Click on "View Quiz" button. 
   - You will see the questions created for the selected chapter
-  
+<br>
 
 B. Create Quiz
   - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
@@ -141,7 +156,6 @@ B. Create Quiz
   - One or more input fields are empty
   - The duration of the quiz is 0
   - The quiz has 0 questions
-
 
 <br><br><br>
 
