@@ -9,10 +9,9 @@
 
 ## ONLY IF: want to review from our local database, to establish connection to local database: 
 1. Create a .env file in same directory as README
-2. Paste "dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms" ,database for our main application data
-3. Paste "testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb" ,database use for integration testing.
-
-
+2. Import spm_lms_finaldb.sql file into local database 
+3. Paste "dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms" ,database for our main application data
+4. Paste "testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb" ,database use for integration testing.
 
 
 ## Assumption
