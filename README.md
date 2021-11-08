@@ -55,24 +55,20 @@ Our LMS targets 3 different users and allows user to do the below actions.
 <br>
 
 ### Steps
-#### Step 1:<br>
-Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+#### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Click on "Log in as HR"
 
-#### Step 2:<br>
-View a course.
+#### Step 2:View a course.
   - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
 
-#### Step 3:<br>
-View a class.
+#### Step 3:View a class.
   - Click on "View Class" button
 
-#### Step 4:<br>
-Please click on the following tabs based on your decided action.
+#### Step 4: Please click on the following tabs based on your decided action.
 
 A. Preassign Learner
 
-  **Successful Attempt**
+  <span style="text-decoration:underline">Successful Attempt</span>
   - Click on "PREASSIGN LEARNERS" tab
   - Press "Preassign" without any inputs. An unsuccessful alert will pop up
   - Input "18" as the Learner ID
@@ -80,10 +76,9 @@ A. Preassign Learner
     - The number of slots left will be updated
     - The learner will appear under "ENROLLED LEARNERS" tab
 
-  **Unsuccessful Attempt**
+  <span style="text-decoration:underline">Unsuccessful Attempt</span>
   - Press "Preassign" again with 18 as the Learner ID
     - An unsuccessful alert will pop up
-
 
 B. Assign Learner
 - Click on "REGISTERED LEARNERS" tab
@@ -107,12 +102,12 @@ C. Withdraw Learner
 <br>
 
 ### Steps
-#### Step 1:<br>
-Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+#### Step 1:Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+
     - Trainer ID: TNR4 <br><br>
 
-#### Step 2:<br>
-Your homepage displays the classes that you are currently teaching. You can either view or create a quiz.
+#### Step 2: View a Class
+- Click on the "View Class" button for BEM460 or EM140 (classes that you are currently teaching)
 
 #### Step 3:<br>
 Please click on the following classes based on your decided action.
@@ -132,13 +127,16 @@ B. Create Quiz
   <p align="center">
     <img src="frontend\static\img\markdown\quiz_success.png" width="700"/>
   </p>
+
   - After which, press "Save & Create Quiz"
     - A confirmation popup will appear
   - Press "Okay"
     - You will be redirected back to the previous page
     - You can view the quiz for Chapter 1
 
+
   **Unsuccessful Attempt**
+
   When "Save & Create Quiz" is clicked, any of the followings would trigger the alert message:
   - One or more input fields are empty
   - The duration of the quiz is 0
