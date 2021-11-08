@@ -55,39 +55,47 @@ Our LMS targets 3 different users and allows user to do the below actions.
 <br>
 
 ### Steps
-1. Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
-    - Click on "Log in as HR"
-2. View a course.
-    - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
-3. View a class.
-    - Click on "View Class" button
-4. Please click on the following tabs based on your decided action.
+#### Step 1:<br>
+Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+  - Click on "Log in as HR"
 
-    A. Preassign Learner
+#### Step 2:<br>
+View a course.
+  - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
 
-    <p style="color:green"><strong>**Successful Attempt</strong></p>
-    - Click on "PREASSIGN LEARNERS" tab
-    - Press "Preassign" without any inputs. An unsuccessful alert will pop up
-    - Input "18" as the Learner ID
-      - A success alert will pop up
-      - The learner will appear under "ENROLLED LEARNERS" tab
+#### Step 3:<br>
+View a class.
+  - Click on "View Class" button
 
-    <p style="color:red"><strong>**Unsuccessful Attempt</strong></p>
-    - Press "Preassign" again with 18 as the Learner ID
-      - An unsuccessful alert will pop up
-    
+#### Step 4:<br>
+Please click on the following tabs based on your decided action.
 
-    B. Assign Learner
-    - Click on "REGISTERED LEARNERS" tab
-    - Press "Approve" for any learner
-      - The number of slots left will be updated
-      - The learner will appear under "ENROLLED LEARNERS" tab
+A. Preassign Learner
 
-    C. Withdraw Learner
-    - Click on "ENROLLED LEARNERS" tab
-    - Press "Approve" for any learner.
-      - The number of slots left will be updated
-      - The learner will no longer be enrolled in the course
+  **Successful Attempt**
+  - Click on "PREASSIGN LEARNERS" tab
+  - Press "Preassign" without any inputs. An unsuccessful alert will pop up
+  - Input "18" as the Learner ID
+    - A success alert will pop up
+    - The number of slots left will be updated
+    - The learner will appear under "ENROLLED LEARNERS" tab
+
+  **Unsuccessful Attempt**
+  - Press "Preassign" again with 18 as the Learner ID
+    - An unsuccessful alert will pop up
+
+
+B. Assign Learner
+- Click on "REGISTERED LEARNERS" tab
+- Press "Approve" for any learner
+  - The number of slots left will be updated
+  - The learner will appear under "ENROLLED LEARNERS" tab
+
+C. Withdraw Learner
+- Click on "ENROLLED LEARNERS" tab
+- Press "Approve" for any learner.
+  - The number of slots left will be updated
+  - The learner will no longer be enrolled in the course
 
 <br><br><br>
 
@@ -99,25 +107,43 @@ Our LMS targets 3 different users and allows user to do the below actions.
 <br>
 
 ### Steps
-1. Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+#### Step 1:<br>
+Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
     - Trainer ID: TNR4 <br><br>
-2. Your homepage displays the classes that you are currently teaching. You can either view or create a quiz.
-3. Please click on the following classes based on your decided action.
 
-   A. View Quiz
-   - Click on EM140 Class 1
-   - Click on "View Quiz" button. You will see the questions created for the selected chapter
+#### Step 2:<br>
+Your homepage displays the classes that you are currently teaching. You can either view or create a quiz.
+
+#### Step 3:<br>
+Please click on the following classes based on your decided action.
+
+A. View Quiz
+  - Click on EM140 Engineering Management Class 1
+  - Click on "View Quiz" button. 
+  - You will see the questions created for the selected chapter
   
 
-    B. Create Quiz
-    - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
-    - Click on the "Create Quiz" button
-    - You are able to do the following when creating a quiz:
-      - Modify the duration of the quiz
-      - Modify the number of questions: Click on "Add a Question" or "Delete" button
-      - Modify the question type
-      - Modify the number of options for MCQ questions
-      - Modify the marks for each question
+B. Create Quiz
+  - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
+
+  **Successful Attempt**
+  - Click on the "Create Quiz" button for Chapter 1
+  - Please fill the input fields as shown below
+  <p align="center">
+    <img src="frontend\static\img\markdown\quiz_success.png" width="700"/>
+  </p>
+  - After which, press "Save & Create Quiz"
+    - A confirmation popup will appear
+  - Press "Okay"
+    - You will be redirected back to the previous page
+    - You can view the quiz for Chapter 1
+
+  **Unsuccessful Attempt**
+  When "Save & Create Quiz" is clicked, any of the followings would trigger the alert message:
+  - One or more input fields are empty
+  - The duration of the quiz is 0
+  - The quiz has 0 questions
+
 
 <br><br><br>
 
