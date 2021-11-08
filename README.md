@@ -64,17 +64,30 @@ Our LMS targets 3 different users and allows user to do the below actions.
 4. Please click on the following tabs based on your decided action.
 
     A. Preassign Learner
+
+    **Successful Attempt**
     - Click on "PREASSIGN LEARNERS" tab
     - Press "Preassign" without any inputs. An unsuccessful alert will pop up
-    - Input "18" as the Learner ID. A success alert will pop up.
+    - Input "18" as the Learner ID
+      - A success alert will pop up
+      - The learner will appear under "ENROLLED LEARNERS" tab
+      
+    **Unsuccessful Attempt**
+    - Press "Preassign" again with 18 as the Learner ID
+      - An unsuccessful alert will pop up
+    
 
     B. Assign Learner
     - Click on "REGISTERED LEARNERS" tab
-    - Press "Approve" for any learner. The number of slots left will be updated and the learner will appear under "ENROLLED LEARNERS" tab
+    - Press "Approve" for any learner
+      - The number of slots left will be updated
+      - The learner will appear under "ENROLLED LEARNERS" tab
 
     C. Withdraw Learner
     - Click on "ENROLLED LEARNERS" tab
-    - Press "Approve" for any learner. The number of slots left will be updated and learner will no longer be enrolled in the course
+    - Press "Approve" for any learner.
+      - The number of slots left will be updated
+      - The learner will no longer be enrolled in the course
 
 <br><br><br>
 

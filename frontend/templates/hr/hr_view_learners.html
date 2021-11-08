@@ -81,7 +81,7 @@
         <form id="preassign-form" class="container needs-validation" novalidate>
             <div class="form-group row mb-4">
                 <span class="mr-3" style="font-size: 30px;" >LNR</span>
-                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="1" max="18" placeholder="Learner ID" required> 
+                <input type="number" class="form-control-lg col-sm-4 p-2 mr-4" id="preassign-id" min="1" max="22" placeholder="Learner ID" required> 
                 <button type="submit" onclick="preassignLearner();" class="btn btn-sm btn-success">Preassign</button>
             </div>
             
@@ -142,7 +142,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="submitLabel">Create Quiz</h5>
+                <h5 class="modal-title" id="submitLabel">Confirmation</h5>
             </div>
             <div class="modal-body">
                 Are you sure you want to create the quiz?
@@ -307,7 +307,7 @@
                             if (lnr.class_id == class_id) {
                                 html_content += `
                                 <tr>
-                                    <td class="text-center align-middle">${lnr.emp_id}</td>
+                                    <td class="text-center align-middle">LNR${lnr.emp_id.slice(3, lnr.emp_id.length)}</td>
                                     <td class="text-center align-middle">${lnr.name}</td>
                                     <td class="text-center align-middle my-auto"><p class= "${btn_class}" onclick="updateLearners('${func_type}', '${lnr.learner_id}', '${lnr.name}','${lnr.class_id}', '${curr_lnr_type}'); " id="${lnr.emp_id}">${btn_text}</p></td>
                                 </tr>`;
