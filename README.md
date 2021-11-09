@@ -259,6 +259,6 @@ Please ensure that you have the following installed on your machine.
   testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb # database use for integration testing
   ```
 
-Proceed to backend folder and run app.py.
+4. Proceed to /backend folder and run ```python app.py```.
 
 <br><br><br>
