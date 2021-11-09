@@ -58,13 +58,13 @@ Please click on the following tabs based on your decided action
 **Successful Attempt**
   - Click on "PREASSIGN LEARNERS" tab
   - Press "Preassign" without any inputs. An unsuccessful alert will pop up
-  - Input "18" as the Learner ID
+  - Input "22" as the Learner ID
     - A success alert will pop up
     - The number of slots left will be updated
     - The learner will appear under "ENROLLED LEARNERS" tab
 
 **Unsuccessful Attempt**
-  - Press "Preassign" again with 18 as the Learner ID
+  - Press "Preassign" again with 22 as the Learner ID
     - An unsuccessful alert will pop up
 <br>
 
@@ -116,6 +116,7 @@ Please click on the following classes based on your decided action.
 
 | Create Quiz                          | 
 | -----------------                    |
+
 **Successful Attempt**
   - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
   - Click on the "Create Quiz" button for Chapter 1
