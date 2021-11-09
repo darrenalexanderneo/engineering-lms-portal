@@ -9,7 +9,7 @@ The LMS targets 3 different users and allows each user to do the stipulated acti
 <br><br>
 
 # 1. Getting Started
-Please access our LMS's Login Page and follow the steps under **2. User Stories**.
+Please access our LMS's Login Page and follow the steps under **2. User Stories**. You can refer to the walkthrough under "recorded scenarios" folder.
 
 <br><br>
 
@@ -40,16 +40,18 @@ Please access our LMS's Login Page and follow the steps under **2. User Stories*
 
 <br>
 
-#### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+#### Step 1: Log in
+Log in to your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Click on "Log in as HR"
 
-#### Step 2: View a course.
+#### Step 2: View a course
   - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
 
-#### Step 3: View a class.
+#### Step 3: View a class
   - Click on "View Class" button
 
-#### Step 4: Please click on the following tabs based on your decided action.
+#### Step 4: Preassign/Assign/Withdraw Learner
+Please click on the following tabs based on your decided action
 | Preassign Learner                    | 
 | -----------------                    |
 
@@ -97,13 +99,15 @@ Please access our LMS's Login Page and follow the steps under **2. User Stories*
 </p>
 <br>
 
-#### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+#### Step 1: Log in
+Log in your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Trainer ID: TNR4 
 
 #### Step 2: View a Class
 - Click on the "View Class" button for BEM460 or EM140 (classes that you are currently teaching)
 
-#### Step 3: Please click on the following classes based on your decided action.
+#### Step 3: View/Create Quiz
+Please click on the following classes based on your decided action.
 | View Quiz                            | 
 | -----------------                    |
   - Click on EM140 Engineering Management Class 1
