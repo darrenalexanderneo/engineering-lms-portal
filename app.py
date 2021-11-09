@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS
 from datetime import datetime
-from classes import *
+# from classes import *
 
 # Database connection
 
@@ -39,11 +39,6 @@ class Employee(db.Model):
         }
         return employee_info
     
-    # def getName(self):
-    #     return self.emp_name
-    
-    # def getEmpId(self):
-    #     return self.emp_id
 
 class Senior_Engineer(Employee):
     __tablename__ = "senior_engineer"
@@ -74,8 +69,6 @@ class Learner(db.Model):
     emp_id =  db.Column(db.String(10), db.ForeignKey('employee.emp_id'), nullable=False)
     learner_id =  db.Column(db.String(10), primary_key=True, nullable=False)
 
-    # def getEmpId(self):
-    #     return self.emp_id
 
 
 class Completion_Record(db.Model):
@@ -110,17 +103,6 @@ class Course(db.Model):
         }
         return Course_info
 
-    # def getCourseName(self):
-    #     return self.course_name
-    
-    # def getCourseDesc(self):
-    #     return self.course_name
-        
-    # def getPrerequisite(self):
-    #     return self.prerequisite
-    
-    # def getCourseId(self):
-    #     return self.course_id
 
 
 
@@ -262,7 +244,6 @@ class Registration(db.Model):
 
             return 502
 
-    # Why must this be inside Reg class? Mmmm...
     def get_current_date():
         now = datetime.now()
         current_date = now.strftime("%Y-%m-%d")
@@ -292,7 +273,7 @@ class Chapter(db.Model):
 
 class Chapter_Learner(db.Model):
     __tablename__ = "chapter_learner"
-    # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
+
     chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
     learner_id =  db.Column(db.String(10), db.ForeignKey('learner.learner_id'), primary_key=True, nullable=False)
     completion = db.Column(db.Integer, nullable=False)
@@ -328,8 +309,7 @@ class Quiz(db.Model):
 class Chapter_Quiz(Quiz):
     __tablename__ = "chapter_quiz"
     quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
-    # Need to fix this - Somehow the chapter_id is not able to be referenced - Darren 24/10
-    # chapter_id = db.Column(db.String(10), db.ForeignKey("chapter.chapter_id"), primary_key=True, nullable=False)
+
     chapter_id = db.Column(db.String(30), primary_key=True, nullable=False)
     total_marks = db.Column(db.String(10), nullable=False)
 
@@ -438,11 +418,6 @@ class Question(db.Model):
 
 
 
-# class Question_Option(db.Model):
-#     __tablename__ = "question_option"
-#     quiz_id = db.Column(db.String(10), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
-#     option = db.Column(db.String(255), primary_key=True, nullable=False)
-
 class Chapter_Quiz_Result(db.Model): 
     __tablename__ = "chapter_quiz_result"
     quiz_id = db.Column(db.String(30), db.ForeignKey("quiz.quiz_id"), primary_key=True, nullable=False)
@@ -504,8 +479,7 @@ class Final_Quiz_Result(db.Model):
 def retrieve_course_class(course_id):
     #registration, course, class table # course_id etc
     
-    # course = Course.query.filter_by(course_id = course_id).first()
-    # course_name = course.course_name
+
     class_run_list = Class_Run.query.filter_by(course_id = course_id).all()
     class_run_array = []
     if(len(class_run_list)):
@@ -655,7 +629,7 @@ def remove_class_run_by_learner_id(data):
 
         if(len(registration_list)!= 0):
             for reg in registration_list:
-                #update_code = update_slot_available_for_class(reg.class_id,'Withdraw')
+
                 reg.delete_registration_db()
 
         else:
@@ -787,9 +761,8 @@ def withdraw_course():
             }
         ), 404
 
-##########################################################sprint 5   ###########################################
 
-#####HEREEEEEEEEEEEEE DATE CHECK WITH REG START AND END! 
+
 @app.route("/registration_course_list")
 def registration_course_list():
     array = []
@@ -1099,7 +1072,7 @@ def registration_details(learner_id):
 
 @app.route("/withdraw_learner_registration", methods=['POST'])
 def withdraw_learner_registration():
-    #insert into class record, update slot available, delete from registration
+
     try:
         data = request.get_json()
         delete_code = 0
@@ -1160,10 +1133,7 @@ def withdraw_learner_registration():
 
 
 
-############################# sprint  5 #####################
 
-#this endpoint is for retrieve quiz for particular course,class,chapter 
-#frontend pass me quiz id eg: coursename_class_chaptX
 @app.route("/retrieve_question/<string:quiz_id>")
 def retrieve_question_by_course_class_chapter(quiz_id):
     #retrieve from registration is_approved = 0 and class_record is_approved = 1
@@ -1413,15 +1383,12 @@ def retrieve_progress_learner_id(class_id,learner_id):
     })
 
 
-#################### finals need to do insert into db, ultimately, when pass , INSERT into completion record
 
-### 26 oct 2021
 
-#i need eg ME111_C1
 @app.route("/retrieve_chapter/<string:course_class_id>")
 def retrieve_chapter(course_class_id):
 
-    #retrieve from registration is_approved = 0 and class_record is_approved = 1
+
 
     chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(course_class_id)).all()
 
@@ -1580,7 +1547,7 @@ def retrieve_all_course_details_by_trainer_id(trainer_id):
         ), 404
 
 
-#flaoting method because it just help to comput
+
 def retrieve_chapter_detail(class_id):
     array_list = []
     chapter_list = Chapter.query.filter(Chapter.chapter_id.contains(class_id)).all()
@@ -1794,7 +1761,6 @@ def view_quiz(quiz_id):
         })
         
 
-####implemented on 6 nov
 
 @app.route("/display_course_material_date/<string:class_id>")
 def display_course_material_date(class_id):
