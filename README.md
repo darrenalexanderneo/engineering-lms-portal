@@ -42,19 +42,17 @@ Please access our LMS's Login Page and follow the steps under **2. User Stories*
 
 #### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Click on "Log in as HR"
-<br>
 
 #### Step 2: View a course.
   - Click on the "View Course" button for **BEM460** or **EM140**. These courses have classes that are within the registration period
-<br>
 
 #### Step 3: View a class.
   - Click on "View Class" button
-<br>
 
 #### Step 4: Please click on the following tabs based on your decided action.
 | Preassign Learner                    | 
 | -----------------                    |
+
 **Successful Attempt**
   - Click on "PREASSIGN LEARNERS" tab
   - Press "Preassign" without any inputs. An unsuccessful alert will pop up
