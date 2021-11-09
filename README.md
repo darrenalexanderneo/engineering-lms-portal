@@ -1,57 +1,45 @@
 # G6T4 - Learning Management System (LMS)
-<Summarize what your software does in the introductory paragraph>
-
-## Getting Started
-Please follow these steps only if you want to review the code on your localhost.
-
-### Prerequisites 
-Please ensure that you have the following installed on your machine.
-- Python 3
-- Visual Studio Code
-- WAMP Server
-- MySQL
-- Google Chrome Extension Installed with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf/related?hl=en)
-
-### Launch & Download
-Please ensure that the following are executed
-- WAMP Server and MySQL is running
-- Default port of MySQL is 8888
-
-After which, please download **spm_lms_finaldb.sql** file.
-- Create a **.env file** and paste the following code inside the file
-  ```
-  dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lm # database for our main application data
-  testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb # database use for integration testing
-  ```
-
-Proceed to backend folder and run app.py.
-
-<br><br><br>
-
-## Targeted Users
-Our LMS targets 3 different users and allows user to do the below actions.
+The LMS targets 3 different users and allows each user to do the stipulated actions as stated below.
 | Employee Type       | Description                                                            |
 | -----------         | -----------                                                            |
 | Trainer             | Able to create assessments. Consist of senior engineer.                |
 | Learner             | Able to enroll themselves into eligible courses and attend the classes online. Consist of both engineers and senior engineers.                                        |
 | Human Resource      | Able to assign engineers to created classes.                           |
 
+<br><br>
 
-<br><br><br>
+# 1. Getting Started
+Please access our LMS's Login Page and follow the steps under **2. User Stories**.
 
-## 1. Human Resource (HR)
+<br><br>
+
+## 2. Assumptions
+- Trainer cannot create quiz after the class start date
+- Trainer can only create chapter 2 if chapter 1 is already created
+- Pre-assignment will be done manually, normally before the registration date [Piazza @136](https://piazza.com/class/kqq5xowd6cj3ov?cid=136)
+- Trainers are assigned before the registration date.
+- Trainers can to upload the course material before the registration start date.
+- All classes have total registration slots of 50
+
+<br><br>
+
+# 3. User Stories
+## 3.1 Human Resource (HR)
+| Title                | User Story                                                                                                    |
+| -----------          | -----------                                                                                                   |
+| Assign Learners | As a HR, I want to be able to enroll and withdraw the trainers to classes based on their availability so that the trainers can start preparing their course materials.                                                                                   |
+| Preassign Learners   | As a HR, I want to be able to preassign learners into prerequisite courses so that I can prioritise their enrollments into the course.     
+
+<br><br>
+
 <p align="center">
   <img src="frontend\static\img\markdown/hr_sitemap.png" width="700"/> <br>
   <i>HR's Sitemap</i>
 </p>
 <br>
 
-| Title                | User Story                                                                                                    |
-| -----------          | -----------                                                                                                   |
-| Assign Learners | As a HR, I want to be able to enroll and withdraw the trainers to classes based on their availability so that the trainers can start preparing their course materials.                                                                                   |
-| Preassign Learners   | As a HR, I want to be able to preassign learners into prerequisite courses so that I can prioritise their enrollments into the course.                                                                                                           |
+<br>
 
-### Steps
 #### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
   - Click on "Log in as HR"
 <br>
@@ -65,10 +53,9 @@ Our LMS targets 3 different users and allows user to do the below actions.
 <br>
 
 #### Step 4: Please click on the following tabs based on your decided action.
-
-A. Preassign Learner
-
-  **Successful Attempt**
+| Preassign Learner                    | 
+| -----------------                    |
+**Successful Attempt**
   - Click on "PREASSIGN LEARNERS" tab
   - Press "Preassign" without any inputs. An unsuccessful alert will pop up
   - Input "18" as the Learner ID
@@ -76,18 +63,20 @@ A. Preassign Learner
     - The number of slots left will be updated
     - The learner will appear under "ENROLLED LEARNERS" tab
 
-  **Unsuccessful Attempt**
+**Unsuccessful Attempt**
   - Press "Preassign" again with 18 as the Learner ID
     - An unsuccessful alert will pop up
 <br>
 
-B. Assign Learner
+| Assign Learner                       | 
+| -----------------                    |
 - Click on "REGISTERED LEARNERS" tab
 - Press "Approve" for any learner
   - The number of slots left will be updated
   - The learner will appear under "ENROLLED LEARNERS" tab
 
-C. Withdraw Learner
+| Withdraw Learner                    | 
+| -----------------                    |
 - Click on "ENROLLED LEARNERS" tab
 - Press "Approve" for any learner.
   - The number of slots left will be updated
@@ -95,40 +84,38 @@ C. Withdraw Learner
 
 <br><br><br>
 
-## 2. Trainer
-<p align="center">
-  <img src="frontend\static\img\markdown/tnr_sitemap.png" width="700"/> <br>
-  <i>Trainer's Sitemap</i>
-</p>
-<br>
-
+## 3.2 Trainer
 | Title                | User Story                                                          |
 | -----------          | -----------                                                            |
 | Create Ungraded Quiz | As a Trainer, I want to be able to set the format of each question for each quiz, so that I can choose the settings best suited for each individual question. online. Consist of both engineers and senior engineers.                                                 |
 | Create Final Quiz    | As a Learner, I want to be able to take the final quiz for a course, so that I can successfully complete the course.                                                    |
 | Auto Grade Quiz      | As a trainer, I want each quiz to be auto-graded, so that I save time from cross-checking through every question.                                                     |
 
-### Steps
-#### Step 1:Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
-  - Trainer ID: TNR4 
 <br>
+
+<p align="center">
+  <img src="frontend\static\img\markdown/tnr_sitemap.png" width="700"/> <br>
+  <i>Trainer's Sitemap</i>
+</p>
+<br>
+
+#### Step 1: Log into your account through the [Login Page](https://spm-lms-team4.s3.amazonaws.com/templates/login.html).
+  - Trainer ID: TNR4 
 
 #### Step 2: View a Class
 - Click on the "View Class" button for BEM460 or EM140 (classes that you are currently teaching)
-<br>
 
 #### Step 3: Please click on the following classes based on your decided action.
-
-A. View Quiz
+| View Quiz                            | 
+| -----------------                    |
   - Click on EM140 Engineering Management Class 1
   - Click on "View Quiz" button. 
   - You will see the questions created for the selected chapter
-<br>
 
-B. Create Quiz
+| Create Quiz                          | 
+| -----------------                    |
+**Successful Attempt**
   - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
-
-  **Successful Attempt**
   - Click on the "Create Quiz" button for Chapter 1
   - Please fill the input fields as shown below
   <p align="center">
@@ -141,9 +128,10 @@ B. Create Quiz
     - You will be redirected back to the previous page
     - You can view the quiz for Chapter 1
 
+<br>
 
   **Unsuccessful Attempt**
-
+  - Click on the "View Course" button for BEM460 Basic Engineering Management Class 4
   When "Save & Create Quiz" is clicked, any of the followings would trigger the alert message:
   - One or more input fields are empty
   - The duration of the quiz is 0
@@ -151,7 +139,7 @@ B. Create Quiz
 
 <br><br><br>
 
-## 3. Learner
+## 3.3 Learner
 | Title                | User Story                                                                                  |
 | -----------          | -----------                                                                                 |
 |Engineers can view all courses                             | As an engineer, I would want to view all available courses with descriptions, so I can decide which are the courses I am interested in.                                                  |
@@ -249,10 +237,28 @@ Once you finish the quiz, scroll down all the way and click on the <b>Submit Qui
 
 <br><br><br>
 
-## Assumptions
-- Trainer cannot create quiz after the class start date
-- Trainer can only create chapter 2 if chapter 1 is already created
-- Pre-assignment will be done manually, normally before the registration date [Piazza @136](https://piazza.com/class/kqq5xowd6cj3ov?cid=136)
-- Trainers are assigned before the registration date.
-- Trainers can to upload the course material before the registration start date.
-- All classes have total registration slots of 50
+# 4. Others
+
+## 4.1 Testing on Local Host
+Please follow these steps only if you want to review the code on your localhost.
+
+### 4.1.1 Prerequisites 
+Please ensure that you have the following installed on your machine.
+- Python 3
+- Visual Studio Code
+- WAMP Server
+- MySQL
+- Google Chrome Extension Installed with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf/related?hl=en)
+
+### 4.1.2 Launch & Download
+1. Please ensure that your WAMP Server is running, MySQL is running and your default port of MySQL is 8888. 
+2. Please download and unzip **spm_lms_finaldb.sql** file.
+3. Create a **.env file** and paste the following code inside the file
+  ```
+  dbURL=mysql+mysqlconnector://root:root@localhost:8888/spm_lms # database for our main application data
+  testURLRDS =mysql+mysqlconnector://root:root@localhost:8888/testdb # database use for integration testing
+  ```
+
+Proceed to backend folder and run app.py.
+
+<br><br><br>
